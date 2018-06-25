@@ -11,14 +11,18 @@ public class main {
         char c = sc.next().charAt(0);
         switch (c){
             case '1':
-                Project1.main(args);
+                Tweeting tweet = new Tweeting();
+                tweet.Tweet();
                 break;
             case '2':
-                Project2.main(args);
+                Timeline timeline = new Timeline();
+                timeline.PrintTimeline();
                 break;
             case '3':
-                Project1.main(args);
-                Project2.main(args);
+                Tweeting tweet1 = new Tweeting();
+                tweet1.Tweet();
+                Timeline timeline1 = new Timeline();
+                timeline1.PrintTimeline();
                 break;
             default:
                 System.out.println("Invalid answer.");
