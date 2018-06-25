@@ -5,7 +5,7 @@ import java.util.List;
 /*Print User's Home Timeline*/
 
 public class Timeline {
-    public void PrintTimeline()
+    public void printTimeline()
     {
         Twitter twitter = TwitterFactory.getSingleton();
         try {
