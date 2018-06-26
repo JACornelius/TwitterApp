@@ -13,7 +13,7 @@ javac -sourcepath twitterapp -cp ../../../lib/twitter4j-core-4.0.4.jar twitterap
 ```
 ## Running:
 ```
-java -cp .:../../../lib/twitter4j-core-4.0.4.jar twitterapp.src.Main
+java -cp .:../../../lib/twitter4j-core-4.0.4.jar twitterapp.src.MainFile
 ```
 ## Creating a JAR File:
 In the java Directory:
