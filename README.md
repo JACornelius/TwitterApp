@@ -22,3 +22,10 @@ jar cfm TwitterApp.jar twitterapp/src/META-INF/MANIFEST.MF twitterapp/src/*.clas
 java -jar TwitterApp.jar
 
 ```
+## Creating a JAR File using Maven
+Install maven and run in TwitterApp directory
+```
+mvn clean install
+cd target/
+java -jar TwitterAppTest-1.0.jar
+```
