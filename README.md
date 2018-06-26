@@ -2,7 +2,8 @@
 
 ## Required Programs/Installations
 Java JDK, Twitter Account, Twitter4j (http://twitter4j.org/en/index.html)
-##Getting Started
+
+## Getting Started
 After creating a twitter account, twitter.properties would require some twitter authentication values. These can be found when making a new Twitter application (https://apps.twitter.com). Here create a new application and under the "Keys and Access Tokens" would be all 4 authentication values.
 
 ## Compiling: 
