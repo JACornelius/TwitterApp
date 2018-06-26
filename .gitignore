@@ -1,0 +1,10 @@
+/src/main/java/twitter4j.properties
+twitter4j.properties
+.DS-Store
+/bin
+/out
+/.idea
+/target
+/src/main/java/twitterapp/src/Main.class
+/src/main/java/twitterapp/src/Tweeting.class
+/src/main/java/twitterapp/src/Timeline.class
