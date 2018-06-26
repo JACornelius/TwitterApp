@@ -4,7 +4,7 @@
 Java JDK, Twitter Account, Twitter4j (http://twitter4j.org/en/index.html)
 
 ## Getting Started
-After creating a twitter account, twitter.properties would require some twitter authentication values. twitter.properties file is in the src/main/java directory and should look like this
+After creating a twitter account, twitter.properties would require some twitter authentication values. twitter.properties file is in the src/main/java directory and the TwitterApp directory. The file should look like this
 ```
 debug = true
 oauth.accessToken =
