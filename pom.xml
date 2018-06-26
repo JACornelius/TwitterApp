@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-
+    <!--Handling Dependencies -->
 
     <repositories>
         <repository>
@@ -17,22 +17,7 @@
             </snapshots>
         </repository>
     </repositories>
-<!--
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Maven Plugin Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
--->
+
     <groupId>com.twitter</groupId>
     <artifactId>TwitterAppTest</artifactId>
     <version>1.0</version>
@@ -43,17 +28,9 @@
             <version>4.0.4</version>
         </dependency>
     </dependencies>
-    <!--
-    <packaging>...</packaging>
 
-    <parent>...</parent>
-    <dependencyManagement>...</dependencyManagement>
-    <modules>...</modules>
-    <properties>...</properties>
-    -->
 
     <build>
-        <!--sourceDirectory>${project.basedir}/src/main/java</sourceDirectory-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -62,14 +39,10 @@
                 <configuration>
                     <archive>
                         <manifest>
-
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>../lib/</classpathPrefix>
-
                             <mainClass>twitterapp.src.Main</mainClass>
                         </manifest>
-                        <!--manifestFile>src/main/java/twitterapp.src/META-INF/MANIFEST.MF</manifestFile-->
-
                     </archive>
                 </configuration>
             </plugin>
