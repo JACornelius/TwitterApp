@@ -38,5 +38,5 @@ mvn clean install
 Add the completed twitter.properties file into this newly created target directory
 ```
 cd target/
-java -jar TwitterAppTest-1.0.jar
+java -jar TwitterAppTest-1.0-SNAPSHOT.jar
 ```
