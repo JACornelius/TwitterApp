@@ -9,7 +9,6 @@ twitter4j.properties
 /.idea
 /target
 /src/main/java/twitterapp/src/MainFile.class
-/src/main/java/twitterapp/src/Main.class
 /src/main/java/twitterapp/src/Tweeting.class
 /src/main/java/twitterapp/src/Timeline.class
 
