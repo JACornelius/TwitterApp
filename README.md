@@ -4,7 +4,15 @@
 Java JDK, Twitter Account, Twitter4j (http://twitter4j.org/en/index.html)
 
 ## Getting Started
-After creating a twitter account, twitter.properties would require some twitter authentication values. These can be found when making a new Twitter application (https://apps.twitter.com). Here create a new application and under the "Keys and Access Tokens" would be all 4 authentication values.
+After creating a twitter account, twitter.properties would require some twitter authentication values. twitter.properties file is in the src/main/java directory and the TwitterApp directory. The file should look like this
+```
+debug = true
+oauth.accessToken =
+oauth.consumerSecret = 	
+oauth.consumerKey =
+oauth.accessTokenSecret = 
+```
+These can be found when making a new Twitter application (https://apps.twitter.com). Here create a new application and under the "Keys and Access Tokens" would be all 4 authentication values.
 
 ## Compiling: 
 In java Directory:
@@ -13,7 +21,7 @@ javac -sourcepath twitterapp -cp ../../../lib/twitter4j-core-4.0.4.jar twitterap
 ```
 ## Running:
 ```
-java -cp .:../../../lib/twitter4j-core-4.0.4.jar twitterapp.src.Main
+java -cp .:../../../lib/twitter4j-core-4.0.4.jar twitterapp.src.MainFile
 ```
 ## Creating a JAR File:
 In the java Directory:
@@ -26,6 +34,9 @@ java -jar TwitterApp.jar
 Install maven and run in TwitterApp directory
 ```
 mvn clean install
+```
+Add the completed twitter.properties file into this newly created target directory
+```
 cd target/
 java -jar TwitterAppTest-1.0.jar
 ```
