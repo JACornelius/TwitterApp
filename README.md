@@ -27,5 +27,5 @@ Install maven and run in TwitterApp directory
 ```
 mvn clean install
 cd target/
-java -jar TwitterAppTest-1.0.jar
+java -jar TwitterAppTest-1.0-SNAPSHOT.jar
 ```
