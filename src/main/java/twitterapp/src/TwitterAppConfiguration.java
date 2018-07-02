@@ -1,6 +1,6 @@
 package twitterapp.src;
 
-import com.yammer.dropwizard.config.Configuration;
+import io.dropwizard.Configuration;
 
 public class TwitterAppConfiguration extends Configuration {
 }
