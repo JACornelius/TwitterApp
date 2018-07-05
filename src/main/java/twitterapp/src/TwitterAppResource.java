@@ -85,11 +85,11 @@ public class TwitterAppResource {
     @Path("/timeline")
     public Response getTimeline()
     {
-        String timeline = "Printing home timeline: \n";
+        String timeline ="";
         Twitter t = TwitterFactory.getSingleton();
         try{
             List<Status> statuses = t.getHomeTimeline();
-
+            timeline = "Printing home timeline: \n";
             for(Status s: statuses)
             {
                 timeline = timeline + s.getUser().getName() + ": " + s.getText() + "\n";
@@ -98,9 +98,11 @@ public class TwitterAppResource {
         catch (Exception e)
         {
             e.printStackTrace();
+            System.out.println("Code 500: There was a problem, possibly incorrect authentication codes");
+            timeline = "Code 500: There was a problem, possibly incorrect authentication codes";
         }
         System.out.println("Code 200: Timeline has been printed.");
-        return Response.ok(timeline, MediaType.TEXT_PLAIN).build();
+        return Response.ok(timeline, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
 
@@ -118,6 +120,7 @@ public class TwitterAppResource {
         }
         catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Code 500: Tweet was not posted, possibly due to authentication error or duplicated tweet");
         }
         System.out.print("Code 200: Tweet has been posted.");
         return Response.status(200).entity("Tweet has been posted").build();
