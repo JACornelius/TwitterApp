@@ -49,3 +49,4 @@ To post a new tweet, in a different terminal while the server is running
 ```
 curl -X POST -d 'insert new tweet here' localhost:8080/api/1.0/twitter/tweet
 ```
+Timeline can be viewed at http://localhost:8080/api/1.0/twitter/timeline
