@@ -7,6 +7,6 @@
 /target
 /src/main/java/twitterapp/src/*.class
 *.properties
-
+*.iml
 
 
