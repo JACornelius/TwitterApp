@@ -99,7 +99,7 @@ public class TwitterAppResource {
         {
             e.printStackTrace();
             System.out.println("Code 500: There was a problem, possibly incorrect authentication codes");
-            timeline = "Code 500: There was a problem, possibly incorrect authentication codes";
+            return Response.status(500).entity("There was a problem, possible incorrect authentication codes").build();
         }
         System.out.println("Code 200: Timeline has been printed.");
         return Response.ok(timeline, MediaType.APPLICATION_JSON_TYPE).build();
@@ -121,6 +121,7 @@ public class TwitterAppResource {
         catch (Exception e) {
             e.printStackTrace();
             System.out.println("Code 500: Tweet was not posted, possibly due to authentication error or duplicated tweet");
+            return Response.status(500).entity("Tweet was not posted, possibly due to authentication error or duplicated tweet").build();
         }
         System.out.print("Code 200: Tweet has been posted.");
         return Response.status(200).entity("Tweet has been posted").build();
