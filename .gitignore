@@ -1,6 +1,6 @@
 /target/*
 /src/main/java/TwitterApp.jar
-.DS-Store
+*.DS_Store
 /bin
 /out
 /.idea
