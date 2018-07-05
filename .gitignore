@@ -1,4 +1,4 @@
-/target/twitter4j.properties
+/target/*
 /src/main/java/twitter4j.properties
 /src/main/java/TwitterApp.jar
 .DS-Store
@@ -6,8 +6,7 @@
 /out
 /.idea
 /target
-/src/main/java/twitterapp/src/Main.class
-/src/main/java/twitterapp/src/Tweeting.class
-/src/main/java/twitterapp/src/Timeline.class
+/src/main/java/twitterapp/src/*.class
+*.properties
 
 

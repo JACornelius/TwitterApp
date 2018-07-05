@@ -1,5 +1,7 @@
 package twitterapp.src;
-import twitter4j.*;
+import twitter4j.TwitterFactory;
+import twitter4j.Twitter;
+import twitter4j.Status;
 import java.util.List;
 
 /*Print User's Home Timeline*/
