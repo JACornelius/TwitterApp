@@ -40,3 +40,12 @@ Add the completed twitter.properties file into this newly created target directo
 cd target/
 java -jar TwitterAppTest-1.0-SNAPSHOT.jar
 ```
+## Running using Dropwizard
+Install the latest Dropwizard. 
+```
+mvn clean package && java -jar target/TwitterApp-1.0-SNAPSHOT.jar server
+```
+To post a new tweet, in a different terminal while the server is running
+```
+curl -X POST -d 'insert new tweet here' localhost:8080/api/1.0/twitter/tweet
+```
