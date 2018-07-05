@@ -44,7 +44,7 @@ public class TwitterAppResource {
     @Path("/tweet")
     public Response postTweet(String tweet){
     Twitter t = TwitterFactory.getSingleton();
-    if (tweet.length() < MAX_LENGTH) {
+    if (tweet.length() > MAX_LENGTH) {
         System.out.println("Code 500: Tweet is too long, keep it within in 280 characters");
        return Response.status(500).entity("Tweet is too long, keep it with in 280 characters").build();
     }
@@ -53,7 +53,7 @@ public class TwitterAppResource {
             t.updateStatus(tweet);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("Code 500: Tweet was not posted, possibly due to authentication error or duplicated tweet");
             return Response.status(500).entity("Tweet was not posted, possibly due to authentication error or duplicated tweet").build();
         }
