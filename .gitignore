@@ -1,7 +1,7 @@
 /target/*
 /src/main/java/twitter4j.properties
 /src/main/java/TwitterApp.jar
-.DS-Store
+*.DS_Store
 /bin
 /out
 /.idea
