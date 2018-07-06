@@ -1,14 +1,11 @@
 package twitterapp.src;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import com.google.common.collect.Lists;
-import javafx.scene.input.DataFormat;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.Status;
+import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.json.DataObjectFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,11 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
-
-
 
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
@@ -30,17 +23,18 @@ public class TwitterAppResource {
     @Path("/timeline")
     public Response getTimeline()
     {
-        Twitter t = TwitterFactory.getSingleton();
-        List <TweetJson> listTweetJson = Lists.newArrayList();
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setJSONStoreEnabled(true);
+        Twitter t = new TwitterFactory(cb.build()).getInstance();
+        String output = "";
         try{
-            List<Status> statuses = t.getHomeTimeline();
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            List<Status> statuses = t.getHomeTimeline();
             for(Status s: statuses)
             {
-                listTweetJson.add(new TweetJson(s.getUser().getName(), s.getText(), dateFormat.format(s.getCreatedAt())));
-
+                output += DataObjectFactory.getRawJSON(s);
             }
+            System.out.println("Code 200: Timeline has been printed.");
         }
         catch (Exception e)
         {
@@ -48,10 +42,7 @@ public class TwitterAppResource {
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
             return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
-
-
-        System.out.println("Code 200: Timeline has been printed.");
-        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(listTweetJson).build();
+        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(output).build();
     }
 
 
@@ -68,7 +59,6 @@ public class TwitterAppResource {
             t.updateStatus(tweet);
         }
         catch (Exception e) {
-            //e.printStackTrace();
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
             return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
