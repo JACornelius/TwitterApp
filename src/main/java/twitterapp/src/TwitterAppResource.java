@@ -2,10 +2,10 @@ package twitterapp.src;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import com.google.common.collect.Lists;
+import javafx.scene.input.DataFormat;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.Status;
@@ -15,7 +15,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+
+
 
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
@@ -25,14 +30,16 @@ public class TwitterAppResource {
     @Path("/timeline")
     public Response getTimeline()
     {
-        String timeline ="";
         Twitter t = TwitterFactory.getSingleton();
+        List <TweetJson> listTweetJson = Lists.newArrayList();
         try{
             List<Status> statuses = t.getHomeTimeline();
-            timeline = "Printing home timeline: \n";
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             for(Status s: statuses)
             {
-                timeline = timeline + s.getUser().getName() + ": " + s.getText() + "\n";
+                listTweetJson.add(new TweetJson(s.getUser().getName(), s.getText(), dateFormat.format(s.getCreatedAt())));
+
             }
         }
         catch (Exception e)
@@ -42,11 +49,9 @@ public class TwitterAppResource {
             return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode timelineJson = mapper.createObjectNode();
-        ((ObjectNode) timelineJson).put("output", "timeline");
+
         System.out.println("Code 200: Timeline has been printed.");
-        return Response.ok(timelineJson, MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(listTweetJson).build();
     }
 
 
