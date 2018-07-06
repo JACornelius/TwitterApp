@@ -66,6 +66,12 @@ public class TwitterAppResource {
 =======
 package twitterapp.src;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.Status;
@@ -98,11 +104,15 @@ public class TwitterAppResource {
         catch (Exception e)
         {
             e.printStackTrace();
-            System.out.println("Code 500: There was a problem, possibly incorrect authentication codes");
-            return Response.status(500).entity("There was a problem, possible incorrect authentication codes").build();
+            System.out.println("Code 500: There was a problem on the server side, please try again later.");
+            return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode timelineJson = mapper.createObjectNode();
+        ((ObjectNode) timelineJson).put("output", "timeline");
         System.out.println("Code 200: Timeline has been printed.");
-        return Response.ok(timeline, MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok(timelineJson, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
 
@@ -120,8 +130,8 @@ public class TwitterAppResource {
         }
         catch (Exception e) {
             //e.printStackTrace();
-            System.out.println("Code 500: Tweet was not posted, possibly due to authentication error or duplicated tweet");
-            return Response.status(500).entity("Tweet was not posted, possibly due to authentication error or duplicated tweet").build();
+            System.out.println("Code 500: There was a problem on the server side, please try again later.");
+            return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
         System.out.print("Code 200: Tweet has been posted.");
         return Response.status(200).entity("Tweet has been posted").build();
