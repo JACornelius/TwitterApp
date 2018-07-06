@@ -1,11 +1,8 @@
 package twitterapp.src;
 
-
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.Status;
-import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.json.DataObjectFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,17 +20,10 @@ public class TwitterAppResource {
     @Path("/timeline")
     public Response getTimeline()
     {
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setJSONStoreEnabled(true);
-        Twitter t = new TwitterFactory(cb.build()).getInstance();
-        String output = "";
+        List<Status> statuses;
+        Twitter t = TwitterFactory.getSingleton();
         try{
-
-            List<Status> statuses = t.getHomeTimeline();
-            for(Status s: statuses)
-            {
-                output += DataObjectFactory.getRawJSON(s);
-            }
+            statuses = t.getHomeTimeline();
             System.out.println("Code 200: Timeline has been printed.");
         }
         catch (Exception e)
@@ -42,7 +32,7 @@ public class TwitterAppResource {
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
             return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
-        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(output).build();
+        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(statuses).build();
     }
 
 
