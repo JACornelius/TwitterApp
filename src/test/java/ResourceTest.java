@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 public class ResourceTest extends TwitterAppResource{
-    MockMvc mockMvc;
 
     @Mock
     TwitterAppResource mockResource = mock(TwitterAppResource.class);
