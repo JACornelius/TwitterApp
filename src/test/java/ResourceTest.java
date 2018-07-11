@@ -2,6 +2,7 @@ import org.junit.Test;
 import org.mockito.*;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
 import twitterapp.src.TwitterAppResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -11,42 +12,44 @@ import javax.ws.rs.core.Response;
 
 public class ResourceTest extends TwitterAppResource{
     @Mock
-    TwitterAppResource mockResource = mock(TwitterAppResource.class);
-    Twitter mockTwitter = mock(Twitter.class);
-    Status mockStatus = mock(Status.class);
+    TwitterAppResource resource = new TwitterAppResource();
+    TwitterFactory mockTwitterFactory = mock(TwitterFactory.class);
     Response r = mock(Response.class);
 
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-    //PROBLEM
+
     @Test
-    //POST Rest Service
     public void testTweetLength(){
-        String shortTweet = "this is a short tweet part 2";
-        r = new TwitterAppResource().postTweet(shortTweet);
+        String shortTweet = "this is a short tweet part 3";
+        resource.setTwitter(mockTwitterFactory);
+        r = resource.postTweet(shortTweet);
         assertTrue(r.getStatus() == 200);
     }
 
     @Test
-    //POST Rest Service
     public void testLongTweet(){
         String longTweet = "This tweet is longer than the 280 limit...................................................................................................................................................................................................................................................";
-        r = new TwitterAppResource().postTweet(longTweet);
+        resource.setTwitter(mockTwitterFactory);
+        r = resource.postTweet(longTweet);
+
         assertTrue(r.getStatus() == 500);
     }
 
     @Test
     public void testEmptyTweet(){
         String emptyTweet = "";
-        r = new TwitterAppResource().postTweet(emptyTweet);
+        resource.setTwitter(mockTwitterFactory);
+        r = resource.postTweet(emptyTweet);
         assertTrue(r.getStatus() == 500);
     }
 
     //PROBLEM
     @Test
     public void testNonEmptyTimeline(){
-        r = new TwitterAppResource().getTimeline();
+        resource.setTwitter(mockTwitterFactory);
+        r = resource.getTimeline();
         if(r.getEntity() == null) {
             assertTrue(r.getStatus() == 500);
         }
@@ -57,7 +60,10 @@ public class ResourceTest extends TwitterAppResource{
 
     @Test
     public void testTimelineReturnJSON(){
-        r = new TwitterAppResource().getTimeline();
+        resource.setTwitter(mockTwitterFactory);
+        r = resource.getTimeline();
         assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
     }
-}
+
+  }
+

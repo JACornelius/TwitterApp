@@ -15,13 +15,19 @@ import java.util.List;
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
     static final int MAX_LENGTH = 280;
+    TwitterFactory twitterFactory;
+    Twitter t;
+
+    public void setTwitter(TwitterFactory tf){
+        t = tf.getSingleton();
+    }
 
     @GET
     @Path("/timeline")
     public Response getTimeline()
     {
         List<Status> statuses;
-        Twitter t = TwitterFactory.getSingleton();
+        //Twitter t = twitterFactory.getSingleton();
         try{
             statuses = t.getHomeTimeline();
             System.out.println("Code 200: Timeline has been printed.");
@@ -39,7 +45,7 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet")
     public Response postTweet(String tweet){
-    Twitter t = TwitterFactory.getSingleton();
+    //Twitter t = twitterFactory.getSingleton();
     if (tweet.length() > MAX_LENGTH) {
         System.out.println("Code 500: Tweet is too long, keep it within in 280 characters");
        return Response.status(500).entity("Tweet is too long, keep it with in 280 characters").build();
