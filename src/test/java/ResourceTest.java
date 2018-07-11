@@ -66,4 +66,19 @@ public class ResourceTest extends TwitterAppResource{
 
         }
     }
+
+    @Test
+    public void testEmptyTweet(){
+        String emptyTweet = "";
+        try{
+            when(mockTwitter.updateStatus(longTweet)).thenReturn(mockStatus);
+            mockResource.postTweet(longTweet);
+            List<Status> statuses = mockTwitter.getUserTimeline();
+            mockStatus = statuses.get(0);
+            assertFalse(longTweet.equals(mockStatus.getText()));
+        }
+        catch(Exception e){
+
+        }
+    }
 }
