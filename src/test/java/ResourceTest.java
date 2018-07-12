@@ -65,6 +65,7 @@ public class ResourceTest extends TwitterAppResource{
         r = resource.getTimeline();
         assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
     }
+
 }
 
 
