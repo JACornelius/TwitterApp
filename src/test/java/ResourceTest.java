@@ -1,4 +1,3 @@
-
 import org.junit.Test;
 
 import org.mockito.InjectMocks;
@@ -67,5 +66,4 @@ public class ResourceTest extends TwitterAppResource{
     }
 
 }
-
 
