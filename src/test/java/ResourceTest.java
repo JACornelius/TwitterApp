@@ -21,18 +21,13 @@ public class ResourceTest extends TwitterAppResource{
     @Mock
     Twitter mockTwitter = Mockito.mock(Twitter.class);
     Response r = Mockito.mock(Response.class);
-    Status mockStatus = mock(Status.class);
+
     @InjectMocks
     TwitterAppResource resource = new TwitterAppResource(mockTwitter);
 
 
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-    }
-
-    public Twitter mockTwitterSetUp(){
-        Twitter t = mock(Twitter.class);
-        return t;
     }
 
     @Test
@@ -70,10 +65,6 @@ public class ResourceTest extends TwitterAppResource{
         r = resource.getTimeline();
         assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
     }
-
-
-
-
-  }
+}
 
 
