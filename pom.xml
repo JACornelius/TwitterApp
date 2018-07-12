@@ -17,6 +17,7 @@
         <junit.version>4.8.1</junit.version>
         <mockito.version>2.19.0</mockito.version>
         <springframework.version>3.0.5.RELEASE</springframework.version>
+        <powermock.version>1.5.4</powermock.version>
     </properties>
 
     <dependencies>
@@ -44,6 +45,16 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-core</artifactId>
+            <version>${powermock.version}</version>
         </dependency>
     </dependencies>
 

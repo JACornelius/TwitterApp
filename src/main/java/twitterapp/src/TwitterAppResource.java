@@ -81,11 +81,16 @@ import java.util.List;
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
     static final int MAX_LENGTH = 280;
-    TwitterFactory twitterFactory;
+
     Twitter t;
 
-    public void setTwitter(TwitterFactory tf){
-        t = tf.getSingleton();
+    public TwitterAppResource(){
+        t = TwitterFactory.getSingleton();
+    }
+
+
+    public TwitterAppResource(Twitter twitter){
+        t = twitter;
     }
 
     @GET
@@ -93,18 +98,26 @@ public class TwitterAppResource {
     public Response getTimeline()
     {
         List<Status> statuses;
-        //Twitter t = twitterFactory.getSingleton();
         try{
             statuses = t.getHomeTimeline();
-            System.out.println("Code 200: Timeline has been printed.");
+            if(statuses.isEmpty() == false)
+            {
+                System.out.println("Code 200: Timeline has been printed.");
+                return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(statuses).build();
+            }
+            else {
+                System.out.println("Code 500: There was a problem on the server side, please try again later.");
+                return Response.status(500).type(MediaType.APPLICATION_JSON_TYPE).entity("There was a problem on the server side, please try again later.").build();
+
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
-            return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
+            return Response.status(500).type(MediaType.APPLICATION_JSON_TYPE).entity("There was a problem on the server side, please try again later.").build();
         }
-        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(statuses).build();
+
     }
 
 
@@ -115,6 +128,10 @@ public class TwitterAppResource {
     if (tweet.length() > MAX_LENGTH) {
         System.out.println("Code 500: Tweet is too long, keep it within in 280 characters");
        return Response.status(500).entity("Tweet is too long, keep it with in 280 characters").build();
+    }
+    else if(tweet.length() == 0){
+        System.out.println("Code 500: No tweet entered");
+        return Response.status(500).entity("No tweet entered.").build();
     }
     else {
         try {
