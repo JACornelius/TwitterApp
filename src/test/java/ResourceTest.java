@@ -3,19 +3,23 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import twitter4j.ResponseList;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitterapp.src.TwitterAppResource;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class ResourceTest {
     TwitterAppResource resource;
 
     @Mock
-    Twitter mockTwitter = Mockito.mock(Twitter.class);
-    Response r = Mockito.mock(Response.class);
+    Twitter mockTwitter = mock(Twitter.class);
+    Response r = mock(Response.class);
 
 
     @Before
@@ -59,8 +63,19 @@ public class ResourceTest {
 
     @Test
     public void testTimelineReturnJSON(){
+        List<Status> mockListStatus = mock(List.class);
+        ResponseList<Status> mockResponseList = mock(ResponseList.class);
         r = resource.getTimeline();
-        assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
+        try{
+            when(mockTwitter.getHomeTimeline()).thenReturn(mockResponseList);
+            when(r.getEntity()).thenReturn(mockResponseList);
+            assertTrue(r.getStatus() == 200);
+            assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
+        }
+        catch (Exception e){
+
+        }
+
 
     }
 
