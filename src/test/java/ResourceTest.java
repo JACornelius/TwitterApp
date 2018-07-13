@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -6,12 +8,14 @@ import org.mockito.MockitoAnnotations;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitterapp.src.Timeline;
 import twitterapp.src.TwitterAppResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Time;
 import java.util.List;
 
 public class ResourceTest {
@@ -39,7 +43,7 @@ public class ResourceTest {
 
     @Test
     public void testLongTweet(){
-        String longTweet = "This tweet is longer than the 280 limit...................................................................................................................................................................................................................................................";
+        String longTweet = StringUtils.repeat(".",281);
         r = resource.postTweet(longTweet);
         assertEquals(500, r.getStatus());
         assertEquals("Tweet is too long, keep it with in 280 characters",r.getEntity().toString());
@@ -65,17 +69,19 @@ public class ResourceTest {
     public void testTimelineReturnJSON(){
         List<Status> mockListStatus = mock(List.class);
         ResponseList<Status> mockResponseList = mock(ResponseList.class);
-        r = resource.getTimeline();
+        ResponseList<Status> mockTestResponseList = mock(ResponseList.class);
         try{
             when(mockTwitter.getHomeTimeline()).thenReturn(mockResponseList);
-            when(r.getEntity()).thenReturn(mockResponseList);
-            assertTrue(r.getStatus() == 200);
-            assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
         }
         catch (Exception e){
 
         }
-
+        r = resource.getTimeline();
+        when(r.getEntity()).thenReturn(mockTestResponseList);
+        assertTrue(mockTestResponseList.size() == mockResponseList.size());
+        assertTrue(mockTestResponseList.get(0) == mockResponseList.get(0));
+        assertTrue(r.getStatus() == 200);
+        assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
 
     }
 
