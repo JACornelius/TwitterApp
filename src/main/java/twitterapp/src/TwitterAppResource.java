@@ -17,7 +17,7 @@ public class TwitterAppResource {
     static final int MAX_LENGTH = 280;
 
     Twitter t;
-
+    List<Status> statuses;
     public TwitterAppResource(){
         t = TwitterFactory.getSingleton();
     }
@@ -31,10 +31,10 @@ public class TwitterAppResource {
     @Path("/timeline")
     public Response getTimeline()
     {
-        List<Status> statuses;
+
         try{
             statuses = t.getHomeTimeline();
-            if(statuses.isEmpty() == false)
+            if(statuses != null)
             {
                 System.out.println("Code 200: Timeline has been printed.");
                 return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(statuses).build();
@@ -75,8 +75,8 @@ public class TwitterAppResource {
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
             return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
-        System.out.print("Code 200: Tweet has been posted.");
-        return Response.status(200).entity("Tweet has been posted").build();
+        System.out.print("Code 200: Tweet("+tweet+") has been posted.");
+        return Response.status(200).entity("Tweet("+tweet+") has been posted").build();
     }
     }
 }
