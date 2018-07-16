@@ -1,5 +1,6 @@
 package twitterapp.src;
 
+import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.Status;
@@ -16,33 +17,56 @@ import java.util.List;
 public class TwitterAppResource {
     static final int MAX_LENGTH = 280;
 
+    Twitter t;
+    List<Status> statuses;
+    public TwitterAppResource(){
+        t = TwitterFactory.getSingleton();
+    }
+
+
+    public TwitterAppResource(Twitter twitter){
+        t = twitter;
+    }
+
     @GET
     @Path("/timeline")
     public Response getTimeline()
     {
-        List<Status> statuses;
-        Twitter t = TwitterFactory.getSingleton();
+
         try{
             statuses = t.getHomeTimeline();
-            System.out.println("Code 200: Timeline has been printed.");
+            if(statuses != null)
+            {
+                System.out.println("Code 200: Timeline has been printed.");
+                return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(statuses).build();
+            }
+            else {
+                System.out.println("Code 500: There was a problem on the server side, please try again later.");
+                return Response.status(500).type(MediaType.APPLICATION_JSON_TYPE).entity("There was a problem on the server side, please try again later.").build();
+
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
-            return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
+            return Response.status(500).type(MediaType.APPLICATION_JSON_TYPE).entity("There was a problem on the server side, please try again later.").build();
         }
-        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(statuses).build();
+
     }
 
 
     @POST
     @Path("/tweet")
     public Response postTweet(String tweet){
-    Twitter t = TwitterFactory.getSingleton();
+    //Twitter t = twitterFactory.getSingleton();
     if (tweet.length() > MAX_LENGTH) {
         System.out.println("Code 500: Tweet is too long, keep it within in 280 characters");
        return Response.status(500).entity("Tweet is too long, keep it with in 280 characters").build();
+    }
+    else if(tweet.length() == 0){
+        System.out.println("Code 500: No tweet entered");
+        return Response.status(500).entity("No tweet entered.").build();
     }
     else {
         try {
@@ -52,13 +76,11 @@ public class TwitterAppResource {
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
             return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
         }
-        System.out.print("Code 200: Tweet has been posted.");
-        return Response.status(200).entity("Tweet has been posted").build();
+        System.out.print("Code 200: Tweet("+tweet+") has been posted.");
+        return Response.status(200).entity("Tweet("+tweet+") has been posted").build();
     }
     }
 }
-
-
 
 
 

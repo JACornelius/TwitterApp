@@ -1,4 +1,5 @@
 /target/*
+/src/main/java/twitter4j.properties
 /src/main/java/TwitterApp.jar
 *.DS_Store
 /bin
@@ -10,4 +11,3 @@
 *.iml
 *.yml
 dependency-reduced-pom.xml
-
