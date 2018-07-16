@@ -9,14 +9,17 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static twitterapp.src.TwitterAppResource.MAX_LENGTH;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class ResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
-    static final int MAX_COUNT = 280;
+
 
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
@@ -40,7 +43,7 @@ public class ResourceTest extends TwitterResponseList{
 
     @Test
     public void testLongTweet(){
-        String longTweet = StringUtils.repeat(".",MAX_COUNT + 1);
+        String longTweet = StringUtils.repeat(".",MAX_LENGTH + 1);
         r = resource.postTweet(longTweet);
         assertEquals(500, r.getStatus());
         assertEquals("Tweet is too long, keep it with in 280 characters",r.getEntity().toString());
@@ -65,18 +68,19 @@ public class ResourceTest extends TwitterResponseList{
     @Test
     public void testTimelineReturnJSON(){
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
+    ;
         Status mockStatus = mock(Status.class);
          try {
              when(mockStatus.getText()).thenReturn("mockStatus");
              responseList.add(mockStatus);
              when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
              r = resource.getTimeline();
-             when(r.getEntity()).thenReturn(responseList);
-             assertEquals(1,responseList.size());
+             ResponseList<Status> newResponseList = (ResponseList<Status>) r.getEntity();
+             assertEquals(1,newResponseList.size());
              assertEquals("mockStatus", responseList.get(0).getText());
         }
         catch (Exception e){
-
+            fail("Timeline was not returned.");
         }
 
         assertEquals(200,r.getStatus());
