@@ -5,20 +5,23 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import twitter4j.ResponseList;
-import twitter4j.Status;
-import twitter4j.Twitter;
+import sun.jvm.hotspot.debugger.Page;
+import twitter4j.*;
 import twitterapp.src.Timeline;
 import twitterapp.src.TwitterAppResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import javax.annotation.Nonnull;
+import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.Array;
 import java.sql.Time;
-import java.util.List;
+import java.util.*;
 
-public class ResourceTest {
+public class ResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
 
     @Mock
@@ -67,19 +70,21 @@ public class ResourceTest {
 
     @Test
     public void testTimelineReturnJSON(){
-        List<Status> mockListStatus = mock(List.class);
-        ResponseList<Status> mockResponseList = mock(ResponseList.class);
-        ResponseList<Status> mockTestResponseList = mock(ResponseList.class);
-        try{
-            when(mockTwitter.getHomeTimeline()).thenReturn(mockResponseList);
+        ResponseList<Status> responseList = new TwitterResponseList<Status>();
+        Status mockStatus = mock(Status.class);
+         try {
+             when(mockStatus.getText()).thenReturn("mockStatus");
+             responseList.add(mockStatus);
+             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
+             r = resource.getTimeline();
+             when(r.getEntity()).thenReturn(responseList);
+             assertTrue(responseList.size() == 1);
+             assertTrue(responseList.get(0).getText() == "mockStatus");
         }
         catch (Exception e){
 
         }
-        r = resource.getTimeline();
-        when(r.getEntity()).thenReturn(mockTestResponseList);
-        assertTrue(mockTestResponseList.size() == mockResponseList.size());
-        assertTrue(mockTestResponseList.get(0) == mockResponseList.get(0));
+
         assertTrue(r.getStatus() == 200);
         assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
 
