@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 public class ResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
+    static final int MAX_COUNT = 280;
 
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
@@ -37,7 +38,7 @@ public class ResourceTest extends TwitterResponseList{
 
     @Test
     public void testLongTweet(){
-        String longTweet = StringUtils.repeat(".",281);
+        String longTweet = StringUtils.repeat(".",MAX_COUNT + 1);
         r = resource.postTweet(longTweet);
         assertEquals(500, r.getStatus());
         assertEquals("Tweet is too long, keep it with in 280 characters",r.getEntity().toString());
@@ -56,7 +57,7 @@ public class ResourceTest extends TwitterResponseList{
         r = resource.getTimeline();
         when(r.getEntity()).thenReturn(null);
         assertEquals(500, r.getStatus());
-        assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
+        assertEquals(MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
     }
 
     @Test
@@ -69,15 +70,15 @@ public class ResourceTest extends TwitterResponseList{
              when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
              r = resource.getTimeline();
              when(r.getEntity()).thenReturn(responseList);
-             assertTrue(responseList.size() == 1);
-             assertTrue(responseList.get(0).getText() == "mockStatus");
+             assertEquals(1,responseList.size());
+             assertEquals("mockStatus", responseList.get(0).getText());
         }
         catch (Exception e){
 
         }
 
-        assertTrue(r.getStatus() == 200);
-        assertTrue(r.getMediaType() == MediaType.APPLICATION_JSON_TYPE);
+        assertEquals(200,r.getStatus());
+        assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
 
     }
 
