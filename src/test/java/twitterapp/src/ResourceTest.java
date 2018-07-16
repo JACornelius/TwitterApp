@@ -1,24 +1,16 @@
+package twitterapp.src;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import twitter4j.*;
-import twitterapp.src.Timeline;
 import twitterapp.src.TwitterAppResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import javax.annotation.Nonnull;
-import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Array;
-import java.sql.Time;
-import java.util.*;
 
 public class ResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
