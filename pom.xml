@@ -8,7 +8,6 @@
     <artifactId>TwitterApp</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
     <properties>
         <dropwizard.version>1.3.5</dropwizard.version>
         <twitter4j.version>4.0.4</twitter4j.version>
@@ -18,8 +17,8 @@
         <junit.version>4.8.1</junit.version>
         <mockito.version>2.19.0</mockito.version>
         <springframework.version>3.0.5.RELEASE</springframework.version>
-        <powermock.version>1.5.4</powermock.version>
-    </properties>
+     </properties>
+
 
     <!--Handling Dependencies -->
 
