@@ -78,3 +78,7 @@ To test a particular test:
 ```
 mvn -Dtest=ResourceTest#<particular test> test
 ```
+## Showing Code Coverage in Browser:
+```
+file:///Users/josephine.cornelius/IdeaProjects/TwitterApp/target/site/jacoco/index.html
+```

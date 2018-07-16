@@ -1,13 +1,11 @@
 package twitterapp.src;
 
-import twitter4j.ResponseList;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.Status;
+import twitter4j.*;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -28,6 +26,7 @@ public class TwitterAppResource {
         t = twitter;
     }
 
+
     @GET
     @Path("/timeline")
     public Response getTimeline()
@@ -46,9 +45,8 @@ public class TwitterAppResource {
 
             }
         }
-        catch (Exception e)
+        catch (TwitterException e)
         {
-            e.printStackTrace();
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
             return Response.status(500).type(MediaType.APPLICATION_JSON_TYPE).entity("There was a problem on the server side, please try again later.").build();
         }
