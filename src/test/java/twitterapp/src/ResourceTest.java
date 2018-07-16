@@ -24,16 +24,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.UnknownHostException;
 import java.rmi.ServerException;
+import java.util.concurrent.ExecutionException;
 
 public class ResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
     TwitterAppResource noMockTwitterResource;
 
 
+
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
     Status mockStatus = mock(Status.class);
     Response r = mock(Response.class);
+    TwitterException mockTwitterException = mock(TwitterException.class);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -56,6 +59,12 @@ public class ResourceTest extends TwitterResponseList{
     @Test
     public void testFailTweet(){
         r = noMockTwitterResource.postTweet("test tweet");
+        try{
+            throw new Exception("There was a problem on the server side, please try again later.");
+        }
+        catch(Exception e){
+
+        }
         assertEquals(500, r.getStatus());
     }
 
@@ -84,7 +93,7 @@ public class ResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void testTimelineReturnJSON() throws Exception{
+    public void testTimelineReturnJSON() {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
     ;
         Status mockStatus = mock(Status.class);
@@ -107,8 +116,13 @@ public class ResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void throwExceptionWhenTimelineDoesNotPrint(){
+    public void throwExceptionWhenTimelineDoesNotPrint() {
         r = noMockTwitterResource.getTimeline();
+        try{
+                throw new TwitterException("There was a problem on the server side, please try again later.");
+            }
+            catch(Exception e){
+            }
         assertEquals(500, r.getStatus());
 
     }
