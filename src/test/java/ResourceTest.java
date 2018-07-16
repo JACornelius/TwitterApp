@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import sun.jvm.hotspot.debugger.Page;
 import twitter4j.*;
 import twitterapp.src.Timeline;
 import twitterapp.src.TwitterAppResource;
