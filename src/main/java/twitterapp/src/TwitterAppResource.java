@@ -1,9 +1,10 @@
 package twitterapp.src;
 
-import twitter4j.ResponseList;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
+
 import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,46 +14,39 @@ import javax.ws.rs.core.Response;
 
 import java.util.List;
 
+import static javax.ws.rs.core.Response.serverError;
+
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
     static final int MAX_LENGTH = 280;
 
     Twitter t;
     List<Status> statuses;
-    public TwitterAppResource(){
-        t = TwitterFactory.getSingleton();
-    }
-
 
     public TwitterAppResource(Twitter twitter){
         t = twitter;
     }
 
+
     @GET
     @Path("/timeline")
-    public Response getTimeline()
-    {
+    public Response getTimeline() {
 
-        try{
+        try {
             statuses = t.getHomeTimeline();
-            if(statuses != null)
-            {
+            if (statuses != null) {
                 System.out.println("Code 200: Timeline has been printed.");
-                return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(statuses).build();
-            }
-            else {
-                System.out.println("Code 500: There was a problem on the server side, please try again later.");
-                return Response.status(500).type(MediaType.APPLICATION_JSON_TYPE).entity("There was a problem on the server side, please try again later.").build();
+                return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
+            } else {
+                    System.out.println("Code 500: There was a problem on the server side, please try again later.");
+                    return serverError().entity("There was a problem on the server side, please try again later.").build();
 
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+        } catch (TwitterException e) {
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
-            return Response.status(500).type(MediaType.APPLICATION_JSON_TYPE).entity("There was a problem on the server side, please try again later.").build();
-        }
+            return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
 
+        }
     }
 
 
@@ -61,12 +55,12 @@ public class TwitterAppResource {
     public Response postTweet(String tweet){
     //Twitter t = twitterFactory.getSingleton();
     if (tweet.length() > MAX_LENGTH) {
-        System.out.println("Code 500: Tweet is too long, keep it within in 280 characters");
-       return Response.status(500).entity("Tweet is too long, keep it with in 280 characters").build();
+        System.out.println("Code 500: Tweet is too long, keep it within 280 characters");
+        return Response.serverError().entity("Tweet is too long, keep it within 280 characters").build();
     }
     else if(tweet.length() == 0){
         System.out.println("Code 500: No tweet entered");
-        return Response.status(500).entity("No tweet entered.").build();
+        return Response.serverError().entity("No tweet entered").build();
     }
     else {
         try {
@@ -74,10 +68,10 @@ public class TwitterAppResource {
         }
         catch (Exception e) {
             System.out.println("Code 500: There was a problem on the server side, please try again later.");
-            return Response.status(500).entity("There was a problem on the server side, please try again later.").build();
+            return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
         System.out.print("Code 200: Tweet("+tweet+") has been posted.");
-        return Response.status(200).entity("Tweet("+tweet+") has been posted").build();
+        return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).entity("Tweet("+tweet+") has been posted.").build();
     }
     }
 }
