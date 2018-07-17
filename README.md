@@ -78,7 +78,9 @@ To test a particular test:
 ```
 mvn -Dtest=ResourceTest#<particular test> test
 ```
-## Showing Code Coverage in Browser:
+## Using Jacoco for Code Coverage
+In terminal run:
 ```
-file:///Users/josephine.cornelius/IdeaProjects/TwitterApp/target/site/jacoco/index.html
+mvn install jacoco:report
 ```
+To review code report coverage open index.html file inside TwitterApp/target/site/jacoco/twitterapp.src/index.html.
