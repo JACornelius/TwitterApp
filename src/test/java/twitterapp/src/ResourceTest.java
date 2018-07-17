@@ -44,7 +44,7 @@ public class ResourceTest extends TwitterResponseList{
     public void testTweetLength(){
         String shortTweet = "this is a short tweet part 6";
         r = resource.postTweet(shortTweet);
-        assertEquals(200, r.getStatus());
+        assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("Tweet("+shortTweet+") has been posted.",r.getEntity().toString());
     }
 
