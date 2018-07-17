@@ -43,7 +43,7 @@ public class ResourceTest extends TwitterResponseList{
         String shortTweet = "this is a short tweet part 6";
         Response r = resource.postTweet(shortTweet);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("Tweet("+shortTweet+") has been posted.",r.getEntity().toString());
+        assertEquals("Tweet("+shortTweet+") has been posted.", r.getEntity().toString());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ResourceTest extends TwitterResponseList{
         Response r = resource.getTimeline();
         when(r.getEntity()).thenReturn(null);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("There was a problem on the server side, please try again later.",r.getEntity().toString());
+        assertEquals("There was a problem on the server side, please try again later.", r.getEntity().toString());
     }
 
     @Test
