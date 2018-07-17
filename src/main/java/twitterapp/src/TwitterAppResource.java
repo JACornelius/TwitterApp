@@ -22,10 +22,6 @@ public class TwitterAppResource {
 
     Twitter t;
     List<Status> statuses;
-    public TwitterAppResource(){
-        t = TwitterFactory.getSingleton();
-    }
-
 
     public TwitterAppResource(Twitter twitter){
         t = twitter;
