@@ -12,6 +12,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static twitterapp.src.TwitterAppResource.MAX_LENGTH;
@@ -23,7 +24,6 @@ import javax.ws.rs.core.Response;
 
 public class ResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
-    TwitterAppResource noMockTwitterResource;
     Response r;
 
 
@@ -37,7 +37,6 @@ public class ResourceTest extends TwitterResponseList{
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         resource = new TwitterAppResource(mockTwitter);
-        noMockTwitterResource = new TwitterAppResource();
     }
 
     @Test
@@ -53,7 +52,7 @@ public class ResourceTest extends TwitterResponseList{
         try {
             String tweet = "test tweet";
             when(mockTwitter.updateStatus(tweet)).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
-            r = noMockTwitterResource.postTweet(tweet);
+            r = resource.postTweet(tweet);
             assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         }
         catch(Exception e){
@@ -108,18 +107,14 @@ public class ResourceTest extends TwitterResponseList{
 
     @Test
     public void throwExceptionWhenTimelineDoesNotPrint() {
-        ResponseList<Status> responseList = new TwitterResponseList<Status>();
         try{
-            when(mockTwitter.getHomeTimeline()).thenThrow(new InternalServerErrorException(""));
-            r = noMockTwitterResource.getTimeline();
-            assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
+           doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
+            r = resource.getTimeline();
         }
         catch(Exception e){
 
         }
-
-
-
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
     }
 
 
