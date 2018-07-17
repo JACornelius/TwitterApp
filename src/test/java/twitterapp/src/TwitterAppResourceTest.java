@@ -2,9 +2,7 @@ package twitterapp.src;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import twitter4j.ResponseList;
@@ -23,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
-public class ResourceTest extends TwitterResponseList{
+public class TwitterAppResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
 
 
