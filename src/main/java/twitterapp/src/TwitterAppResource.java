@@ -1,11 +1,14 @@
 package twitterapp.src;
 
-import twitter4j.*;
+
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -37,7 +40,7 @@ public class TwitterAppResource {
             statuses = t.getHomeTimeline();
             if (statuses != null) {
                 System.out.println("Code 200: Timeline has been printed.");
-                return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).entity("Code 200: Timeline is printed").build();
+                return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
             } else {
                     System.out.println("Code 500: There was a problem on the server side, please try again later.");
                     return serverError().entity("There was a problem on the server side, please try again later.").build();
@@ -72,7 +75,7 @@ public class TwitterAppResource {
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
         System.out.print("Code 200: Tweet("+tweet+") has been posted.");
-        return Response.status(200).entity("Tweet("+tweet+") has been posted").build();
+        return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).entity("Tweet("+tweet+") has been posted.").build();
     }
     }
 }
