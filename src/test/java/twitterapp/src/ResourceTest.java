@@ -12,14 +12,14 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static twitterapp.src.TwitterAppResource.MAX_LENGTH;
 
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.UnknownHostException;
@@ -58,14 +58,15 @@ public class ResourceTest extends TwitterResponseList{
 
     @Test
     public void testFailTweet(){
-        r = noMockTwitterResource.postTweet("test tweet");
         try{
-            throw new Exception("There was a problem on the server side, please try again later.");
+            when(mockTwitter.updateStatus("test tweet")).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
+            r = noMockTwitterResource.postTweet("test tweet");
+            assertEquals(500, r.getStatus());
         }
         catch(Exception e){
 
         }
-        assertEquals(500, r.getStatus());
+
     }
 
     @Test
@@ -73,7 +74,7 @@ public class ResourceTest extends TwitterResponseList{
         String longTweet = StringUtils.repeat(".",MAX_LENGTH + 1);
         r = resource.postTweet(longTweet);
         assertEquals(500, r.getStatus());
-        assertEquals("Tweet is too long, keep it with in 280 characters",r.getEntity().toString());
+        assertEquals("Tweet is too long, keep it within 280 characters",r.getEntity().toString());
     }
 
     @Test
@@ -81,7 +82,7 @@ public class ResourceTest extends TwitterResponseList{
         String emptyTweet = "";
         r = resource.postTweet(emptyTweet);
         assertEquals(500, r.getStatus());
-        assertEquals("No tweet entered.",r.getEntity());
+        assertEquals("No tweet entered",r.getEntity());
     }
 
     @Test
@@ -89,13 +90,12 @@ public class ResourceTest extends TwitterResponseList{
         r = resource.getTimeline();
         when(r.getEntity()).thenReturn(null);
         assertEquals(500, r.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
+        assertEquals("There was a problem on the server side, please try again later.",r.getEntity().toString());
     }
 
     @Test
     public void testTimelineReturnJSON() {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
-    ;
         Status mockStatus = mock(Status.class);
          try {
              when(mockStatus.getText()).thenReturn("mockStatus");
@@ -104,26 +104,29 @@ public class ResourceTest extends TwitterResponseList{
              r = resource.getTimeline();
              ResponseList<Status> newResponseList = (ResponseList<Status>) r.getEntity();
              assertEquals(1,newResponseList.size());
-             assertEquals("mockStatus", responseList.get(0).getText());
+            assertEquals("mockStatus", responseList.get(0).getText());
         }
         catch (Exception e) {
-            fail("Timeline was not returned.");
-            thrown.expect(TwitterException.class);
+
         }
 
         assertEquals(200,r.getStatus());
-        assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
+      assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
     }
 
     @Test
     public void throwExceptionWhenTimelineDoesNotPrint() {
-        r = noMockTwitterResource.getTimeline();
+        ResponseList<Status> responseList = new TwitterResponseList<Status>();
         try{
-                throw new TwitterException("There was a problem on the server side, please try again later.");
-            }
-            catch(Exception e){
-            }
-        assertEquals(500, r.getStatus());
+            when(mockTwitter.getHomeTimeline()).thenThrow(new InternalServerErrorException(""));
+            r = noMockTwitterResource.getTimeline();
+            assertEquals(500, r.getStatus());
+        }
+        catch(Exception e){
+
+        }
+
+
 
     }
 
