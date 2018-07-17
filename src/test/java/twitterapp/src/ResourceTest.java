@@ -11,27 +11,26 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static twitterapp.src.TwitterAppResource.MAX_LENGTH;
 
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
 public class ResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
-    Response r;
+
 
 
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -42,7 +41,7 @@ public class ResourceTest extends TwitterResponseList{
     @Test
     public void testTweetLength(){
         String shortTweet = "this is a short tweet part 6";
-        r = resource.postTweet(shortTweet);
+        Response r = resource.postTweet(shortTweet);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("Tweet("+shortTweet+") has been posted.",r.getEntity().toString());
     }
@@ -52,7 +51,7 @@ public class ResourceTest extends TwitterResponseList{
         try {
             String tweet = "test tweet";
             when(mockTwitter.updateStatus(tweet)).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
-            r = resource.postTweet(tweet);
+            Response r = resource.postTweet(tweet);
             assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         }
         catch(Exception e){
@@ -63,22 +62,22 @@ public class ResourceTest extends TwitterResponseList{
     @Test
     public void testLongTweet(){
         String longTweet = StringUtils.repeat(".",MAX_LENGTH + 1);
-        r = resource.postTweet(longTweet);
+        Response r = resource.postTweet(longTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("Tweet is too long, keep it within 280 characters",r.getEntity().toString());
+        assertEquals("Tweet is too long, keep it within 280 characters", r.getEntity().toString());
     }
 
     @Test
     public void testEmptyTweet(){
         String emptyTweet = "";
-        r = resource.postTweet(emptyTweet);
+        Response r = resource.postTweet(emptyTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("No tweet entered",r.getEntity());
+        assertEquals("No tweet entered", r.getEntity());
     }
 
     @Test
     public void testEmptyTimeline(){
-        r = resource.getTimeline();
+        Response r = resource.getTimeline();
         when(r.getEntity()).thenReturn(null);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("There was a problem on the server side, please try again later.",r.getEntity().toString());
@@ -88,33 +87,41 @@ public class ResourceTest extends TwitterResponseList{
     public void testTimelineReturnJSON() {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
         Status mockStatus = mock(Status.class);
+        Status mockStatus1 = mock(Status.class);
+        Response r;
         try {
             when(mockStatus.getText()).thenReturn("mockStatus");
+            when(mockStatus1.getText()).thenReturn("mockStatus1");
             responseList.add(mockStatus);
+            responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
             r = resource.getTimeline();
             ResponseList<Status> newResponseList = (ResponseList<Status>) r.getEntity();
-            assertEquals(1,newResponseList.size());
+            assertEquals(2,newResponseList.size());
             assertEquals("mockStatus", responseList.get(0).getText());
+            assertEquals("mockStatus1", responseList.get(1).getText());
+            assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
+            assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
         }
         catch (Exception e) {
             fail("Timeline was not returned");
         }
 
-        assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
+
     }
 
     @Test
     public void throwExceptionWhenTimelineDoesNotPrint() {
+        Response r;
         try{
            doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
-            r = resource.getTimeline();
+          r = resource.getTimeline();
+          assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         }
         catch(Exception e){
 
         }
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
+
     }
 
 
