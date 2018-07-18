@@ -19,11 +19,13 @@ import static javax.ws.rs.core.Response.serverError;
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
     static final int MAX_LENGTH = 280;
-
     Twitter t;
     List<Status> statuses;
 
+
+
     public TwitterAppResource(Twitter twitter){
+
         t = twitter;
     }
 

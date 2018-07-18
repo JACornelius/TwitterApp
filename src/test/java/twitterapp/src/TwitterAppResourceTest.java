@@ -86,16 +86,16 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
         Status mockStatus = mock(Status.class);
         Status mockStatus1 = mock(Status.class);
-        Response r;
+
         try {
             when(mockStatus.getText()).thenReturn("mockStatus");
             when(mockStatus1.getText()).thenReturn("mockStatus1");
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
-            r = resource.getTimeline();
+            Response r = resource.getTimeline();
             ResponseList<Status> newResponseList = (ResponseList<Status>) r.getEntity();
-            assertEquals(2,newResponseList.size());
+            assertEquals(2, newResponseList.size());
             assertEquals("mockStatus", responseList.get(0).getText());
             assertEquals("mockStatus1", responseList.get(1).getText());
             assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
@@ -109,16 +109,10 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void throwExceptionWhenTimelineDoesNotPrint() {
-        Response r;
-        try{
+    public void throwExceptionWhenTimelineDoesNotPrint() throws Exception{
            doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
-          r = resource.getTimeline();
+            Response r = resource.getTimeline();
           assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        }
-        catch(Exception e){
-
-        }
 
     }
 
