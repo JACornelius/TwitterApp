@@ -1,8 +1,9 @@
+
 package twitterapp.src;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import twitter4j.TwitterFactory;
+
 
 public class TwitterAppApplication extends Application<TwitterAppConfiguration>
 {
@@ -13,6 +14,7 @@ public class TwitterAppApplication extends Application<TwitterAppConfiguration>
 
     public void run(final TwitterAppConfiguration configuration, final Environment environment)
     {
-        environment.jersey().register(new TwitterAppResource(TwitterFactory.getSingleton()));
+
+        environment.jersey().register(new TwitterAppResource(configuration.getTwitter()));
     }
 }

@@ -84,3 +84,16 @@ In terminal run:
 mvn install jacoco:report
 ```
 To review code report coverage open index.html file inside TwitterApp/target/site/jacoco/twitterapp.src/index.html.
+## Incorporating config.yml file
+Create a new file named config.yml inside the TwitterApp folder and include all the tokens and secrets, as so:
+```
+accessToken: <Access Token>
+accessTokenSecret: <Access Token Secret>
+consumerSecret: <Consumer Secret>
+consumerKey: <Consumer Key>
+```
+To run and compile:
+```
+mvn clean install
+java -jar target/TwitterApp-1.0-SNAPSHOT.jar server config.yml
+```
