@@ -1,6 +1,8 @@
 package twitterapp.src;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -21,7 +23,7 @@ public class TwitterAppResource {
     Twitter t;
     List<Status> statuses;
 
-
+    Logger LOGGER = LoggerFactory.getLogger(TwitterAppResource.class);
 
     public TwitterAppResource(Twitter twitter){
 
@@ -36,17 +38,15 @@ public class TwitterAppResource {
         try {
             statuses = t.getHomeTimeline();
             if (statuses != null) {
-                System.out.println("Code 200: Timeline has been printed.");
+                LOGGER.info("Timeline has been printed.");
                 return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
             } else {
-                    System.out.println("Code 500: There was a problem on the server side, please try again later.");
+                    LOGGER.error("List of Statuses are null.");
                     return serverError().entity("There was a problem on the server side, please try again later.").build();
-
             }
         } catch (TwitterException e) {
-            System.out.println("Code 500: There was a problem on the server side, please try again later.");
+            LOGGER.error("There was a problem on the server side.");
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
-
         }
     }
 
@@ -55,24 +55,24 @@ public class TwitterAppResource {
     @Path("/tweet")
     public Response postTweet(String tweet){
     if (tweet.length() > MAX_LENGTH) {
-        System.out.println("Code 500: Tweet is too long, keep it within 280 characters");
+        LOGGER.error("Tweet is too long, keep it within 280 characters");
         return Response.serverError().entity("Tweet is too long, keep it within 280 characters").build();
     }
     else if(tweet.length() == 0){
-        System.out.println("Code 500: No tweet entered");
-        return Response.serverError().entity("No tweet entered").build();
+        LOGGER.error("An empty tweet was entered.");
+        return Response.serverError().entity("An empty tweet entered").build();
     }
     else {
         try {
             t.updateStatus(tweet);
         }
         catch (Exception e) {
-            System.out.println("Code 500: There was a problem on the server side, please try again later.");
+            LOGGER.error("There was a problem on the server side, please try again later.");
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
-        System.out.print("Code 200: Tweet("+tweet+") has been posted.");
+        LOGGER.info("Tweet("+tweet+") has been posted.");
         return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).entity("Tweet("+tweet+") has been posted.").build();
-    }
+        }
     }
 }
 

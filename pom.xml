@@ -17,6 +17,7 @@
         <junit.version>4.8.1</junit.version>
         <mockito.version>2.19.0</mockito.version>
         <jacoco.version>0.8.1</jacoco.version>
+        <logback.version>1.2.3</logback.version>
      </properties>
 
 
@@ -44,6 +45,11 @@
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
         </dependency>
     </dependencies>
 
