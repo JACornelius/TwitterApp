@@ -9,11 +9,21 @@ import twitter4j.conf.ConfigurationBuilder;
 public class TwitterAppConfiguration extends Configuration {
 
     @JsonProperty("twitter")
-    TwitterConfiguration twitter;
+    TwitterConfiguration twitterConfig = new TwitterConfiguration();
+    Twitter twitter;
 
     @JsonProperty("twitter")
-    public TwitterConfiguration getTwitter(){
+    public Twitter getTwitter(){
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey(twitterConfig.getConsumerKey())
+                .setOAuthConsumerSecret(twitterConfig.getConsumerSecret())
+                .setOAuthAccessToken(twitterConfig.getAccessToken())
+                .setOAuthAccessTokenSecret(twitterConfig.getAccessTokenSecret());
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        twitter = tf.getInstance();
         return twitter;
     }
+
 
 }

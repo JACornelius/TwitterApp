@@ -1,29 +1,23 @@
 package twitterapp.src;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 
 public class TwitterConfiguration {
-    /*@NotEmpty
-    @NotNull*/
+
     @JsonProperty("accessToken")
     String accessToken;
 
-    /*@NotEmpty
-    @NotNull
-    @JsonProperty*/
+
+    @JsonProperty("accessTokenSecret")
     String accessTokenSecret;
 
-    /*@NotEmpty
-    @NotNull
-    @JsonProperty*/
+
+    @JsonProperty("consumerSecret")
     String consumerSecret;
 
-    /*@NotEmpty
-    @NotNull
-    @JsonProperty*/
+
+    @JsonProperty("consumerKey")
     String consumerKey;
 
 
@@ -42,8 +36,5 @@ public class TwitterConfiguration {
     }
 
     @JsonProperty
-    public String getConsumerKey(){
-
-        return consumerKey;
-    }
+    public String getConsumerKey(){ return consumerKey; }
 }

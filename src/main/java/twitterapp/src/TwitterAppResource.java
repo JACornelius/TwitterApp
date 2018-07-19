@@ -4,7 +4,6 @@ package twitterapp.src;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -55,7 +54,6 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet")
     public Response postTweet(String tweet){
-    //Twitter t = twitterFactory.getSingleton();
     if (tweet.length() > MAX_LENGTH) {
         System.out.println("Code 500: Tweet is too long, keep it within 280 characters");
         return Response.serverError().entity("Tweet is too long, keep it within 280 characters").build();
