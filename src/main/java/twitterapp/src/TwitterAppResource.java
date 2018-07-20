@@ -2,11 +2,7 @@ package twitterapp.src;
 
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.ConsoleAppender;
+import org.slf4j.Logger;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -44,11 +40,11 @@ public class TwitterAppResource {
                 log.info("Timeline has been printed.");
                 return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
             } else {
-                    log.error("List of Statuses are null.");
+                    log.warn("List of Statuses are null.");
                     return serverError().entity("There was a problem on the server side, please try again later.").build();
             }
         } catch (TwitterException e) {
-            log.error("There was a problem on the server side.", e);
+            log.warn("There was a problem on the server side.", e);
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
     }
@@ -58,11 +54,11 @@ public class TwitterAppResource {
     @Path("/tweet")
     public Response postTweet(String tweet){
     if (tweet.length() > MAX_LENGTH) {
-        log.error("Tweet is too long, keep it within 280 characters");
+        log.warn("Tweet is too long, keep it within 280 characters");
         return Response.serverError().entity("Tweet is too long, keep it within 280 characters").build();
     }
     else if(tweet.length() == 0){
-        log.error("No tweet entered");
+        log.warn("No tweet entered");
         return Response.serverError().entity("No tweet entered").build();
     }
     else {
@@ -70,7 +66,7 @@ public class TwitterAppResource {
             t.updateStatus(tweet);
         }
         catch (Exception e) {
-            log.error("There was a problem on the server side, please try again later.", e);
+            log.warn("There was a problem on the server side, please try again later.", e);
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
         log.info("Tweet("+tweet+") has been posted.");

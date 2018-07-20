@@ -17,7 +17,7 @@
         <junit.version>4.8.1</junit.version>
         <mockito.version>2.19.0</mockito.version>
         <jacoco.version>0.8.1</jacoco.version>
-        <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.6.1</slf4j.version>
      </properties>
 
 
@@ -47,9 +47,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 
