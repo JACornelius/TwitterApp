@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
-public class TwitterAppResourceTest extends TwitterResponseList{
+public class    TwitterAppResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
 
 

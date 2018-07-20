@@ -87,10 +87,20 @@ To review code report coverage open index.html file inside TwitterApp/target/sit
 ## Incorporating config.yml file
 Create a new file named config.yml inside the TwitterApp folder and include all the tokens and secrets, as so:
 ```
-accessToken: <Access Token>
-accessTokenSecret: <Access Token Secret>
-consumerSecret: <Consumer Secret>
-consumerKey: <Consumer Key>
+twitter:
+    accessToken: <Access Token>
+    accessTokenSecret: <Access Token Secret>
+    consumerSecret: <Consumer Secret>
+    consumerKey: <Consumer Key>
+logging:
+  level: INFO
+  loggers:
+    "myLogger":
+      level: INFO
+      additive: false
+      appenders:
+        - type: console
+          logFormat: "%d{HH:mm:ss.SSS} [%thread]: %message%n %ex{full}"
 ```
 To run and compile:
 ```
