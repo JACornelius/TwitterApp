@@ -44,7 +44,7 @@ public class TwitterAppResource {
                     return serverError().entity("There was a problem on the server side, please try again later.").build();
             }
         } catch (TwitterException e) {
-            log.warn("There was a problem on the server side.", e);
+            log.error("There was a problem on the server side.", e);
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
     }
@@ -66,7 +66,7 @@ public class TwitterAppResource {
             t.updateStatus(tweet);
         }
         catch (Exception e) {
-            log.warn("There was a problem on the server side, please try again later.", e);
+            log.error("There was a problem on the server side, please try again later.", e);
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
         log.info("Tweet("+tweet+") has been posted.");
