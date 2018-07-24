@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
-public class    TwitterAppResourceTest extends TwitterResponseList{
+public class TwitterAppResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
 
 
@@ -38,7 +38,7 @@ public class    TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testTweetLength(){
-        String shortTweet = "this is a short tweet part 6";
+        String shortTweet = "this is a short tweet using mockTwitter";
         Response r = resource.postTweet(shortTweet);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("Tweet("+shortTweet+") has been posted.", r.getEntity().toString());

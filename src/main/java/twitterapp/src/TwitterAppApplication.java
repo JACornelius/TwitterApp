@@ -14,7 +14,6 @@ public class TwitterAppApplication extends Application<TwitterAppConfiguration>
 
     public void run(final TwitterAppConfiguration configuration, final Environment environment)
     {
-
         environment.jersey().register(new TwitterAppResource(configuration.getTwitter()));
     }
 }
