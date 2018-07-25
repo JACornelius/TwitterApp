@@ -7,6 +7,8 @@ import twitter4j.Twitter;
 
 import java.util.List;
 
+import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
+
 public class TwitterAppService {
         private static Logger log = (Logger) LoggerFactory.getLogger("myLogger");
         static TwitterAppService service = null;
@@ -25,10 +27,8 @@ public class TwitterAppService {
             twitter = t;
         }
 
-        public boolean testBadTweet(String tweet){int max = 280;
-            System.out.println(tweet.length());
-            System.out.print(max);
-            if(tweet.length() > 280){
+        public boolean testBadTweet(String tweet){
+            if(tweet.length() > MAX_LENGTH){
                 log.warn("Tweet is too long, keep it within 280 characters");
                 return true;
             }
