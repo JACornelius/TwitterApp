@@ -7,13 +7,13 @@ import twitter4j.Twitter;
 
 import java.util.List;
 
-import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
+
 
 public class TwitterAppService {
         private static Logger log = (Logger) LoggerFactory.getLogger("myLogger");
         static TwitterAppService service = null;
         Twitter twitter;
-
+        int MAX_LENGTH = 280;
 
 
         public static TwitterAppService getService(){
@@ -64,10 +64,8 @@ public class TwitterAppService {
             List<Status> statuses;
             try{
                 statuses = twitter.getHomeTimeline();
-                if (statuses != null) {
-                    log.info("Timeline has been printed.");
                     return statuses;
-                }
+
             }
             catch(Exception e){
                 log.error("There was a problem on the server side.", e);

@@ -31,7 +31,7 @@ public class TwitterAppResource {
     @Path("/timeline")
     public Response getTimeline() {
        List<Status> statuses = service.getTimeline();
-       if(statuses != null && statuses.isEmpty() == false){
+       if( statuses.isEmpty() == false){
            return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
        }
        else{
@@ -48,6 +48,9 @@ public class TwitterAppResource {
         if(s != null)
         {
             return Response.ok().entity("Tweet("+tweet+") has been posted.").build();
+        }
+        else if(service.testBadTweet(tweet)){
+            return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
         else{
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
