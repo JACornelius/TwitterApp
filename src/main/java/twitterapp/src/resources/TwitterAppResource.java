@@ -1,7 +1,10 @@
-package twitterapp.src;
+package twitterapp.src.resources;
 
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitterapp.src.TwitterAppConfiguration;
+import twitterapp.src.services.TwitterAppService;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,10 +15,19 @@ import java.util.List;
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
 
-    static final int MAX_LENGTH = 280;
-    TwitterAppService service;
+    public static final int MAX_LENGTH = 280;
+    public TwitterAppService service;
+    public TwitterAppConfiguration config;
 
-    public TwitterAppResource(Twitter twitter){
+    public TwitterAppService getService(){
+        return service;
+    }
+
+    public void setService(TwitterAppService s){
+        service = s;
+    }
+
+    public TwitterAppResource(Twitter twitter) {
         service = TwitterAppService.getService();
         service.setTwitter(twitter);
     }
@@ -23,7 +35,7 @@ public class TwitterAppResource {
     @GET
     @Path("/timeline")
     public Response getTimeline() {
-       List<Status> statuses = service.serviceGetTimeline();
+       List<Status> statuses = service.getTimeline();
        if(statuses != null && statuses.isEmpty() == false){
            return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
        }
@@ -35,14 +47,13 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet")
     public Response postTweet(String tweet) {
-
-        String r = service.servicePostTweet(tweet);
-        if(r.equals("Tweet("+tweet+") has been posted."))
+        Status s = service.postTweet(tweet);
+        if(s != null)
         {
-            return Response.ok().entity(r).build();
+            return Response.ok().entity("Tweet("+tweet+") has been posted.").build();
         }
         else{
-            return Response.serverError().entity(r).build();
+            return Response.serverError().entity("No tweet or a tweet longer than 280 characters was entered").build();
         }
     }
 

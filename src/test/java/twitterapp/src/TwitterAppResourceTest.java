@@ -9,13 +9,15 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitterapp.src.resources.TwitterAppResource;
+import twitterapp.src.services.TwitterAppService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static twitterapp.src.TwitterAppResource.MAX_LENGTH;
+import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,17 +30,21 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
-
+    TwitterAppService mockService = mock(TwitterAppService.class);
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         resource = new TwitterAppResource(mockTwitter);
+
+        resource.setService(mockService);
     }
 
     @Test
     public void testTweetLength(){
-        String shortTweet = "this is a short tweet using mockTwitter";
+        String shortTweet = "this is a short tweet jfdgdfgf";
+        Status mockStatus = mock(Status.class);
+        when(mockService.postTweet(shortTweet)).thenReturn(mockStatus);
         Response r = resource.postTweet(shortTweet);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("Tweet("+shortTweet+") has been posted.", r.getEntity().toString());
@@ -59,10 +65,10 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testLongTweet(){
-        String longTweet = StringUtils.repeat(".",MAX_LENGTH + 1);
+        String longTweet = StringUtils.repeat(".", MAX_LENGTH+ 1);
         Response r = resource.postTweet(longTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("Tweet is too long, keep it within 280 characters", r.getEntity().toString());
+        assertEquals("No tweet or a tweet longer than 280 characters was entered", r.getEntity().toString());
     }
 
     @Test
@@ -70,7 +76,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         String emptyTweet = "";
         Response r = resource.postTweet(emptyTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("No tweet entered", r.getEntity());
+        assertEquals("No tweet or a tweet longer than 280 characters was entered", r.getEntity());
     }
 
     @Test
@@ -93,6 +99,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
+            when(mockService.getTimeline()).thenReturn(responseList);
             Response r = resource.getTimeline();
             ResponseList<Status> newResponseList = (ResponseList<Status>) r.getEntity();
             assertEquals(2, newResponseList.size());
