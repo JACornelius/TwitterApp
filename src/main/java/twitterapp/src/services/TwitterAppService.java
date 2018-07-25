@@ -4,20 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
-import twitterapp.src.TwitterAppConfiguration;
 
 import java.util.List;
 
-import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
-
-public class TwitterAppService{
-        Logger log = (Logger) LoggerFactory.getLogger("myLogger");
+public class TwitterAppService {
+        private static Logger log = (Logger) LoggerFactory.getLogger("myLogger");
         static TwitterAppService service = null;
         Twitter twitter;
 
-        public TwitterAppService TwitterAppService(){
-            return service;
-        }
+
 
         public static TwitterAppService getService(){
             if(service == null){
@@ -30,17 +25,14 @@ public class TwitterAppService{
             twitter = t;
         }
 
-        public TwitterAppService setService(TwitterAppService s){
-            service = s;
-            return service;
-        }
-
-        public boolean testBadTweet(String tweet){
-            if(tweet.length() > MAX_LENGTH){
+        public boolean testBadTweet(String tweet){int max = 280;
+            System.out.println(tweet.length());
+            System.out.print(max);
+            if(tweet.length() > 280){
                 log.warn("Tweet is too long, keep it within 280 characters");
                 return true;
             }
-            else if(tweet.isEmpty() == true){
+            else if(tweet.length() == 0){
                 log.warn("An empty tweet was entered");
                 return true;
             }
@@ -60,18 +52,12 @@ public class TwitterAppService{
                         s = twitter.updateStatus(tweet);
                         log.info("Tweet("+tweet+") has been posted.");
                         return s;
-
-
                 }
                 catch(Exception e){
                     log.error("There was a problem on the server side, please try again later.", e);
                     s = null;
                     return s;
                 }
-
-
-
-
         }
 
         public List<Status> getTimeline(){

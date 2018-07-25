@@ -65,10 +65,10 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testLongTweet(){
-        String longTweet = StringUtils.repeat(".", MAX_LENGTH+ 1);
+        String longTweet = StringUtils.repeat(".", MAX_LENGTH + 5);
         Response r = resource.postTweet(longTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("No tweet or a tweet longer than 280 characters was entered", r.getEntity().toString());
+        assertEquals("There was a problem on the server side, please try again later.", r.getEntity().toString());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         String emptyTweet = "";
         Response r = resource.postTweet(emptyTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("No tweet or a tweet longer than 280 characters was entered", r.getEntity());
+        assertEquals("There was a problem on the server side, please try again later.", r.getEntity());
     }
 
     @Test
