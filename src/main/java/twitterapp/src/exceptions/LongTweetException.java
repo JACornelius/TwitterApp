@@ -1,4 +1,4 @@
-package twitterapp.src;
+package twitterapp.src.exceptions;
 
 public class LongTweetException extends Exception {
 

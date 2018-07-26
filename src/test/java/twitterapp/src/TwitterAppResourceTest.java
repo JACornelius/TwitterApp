@@ -9,6 +9,9 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitterapp.src.exceptions.EmptyTweetException;
+import twitterapp.src.exceptions.LongTweetException;
+import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.resources.TwitterAppResource;
 import twitterapp.src.services.TwitterAppService;
 
@@ -39,12 +42,12 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testTweetLength() throws Exception{
-        String shortTweet = "this is a short tweet jfdgdfgf";
+        String shortTweet = "this is a short tweet jfgf";
         Status mockStatus = mock(Status.class);
         when(mockService.postTweet(shortTweet)).thenReturn(mockStatus);
         Response r = resource.postTweet(shortTweet);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("Tweet("+shortTweet+") has been posted.", r.getEntity().toString());
+        assertEquals("Tweet("+mockStatus.getText()+") has been posted.", r.getEntity().toString());
     }
 
     @Test

@@ -4,10 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitterapp.src.EmptyTweetException;
-import twitterapp.src.LongTweetException;
-import twitterapp.src.TwitterAppException;
+import twitterapp.src.exceptions.EmptyTweetException;
+import twitterapp.src.exceptions.LongTweetException;
+import twitterapp.src.exceptions.TwitterAppException;
 
 import java.util.List;
 

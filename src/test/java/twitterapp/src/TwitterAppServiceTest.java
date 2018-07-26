@@ -10,6 +10,9 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitterapp.src.exceptions.EmptyTweetException;
+import twitterapp.src.exceptions.LongTweetException;
+import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.services.TwitterAppService;
 import org.mockito.MockitoAnnotations;
 

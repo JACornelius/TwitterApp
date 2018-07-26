@@ -3,9 +3,9 @@ package twitterapp.src.resources;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
-import twitterapp.src.EmptyTweetException;
-import twitterapp.src.LongTweetException;
-import twitterapp.src.TwitterAppException;
+import twitterapp.src.exceptions.EmptyTweetException;
+import twitterapp.src.exceptions.LongTweetException;
+import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.services.TwitterAppService;
 
 import javax.ws.rs.GET;
@@ -44,9 +44,9 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet")
     public Response postTweet(String tweet) throws Exception{
-
+Status s;
             try {
-                service.postTweet(tweet);
+                 s = service.postTweet(tweet);
                 //return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
             }
             catch (EmptyTweetException e) {
@@ -60,7 +60,7 @@ public class TwitterAppResource {
                 return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
             }
 
-        return Response.ok().entity("Tweet(" + tweet + ") has been posted.").build();
+        return Response.ok().entity("Tweet(" + s.getText() + ") has been posted.").build();
     }
 
 }
