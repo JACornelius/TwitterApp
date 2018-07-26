@@ -40,7 +40,7 @@ public class TwitterAppResource {
 
     @POST
     @Path("/tweet")
-    public Response postTweet(String tweet) {
+    public Response postTweet(String tweet) throws Exception{
         if (service.postTweet(tweet) != null) {
             return Response.ok().entity("Tweet(" + tweet + ") has been posted.").build();
         } else {

@@ -40,7 +40,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void testTweetLength(){
+    public void testTweetLength() throws Exception{
         String shortTweet = "this is a short tweet jfdgdfgf";
         Status mockStatus = mock(Status.class);
         when(mockService.postTweet(shortTweet)).thenReturn(mockStatus);
@@ -64,7 +64,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void testLongTweet() throws IllegalArgumentException{
+    public void testLongTweet() throws Exception{
         String longTweet = StringUtils.repeat(".", MAX_LENGTH + 5);
         when(mockService.testBadTweet(longTweet)).thenThrow(new IllegalArgumentException("Tweet is too long, keep it within 280 characters"));
         Response r = resource.postTweet(longTweet);
@@ -73,7 +73,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void testEmptyTweet() throws IllegalArgumentException{
+    public void testEmptyTweet() throws Exception{
         String emptyTweet = "";
         when(mockService.testBadTweet(emptyTweet)).thenThrow(new IllegalArgumentException("An empty tweet was entered"));
         Response r = resource.postTweet(emptyTweet);

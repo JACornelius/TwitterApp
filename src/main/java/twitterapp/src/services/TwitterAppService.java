@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitterapp.src.TwitterAppException;
 
 import java.util.List;
 
@@ -26,15 +28,15 @@ public class TwitterAppService {
     }
 
 
-    public boolean testBadTweet(String tweet) throws IllegalArgumentException {
+    public boolean testBadTweet(String tweet) throws TwitterAppException {
 
         if (tweet.length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
-            throw new IllegalArgumentException("Tweet is too long, keep it within 280 characters");
+            throw new TwitterAppException("Tweet is too long, keep it within 280 characters");
 
         } else if (tweet.length() == 0) {
             log.warn("An empty tweet was entered");
-            throw new IllegalArgumentException("An empty tweet was entered");
+            throw new TwitterAppException("An empty tweet was entered");
         } else {
             return false;
         }
@@ -42,19 +44,32 @@ public class TwitterAppService {
     }
 
 
-    public Status postTweet(String tweet) throws IllegalArgumentException {
+    public Status postTweet(String tweet) throws Exception {
         Status s;
-        try {
+         try {
 
             s = twitter.updateStatus(tweet);
             log.info("Tweet(" + tweet + ") has been posted.");
-            return s;
+
 
         } catch (Exception e) {
             log.error("There was a problem on the server side, please try again later.", e);
-            return null;
+            throw new TwitterException("There was a problem on the server side, please try again later");
 
         }
+        /*
+
+        if(twitter.updateStatus(tweet) != null){
+
+            log.info("Tweet(" + tweet + ") has been posted.");
+            return twitter.updateStatus(tweet);
+        }
+        else{
+            throw new TwitterException("There was a problem on the server side, please try again later.");
+
+        }
+        */
+        return s;
 
     }
 

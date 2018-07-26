@@ -50,7 +50,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testBadTweetinPostTweet(){
+    public void testBadTweetinPostTweet() throws Exception{
         String emptyTweet = "";
         String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
         Status s = service.postTweet(emptyTweet);
@@ -74,7 +74,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testEmptyTweetExceptionHandling() throws IllegalArgumentException{
+    public void testEmptyTweetExceptionHandling() throws TwitterAppException{
         String emptyTweet = "";
 
       service.testBadTweet(emptyTweet);
@@ -82,7 +82,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testLongTweetExceptionHandling() throws IllegalArgumentException{
+    public void testLongTweetExceptionHandling() throws TwitterAppException{
         String longTweet = StringUtils.repeat("a", MAX_LENGTH+3);
         service.testBadTweet(longTweet);
 
