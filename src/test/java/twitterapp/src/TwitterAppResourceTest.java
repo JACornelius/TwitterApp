@@ -54,6 +54,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         try {
             String tweet = "test tweet";
             when(mockTwitter.updateStatus(tweet)).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
+            when(mockService.testBadTweet(tweet)).thenReturn(false);
             Response r = resource.postTweet(tweet);
             assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         }
@@ -63,20 +64,21 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void testLongTweet(){
+    public void testLongTweet() throws IllegalArgumentException{
         String longTweet = StringUtils.repeat(".", MAX_LENGTH + 5);
+        when(mockService.testBadTweet(longTweet)).thenThrow(new IllegalArgumentException("Tweet is too long, keep it within 280 characters"));
         Response r = resource.postTweet(longTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("There was a problem on the server side, please try again later.", r.getEntity().toString());
+        assertEquals("The tweet is longer than 280 characters or empty.", r.getEntity().toString());
     }
 
     @Test
-    public void testEmptyTweet(){
+    public void testEmptyTweet() throws IllegalArgumentException{
         String emptyTweet = "";
-        when(mockService.testBadTweet("")).thenReturn(true);
+        when(mockService.testBadTweet(emptyTweet)).thenThrow(new IllegalArgumentException("An empty tweet was entered"));
         Response r = resource.postTweet(emptyTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("There was a problem on the server side, please try again later.", r.getEntity());
+        assertEquals("The tweet is longer than 280 characters or empty.", r.getEntity());
     }
 
 
@@ -127,6 +129,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
           assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
 
     }
+
 
 
 }

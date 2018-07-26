@@ -1,9 +1,10 @@
 package twitterapp.src;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.util.StringUtil;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -20,7 +21,8 @@ import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 public class TwitterAppServiceTest {
     TwitterAppService service;
     Twitter mockTwitter;
-
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
@@ -29,15 +31,9 @@ public class TwitterAppServiceTest {
         service.setTwitter(mockTwitter);
     }
 
-    @Test
-    public void testBadTweetTest(){
-        String emptyTweet = "";
-        String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
-        assertTrue(service.testBadTweet(emptyTweet));
-        assertTrue(service.testBadTweet(longTweet));
-    }
 
-    @Test
+
+  @Test
     public void testGoodTweet(){
         String tweet = "good tweethjfgj";
 
@@ -54,7 +50,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testBadTweet(){
+    public void testBadTweetinPostTweet(){
         String emptyTweet = "";
         String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
         Status s = service.postTweet(emptyTweet);
@@ -69,6 +65,26 @@ public class TwitterAppServiceTest {
         catch (Exception e) {
 
         }
+
+    }
+    @Test
+    public void testBadTweetTest() throws Exception{
+        when(mockTwitter.updateStatus("bad tweet")).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
+        assertFalse(service.testBadTweet("bad tweet"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEmptyTweetExceptionHandling() throws IllegalArgumentException{
+        String emptyTweet = "";
+
+      service.testBadTweet(emptyTweet);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLongTweetExceptionHandling() throws IllegalArgumentException{
+        String longTweet = StringUtils.repeat("a", MAX_LENGTH+3);
+        service.testBadTweet(longTweet);
 
     }
 
