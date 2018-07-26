@@ -13,9 +13,7 @@ import twitterapp.src.resources.TwitterAppResource;
 import twitterapp.src.services.TwitterAppService;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 import javax.ws.rs.core.MediaType;
@@ -50,35 +48,33 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
     @Test
-    public void testFailTweet(){
-        try {
+    public void testFailTweet() throws Exception{
+
             String tweet = "test tweet";
             when(mockTwitter.updateStatus(tweet)).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
-            when(mockService.testBadTweet(tweet)).thenReturn(false);
+            when(mockService.postTweet(tweet)).thenThrow(new TwitterAppException("There was a problem on the server side, please try again later."));
+
             Response r = resource.postTweet(tweet);
             assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        }
-        catch(Exception e){
-            fail();
-        }
+
     }
 
     @Test
     public void testLongTweet() throws Exception{
         String longTweet = StringUtils.repeat(".", MAX_LENGTH + 5);
-        when(mockService.testBadTweet(longTweet)).thenThrow(new IllegalArgumentException("Tweet is too long, keep it within 280 characters"));
+        when(mockService.postTweet(longTweet)).thenThrow(new LongTweetException("Tweet is too long, keep it within 280 characters"));
         Response r = resource.postTweet(longTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("The tweet is longer than 280 characters or empty.", r.getEntity().toString());
+        assertEquals("The tweet needs to under 280 characters.", r.getEntity().toString());
     }
 
     @Test
     public void testEmptyTweet() throws Exception{
         String emptyTweet = "";
-        when(mockService.testBadTweet(emptyTweet)).thenThrow(new IllegalArgumentException("An empty tweet was entered"));
+        when(mockService.postTweet(emptyTweet)).thenThrow(new EmptyTweetException("An empty tweet was entered"));
         Response r = resource.postTweet(emptyTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("The tweet is longer than 280 characters or empty.", r.getEntity());
+        assertEquals("The tweet is empty.", r.getEntity());
     }
 
 

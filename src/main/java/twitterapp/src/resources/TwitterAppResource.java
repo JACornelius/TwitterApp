@@ -3,6 +3,9 @@ package twitterapp.src.resources;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
+import twitterapp.src.EmptyTweetException;
+import twitterapp.src.LongTweetException;
+import twitterapp.src.TwitterAppException;
 import twitterapp.src.services.TwitterAppService;
 
 import javax.ws.rs.GET;
@@ -41,18 +44,23 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet")
     public Response postTweet(String tweet) throws Exception{
-        if (service.postTweet(tweet) != null) {
-            return Response.ok().entity("Tweet(" + tweet + ") has been posted.").build();
-        } else {
+
             try {
-                service.testBadTweet(tweet);
-                return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
-            } catch (Exception e) {
-                return Response.serverError().entity("The tweet is longer than 280 characters or empty.").build();
+                service.postTweet(tweet);
+                //return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
             }
-        }
+            catch (EmptyTweetException e) {
+                return Response.serverError().entity("The tweet is empty.").build();
+            }
+            catch(LongTweetException e){
+                return Response.serverError().entity("The tweet needs to under 280 characters.").build();
 
+            }
+            catch (TwitterAppException e){
+                return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
+            }
 
+        return Response.ok().entity("Tweet(" + tweet + ") has been posted.").build();
     }
 
 }

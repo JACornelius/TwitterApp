@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitterapp.src.EmptyTweetException;
+import twitterapp.src.LongTweetException;
 import twitterapp.src.TwitterAppException;
 
 import java.util.List;
@@ -28,35 +30,35 @@ public class TwitterAppService {
     }
 
 
-    public boolean testBadTweet(String tweet) throws TwitterAppException {
+    public void testBadTweet(String tweet) throws Exception {
 
         if (tweet.length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
-            throw new TwitterAppException("Tweet is too long, keep it within 280 characters");
+            throw new LongTweetException("Tweet is too long, keep it within 280 characters");
 
         } else if (tweet.length() == 0) {
             log.warn("An empty tweet was entered");
-            throw new TwitterAppException("An empty tweet was entered");
+            throw new EmptyTweetException("An empty tweet was entered");
         } else {
-            return false;
-        }
 
+            log.error("There was a problem on the server side, please try again later.");
+            throw new TwitterAppException("There was a problem on the server side, please try again later");
+        }
     }
 
 
     public Status postTweet(String tweet) throws Exception {
         Status s;
-         try {
-
             s = twitter.updateStatus(tweet);
-            log.info("Tweet(" + tweet + ") has been posted.");
+            if(s == null){
+                testBadTweet(tweet);
+            }
+            else{
+                log.info("Tweet(" + tweet + ") has been posted.");
+            }
 
 
-        } catch (Exception e) {
-            log.error("There was a problem on the server side, please try again later.", e);
-            throw new TwitterException("There was a problem on the server side, please try again later");
 
-        }
         return s;
 
     }
