@@ -29,9 +29,8 @@ public class TwitterAppService {
         twitter = t;
     }
 
-
-    public void testBadTweet(String tweet) throws Exception {
-
+    public Status postTweet(String tweet) throws Exception {
+        Status s;
         if (tweet.length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
@@ -40,27 +39,17 @@ public class TwitterAppService {
             log.warn("An empty tweet was entered");
             throw new EmptyTweetException("An empty tweet was entered");
         } else {
-
-            log.error("There was a problem on the server side, please try again later.");
-            throw new TwitterAppException("There was a problem on the server side, please try again later");
-        }
-    }
-
-
-    public Status postTweet(String tweet) throws Exception {
-        Status s;
-            s = twitter.updateStatus(tweet);
-            if(s == null){
-                testBadTweet(tweet);
-            }
-            else{
+            try {
+                s = twitter.updateStatus(tweet);
                 log.info("Tweet(" + tweet + ") has been posted.");
+            } catch (Exception e) {
+
+                log.error("There was a problem on the server side, please try again later.");
+                throw new TwitterAppException("There was a problem on the server side, please try again later");
             }
+            return s;
 
-
-
-        return s;
-
+        }
     }
 
     public List<Status> getTimeline() {

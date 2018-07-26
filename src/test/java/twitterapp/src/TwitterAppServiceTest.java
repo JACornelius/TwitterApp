@@ -24,8 +24,9 @@ public class TwitterAppServiceTest {
     Twitter mockTwitter;
     @Rule
     public final ExpectedException exception = ExpectedException.none();
+
     @Before
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         service = TwitterAppService.getService();
         mockTwitter = mock(Twitter.class);
@@ -33,34 +34,30 @@ public class TwitterAppServiceTest {
     }
 
 
-
-  @Test
+    @Test
     public void testGoodTweet() {
-      String tweet = "good tweethjfgj";
+        String tweet = "good tweethjfgj";
 
-      try {
-          Status s = mock(Status.class);
-          when(mockTwitter.updateStatus(tweet)).thenReturn(s);
-          assertEquals(s, service.postTweet(tweet));
-      } catch (Exception e) {
-
-
-      }
+        try {
+            Status s = mock(Status.class);
+            when(mockTwitter.updateStatus(tweet)).thenReturn(s);
+            assertEquals(s, service.postTweet(tweet));
+        } catch (Exception e) {
 
 
-  }
+        }
+
+
+    }
 
 
     @Test(expected = TwitterAppException.class)
-    public void testBadTweetInPostTweet() throws Exception{
-       Status s;
+    public void testBadTweetInPostTweet() throws Exception {
+        Status s;
 
-            //when(mockTwitter.updateStatus("bad tweet")).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
-            s = service.postTweet("bad tweet");
-            when(s.getText()).thenReturn(null);
-            service.testBadTweet("bad tweet");
-            assertTrue(s == null);
-            //service.testBadTweet("bad tweet");
+        when(mockTwitter.updateStatus("bad tweet")).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
+        s = service.postTweet("bad tweet");
+        assertTrue(s == null);
 
     }
 
@@ -68,19 +65,18 @@ public class TwitterAppServiceTest {
     @Test(expected = EmptyTweetException.class)
     public void testEmptyTweetExceptionHandling() throws Exception {
         String emptyTweet = "";
-       Status s = service.postTweet(emptyTweet);
+        Status s = service.postTweet(emptyTweet);
         assertTrue(s == null);
-      service.testBadTweet(emptyTweet);
+
 
     }
 
     @Test(expected = LongTweetException.class)
-    public void testLongTweetExceptionHandling() throws Exception{
-        String longTweet = StringUtils.repeat("a", MAX_LENGTH+3);
+    public void testLongTweetExceptionHandling() throws Exception {
+        String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
         Status s = service.postTweet(longTweet);
-
         assertTrue(s == null);
-        service.testBadTweet(longTweet);
+
 
     }
 
@@ -89,7 +85,7 @@ public class TwitterAppServiceTest {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
         Status mockStatus = mock(Status.class);
         Status mockStatus1 = mock(Status.class);
-        try{
+        try {
             when(mockStatus.getText()).thenReturn("mockStatus");
             when(mockStatus1.getText()).thenReturn("mockStatus1");
             responseList.add(mockStatus);
@@ -98,14 +94,13 @@ public class TwitterAppServiceTest {
             assertEquals(responseList, service.getTimeline());
             assertNotNull(service.getTimeline());
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             fail("Timeline was not returned");
         }
     }
 
     @Test
-    public void testBadTimeline() throws Exception{
+    public void testBadTimeline() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
         assertNull(service.getTimeline());
     }
