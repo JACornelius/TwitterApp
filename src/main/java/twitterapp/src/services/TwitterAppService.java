@@ -57,18 +57,6 @@ public class TwitterAppService {
             throw new TwitterException("There was a problem on the server side, please try again later");
 
         }
-        /*
-
-        if(twitter.updateStatus(tweet) != null){
-
-            log.info("Tweet(" + tweet + ") has been posted.");
-            return twitter.updateStatus(tweet);
-        }
-        else{
-            throw new TwitterException("There was a problem on the server side, please try again later.");
-
-        }
-        */
         return s;
 
     }
