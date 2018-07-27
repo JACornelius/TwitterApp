@@ -11,8 +11,8 @@ import twitterapp.src.services.TwitterAppService;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.*;
 import java.util.List;
 
 @Path("/api/1.0/twitter")
@@ -40,11 +40,13 @@ public class TwitterAppResource {
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
     }
-
     @POST
     @Path("/tweet")
-    public Response postTweet(String tweet) throws Exception{
-Status s;
+    public Response postTweet(@Context UriInfo info, String message) throws Exception{
+        MultivaluedMap<String, String> mpAllQueParams = info.getQueryParameters();
+
+            Status s;
+            String tweet =message;
             try {
                  s = service.postTweet(tweet);
                 //return Response.serverError().entity("There was a problem on the server side, please try again later.").build();

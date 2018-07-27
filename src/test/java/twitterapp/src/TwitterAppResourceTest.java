@@ -21,6 +21,8 @@ import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 
 public class TwitterAppResourceTest extends TwitterResponseList{
@@ -31,6 +33,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
     TwitterAppService mockService = mock(TwitterAppService.class);
+    UriInfo mockUriInfo = mock(UriInfo.class);
 
     @Before
     public void setUp() {
@@ -45,7 +48,8 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         String shortTweet = "this is a short tweet jfgf";
         Status mockStatus = mock(Status.class);
         when(mockService.postTweet(shortTweet)).thenReturn(mockStatus);
-        Response r = resource.postTweet(shortTweet);
+        when(mockUriInfo.getAbsolutePath()).thenReturn(URI.create("http://localhost:8080/api/1.0/twitter/tweet"));
+        Response r = resource.postTweet(mockUriInfo, shortTweet);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("Tweet("+mockStatus.getText()+") has been posted.", r.getEntity().toString());
     }
@@ -56,8 +60,8 @@ public class TwitterAppResourceTest extends TwitterResponseList{
             String tweet = "test tweet";
             when(mockTwitter.updateStatus(tweet)).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
             when(mockService.postTweet(tweet)).thenThrow(new TwitterAppException("There was a problem on the server side, please try again later."));
-
-            Response r = resource.postTweet(tweet);
+            when(mockUriInfo.getAbsolutePath()).thenReturn(URI.create("http://localhost:8080/api/1.0/twitter/tweet"));
+            Response r = resource.postTweet(mockUriInfo, tweet);
             assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
 
     }
@@ -66,7 +70,8 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     public void testLongTweet() throws Exception{
         String longTweet = StringUtils.repeat(".", MAX_LENGTH + 5);
         when(mockService.postTweet(longTweet)).thenThrow(new LongTweetException("Tweet is too long, keep it within 280 characters"));
-        Response r = resource.postTweet(longTweet);
+        when(mockUriInfo.getAbsolutePath()).thenReturn(URI.create("http://localhost:8080/api/1.0/twitter/tweet"));
+        Response r = resource.postTweet(mockUriInfo, longTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("The tweet needs to under 280 characters.", r.getEntity().toString());
     }
@@ -75,7 +80,8 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     public void testEmptyTweet() throws Exception{
         String emptyTweet = "";
         when(mockService.postTweet(emptyTweet)).thenThrow(new EmptyTweetException("An empty tweet was entered"));
-        Response r = resource.postTweet(emptyTweet);
+        when(mockUriInfo.getAbsolutePath()).thenReturn(URI.create("http://localhost:8080/api/1.0/twitter/tweet"));
+        Response r = resource.postTweet(mockUriInfo, emptyTweet);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("The tweet is empty.", r.getEntity());
     }
