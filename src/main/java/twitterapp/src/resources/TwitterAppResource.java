@@ -1,17 +1,18 @@
 package twitterapp.src.resources;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
+import twitterapp.src.models.RequestBody;
 import twitterapp.src.services.TwitterAppService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class TwitterAppResource {
 
     public static int MAX_LENGTH = 280;
     public TwitterAppService service;
+    private static Logger log = (Logger) LoggerFactory.getLogger("myLogger");
 
     public void setService(TwitterAppService s) {
         service = s;
@@ -40,13 +42,20 @@ public class TwitterAppResource {
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
     }
+
+
     @POST
     @Path("/tweet")
-    public Response postTweet(@Context UriInfo info, String message) throws Exception{
-        MultivaluedMap<String, String> mpAllQueParams = info.getQueryParameters();
+    @Consumes("application/json")
+    public Response postTweet(RequestBody input) throws Exception{
 
-            Status s;
-            String tweet =message;
+        String name = input.name;
+        log.info("name: " + name);
+        Status s;
+        String tweet = input.message;
+        log.info("message: " + tweet);
+
+
             try {
                  s = service.postTweet(tweet);
                 //return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
