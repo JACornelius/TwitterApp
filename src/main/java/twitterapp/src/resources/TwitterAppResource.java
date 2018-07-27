@@ -10,6 +10,7 @@ import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.models.RequestBody;
+import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 
 import javax.ws.rs.*;
@@ -35,7 +36,7 @@ public class TwitterAppResource {
     @GET
     @Path("/timeline")
     public Response getTimeline() {
-        List<Status> statuses = service.getTimeline();
+        List<TwitterPost> statuses = service.getTimeline();
         if (statuses.isEmpty() == false) {
             return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
         } else {

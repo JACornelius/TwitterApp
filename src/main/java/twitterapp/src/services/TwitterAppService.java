@@ -9,7 +9,9 @@ import twitterapp.src.exceptions.LongTweetException;
 
 
 import twitterapp.src.exceptions.TwitterAppException;
+import twitterapp.src.models.TwitterPost;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -53,18 +55,23 @@ public class TwitterAppService {
         }
     }
 
-    public List<Status> getTimeline() {
+    public List<TwitterPost> getTimeline() {
         List<Status> statuses;
+        List<TwitterPost> listTwitterPost = new ArrayList<>();
         try {
+
             statuses = twitter.getHomeTimeline();
-            return statuses;
+            for(Status s: statuses){
+                TwitterPost twitterPostObj = new TwitterPost(s.getText(), s.getUser().getName(), s.getUser().getScreenName(), s.getUser().getProfileImageURL(), s.getCreatedAt());
+                listTwitterPost.add(twitterPostObj);
+            }
 
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
-            statuses = null;
 
         }
-        return statuses;
+
+        return listTwitterPost;
     }
 }
 
