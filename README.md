@@ -19,17 +19,19 @@ In java Directory:
 ```
 javac -sourcepath twitterapp -cp ../../../lib/twitter4j-core-4.0.4.jar twitterapp/src/*.java 
 ```
+
 ## Running:
 ```
 java -cp .:../../../lib/twitter4j-core-4.0.4.jar twitterapp.src.MainFile
 ```
+
 ## Creating a JAR File:
 In the java Directory:
 ```
 jar cfm TwitterApp.jar twitterapp/src/META-INF/MANIFEST.MF twitterapp/src/*.class ../../../twitter4j.properties
 java -jar TwitterApp.jar
-
 ```
+
 ## Creating a JAR File using Maven
 Install maven and run in TwitterApp directory
 ```
@@ -40,6 +42,7 @@ Add the completed twitter.properties file into this newly created target directo
 cd target/
 java -jar TwitterAppTest-1.0-SNAPSHOT.jar
 ```
+
 ## Running using Dropwizard
 Install the latest Dropwizard. 
 ```
@@ -47,9 +50,12 @@ mvn clean package && java -jar target/TwitterApp-1.0-SNAPSHOT.jar server
 ```
 To post a new tweet, in a different terminal while the server is running
 ```
-curl -X POST -d 'insert new tweet here' localhost:8080/api/1.0/twitter/tweet
+curl -d'{"name":"mojo", "message":"insert new tweet here"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/1.0/twitter/tweet
+
 ```
+To post a new tweet with additional information
 Timeline can be viewed at http://localhost:8080/api/1.0/twitter/timeline
+
 ## Unit Testing with mockito
 To test all unit tests:
 ```
@@ -59,31 +65,14 @@ To test a particular test:
 ```
 mvn -Dtest=ResourceTest#<particular test> test
 ```
-## Running using Dropwizard
-Install the latest Dropwizard. 
-```
-mvn clean package && java -jar target/TwitterApp-1.0-SNAPSHOT.jar server
-```
-To post a new tweet, in a different terminal while the server is running
-```
-curl -X POST -d 'insert new tweet here' localhost:8080/api/1.0/twitter/tweet
-```
-Timeline can be viewed at http://localhost:8080/api/1.0/twitter/timeline
-## Unit Testing with mockito
-To test all unit tests:
-```
-mvn test
-```
-To test a particular test:
-```
-mvn -Dtest=ResourceTest#<particular test> test
-```
+
 ## Using Jacoco for Code Coverage
 In terminal run:
 ```
 mvn install jacoco:report
 ```
 To review code report coverage open index.html file inside TwitterApp/target/site/jacoco/twitterapp.src/index.html.
+
 ## Incorporating config.yml file
 Create a new file named config.yml inside the TwitterApp folder and include all the tokens and secrets, as so:
 ```

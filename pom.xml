@@ -17,7 +17,7 @@
         <junit.version>4.8.1</junit.version>
         <mockito.version>2.19.0</mockito.version>
         <jacoco.version>0.8.1</jacoco.version>
-        <slf4j.version>1.6.1</slf4j.version>
+        <slf4j.version>1.7.16</slf4j.version>
      </properties>
 
 
