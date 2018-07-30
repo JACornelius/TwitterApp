@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.mockito.Mock;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -31,8 +32,11 @@ import static org.mockito.Mockito.when;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 public class TwitterAppServiceTest {
-    TwitterAppService service;
-    Twitter mockTwitter;
+    TwitterAppService service; 
+    TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
+    @Mock
+    Twitter mockTwitter = mock(Twitter.class);
+   
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -48,11 +52,11 @@ public class TwitterAppServiceTest {
     @Test
     public void testGoodTweet() {
         String tweet = "good tweethjfgj";
-
+        twitterPost.setMessage(tweet);
         try {
             Status s = mock(Status.class);
-            when(mockTwitter.updateStatus(tweet)).thenReturn(s);
-            assertEquals(s, service.postTweet(tweet));
+            when(mockTwitter.updateStatus(twitterPost.getMessage())).thenReturn(s);
+            assertEquals(tweet, service.postTweet(twitterPost).getMessage());
         } catch (Exception e) {
 
 
@@ -65,10 +69,10 @@ public class TwitterAppServiceTest {
     @Test(expected = TwitterAppException.class)
     public void testBadTweetInPostTweet() throws Exception {
         Status s;
-
-        when(mockTwitter.updateStatus("bad tweet")).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
-        s = service.postTweet("bad tweet");
-        assertTrue(s == null);
+        twitterPost.setMessage("bad tweet");
+        when(mockTwitter.updateStatus(twitterPost.getMessage())).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
+        twitterPost = service.postTweet(twitterPost);
+        assertTrue(twitterPost == null);
 
     }
 
@@ -76,8 +80,9 @@ public class TwitterAppServiceTest {
     @Test(expected = EmptyTweetException.class)
     public void testEmptyTweetExceptionHandling() throws Exception {
         String emptyTweet = "";
-        Status s = service.postTweet(emptyTweet);
-        assertTrue(s == null);
+        twitterPost.setMessage(emptyTweet);
+        twitterPost = service.postTweet(twitterPost);
+        assertTrue(twitterPost == null);
 
 
     }
@@ -85,8 +90,9 @@ public class TwitterAppServiceTest {
     @Test(expected = LongTweetException.class)
     public void testLongTweetExceptionHandling() throws Exception {
         String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
-        Status s = service.postTweet(longTweet);
-        assertTrue(s == null);
+        twitterPost.setMessage(longTweet);
+        twitterPost = service.postTweet(twitterPost);
+        assertTrue(twitterPost == null);
 
 
     }
