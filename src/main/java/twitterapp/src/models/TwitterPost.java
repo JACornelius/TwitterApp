@@ -1,5 +1,8 @@
 package twitterapp.src.models;
+import twitter4j.Status;
+
 import java.util.Date;
+import java.util.Objects;
 
 public class TwitterPost {
     private String message ;
@@ -14,6 +17,23 @@ public class TwitterPost {
         this.twitterHandle = twitterHandle;
         this.profileImageUrl = profileImageUrl;
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this) return true;
+        if(!(o instanceof TwitterPost)) return false;
+        TwitterPost twitterPost = (TwitterPost) o;
+        return Objects.equals(message, twitterPost.message)
+                && Objects.equals(userName, twitterPost.userName)
+                && Objects.equals(twitterHandle, twitterPost.twitterHandle)
+                && Objects.equals(profileImageUrl, twitterPost.profileImageUrl)
+                && Objects.equals(createdAt, twitterPost.createdAt);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(message, userName, twitterHandle, profileImageUrl, createdAt);
     }
 
     public String getMessage(){
@@ -54,5 +74,10 @@ public class TwitterPost {
 
     public void setCreatedAt(Date createdAt){
         this.createdAt = createdAt;
+    }
+
+    public TwitterPost statusToTwitterPost(Status status){
+        TwitterPost twitterPost = new TwitterPost(status.getText(),status.getUser().getName(), status.getUser().getScreenName(), status.getUser().getProfileImageURL(), status.getCreatedAt());
+        return twitterPost;
     }
 }

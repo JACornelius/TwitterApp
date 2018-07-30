@@ -50,17 +50,14 @@ public class TwitterAppServiceTest {
 
 
     @Test
-    public void testGoodTweet() {
+    public void testGoodTweet() throws Exception{
         String tweet = "good tweethjfgj";
         twitterPost.setMessage(tweet);
-        try {
-            Status s = mock(Status.class);
-            when(mockTwitter.updateStatus(twitterPost.getMessage())).thenReturn(s);
-            assertEquals(tweet, service.postTweet(twitterPost).getMessage());
-        } catch (Exception e) {
 
+        Status s = mock(Status.class);
+        when(mockTwitter.updateStatus(twitterPost.getMessage())).thenReturn(s);
+        assertEquals(tweet, service.postTweet(twitterPost).getMessage());
 
-        }
 
 
     }

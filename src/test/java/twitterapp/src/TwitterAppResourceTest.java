@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -29,15 +31,10 @@ import java.util.List;
 
 public class TwitterAppResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
-
-    //RequestBody requestBody = new RequestBody();
     TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
-    //TwitterPost twitterPost;
 
     @Mock
-
     TwitterAppService mockService = mock(TwitterAppService.class);
-    //TwitterPost twitterPost = mock(TwitterPost.class);
     RequestBody requestBody = mock(RequestBody.class);
     Twitter mockTwitter = mock(Twitter.class);
     @Before
@@ -48,6 +45,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         mockService.setTwitter(mockTwitter);
     }
 
+
     @Test
     public void testTweetLength() throws Exception{
 
@@ -56,6 +54,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         twitterPost.setMessage(shortTweet);
         twitterPost.setUsername("jojo");
         when(mockService.postTweet(isA(TwitterPost.class))).thenReturn(twitterPost);
+
         RequestBody requestBody1 = new RequestBody();
         requestBody1.setMessage(shortTweet);
         requestBody1.setName("jojo");

@@ -20,7 +20,7 @@ public class TwitterAppApplication extends Application<TwitterAppConfiguration>
         new TwitterAppApplication().run(args);
     }
 
-
+    @Override
     public void run(final TwitterAppConfiguration configuration, final Environment environment)
     {
         environment.jersey().register(new TwitterAppResource(configuration.getTwitter()));

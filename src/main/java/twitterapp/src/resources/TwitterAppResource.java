@@ -1,9 +1,7 @@
 package twitterapp.src.resources;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import twitter4j.Status;
 import twitter4j.Twitter;
 
 import twitterapp.src.exceptions.EmptyTweetException;
