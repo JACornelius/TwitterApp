@@ -17,15 +17,12 @@ import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
