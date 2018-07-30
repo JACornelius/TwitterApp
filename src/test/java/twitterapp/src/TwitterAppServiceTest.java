@@ -13,10 +13,18 @@ import twitter4j.TwitterException;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
+import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
+import java.util.Date;
+import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -94,18 +102,22 @@ public class TwitterAppServiceTest {
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
-            assertEquals(responseList, service.getTimeline());
-            assertNotNull(service.getTimeline());
+           List<TwitterPost> twitterPostList = service.getTimeline();
+          assertEquals(2, twitterPostList.size());
+           assertEquals(responseList.get(0).getText(), twitterPostList.get(0).getMessage());
+           assertEquals(responseList.get(1).getText(), twitterPostList.get(1).getMessage());
+
+           assertNotNull(service.getTimeline());
 
         } catch (Exception e) {
-            fail("Timeline was not returned");
+           fail("Timeline was not returned");
         }
     }
 
     @Test
     public void testBadTimeline() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
-        assertNull(service.getTimeline());
+        assertTrue(service.getTimeline().isEmpty());
     }
 
 }

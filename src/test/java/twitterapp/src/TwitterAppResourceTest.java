@@ -102,25 +102,26 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testTimelineReturnJSON() {
-        ResponseList<Status> responseList = new TwitterResponseList<Status>();
         List<TwitterPost> twitterPostList = new ArrayList<>();
-        Status mockStatus = mock(Status.class);
-        Status mockStatus1 = mock(Status.class);
+
 
         try {
-            when(mockStatus.getText()).thenReturn("mockStatus");
-            when(mockStatus1.getText()).thenReturn("mockStatus1");
-            responseList.add(mockStatus);
-            responseList.add(mockStatus1);
-            when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
+            TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
+            TwitterPost twitterPost1 = new TwitterPost(null, null, null, null, null);
+            twitterPost.setMessage("twitterPost");
+            twitterPost1.setMessage("twitterPost1");
+
+           twitterPostList.add(twitterPost);
+            twitterPostList.add(twitterPost1);
             when(mockService.getTimeline()).thenReturn(twitterPostList);
-            Response r = resource.getTimeline();
-            ResponseList<Status> newResponseList = (ResponseList<Status>) r.getEntity();
-            assertNotNull(newResponseList);
-            assertFalse(newResponseList.isEmpty());
-            assertEquals(2, newResponseList.size());
-            assertEquals("mockStatus", twitterPostList.get(0));
-            assertEquals("mockStatus1", twitterPostList.get(1));
+           Response r = resource.getTimeline();
+           List<TwitterPost> newTwitterPostList = (List<TwitterPost>) r.getEntity();
+            System.out.println(newTwitterPostList.size());
+            assertNotNull(newTwitterPostList);
+            assertEquals(2, newTwitterPostList.size());
+            assertEquals("twitterPost", newTwitterPostList.get(0).getMessage());
+            assertEquals("twitterPost1", newTwitterPostList.get(1).getMessage());
+
             assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
             assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
         }

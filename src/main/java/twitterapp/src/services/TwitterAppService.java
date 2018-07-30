@@ -58,12 +58,14 @@ public class TwitterAppService {
     public List<TwitterPost> getTimeline() {
         List<Status> statuses;
         List<TwitterPost> listTwitterPost = new ArrayList<>();
+
         try {
 
             statuses = twitter.getHomeTimeline();
             for(Status s: statuses){
-                TwitterPost twitterPostObj = new TwitterPost(s.getText(), s.getUser().getName(), s.getUser().getScreenName(), s.getUser().getProfileImageURL(), s.getCreatedAt());
-                listTwitterPost.add(twitterPostObj);
+                TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
+                twitterPost.setMessage(s.getText());
+                listTwitterPost.add(twitterPost);
             }
 
         } catch (Exception e) {
