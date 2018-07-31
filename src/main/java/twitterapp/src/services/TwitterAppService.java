@@ -9,15 +9,19 @@ import twitterapp.src.exceptions.LongTweetException;
 
 
 import twitterapp.src.exceptions.TwitterAppException;
+import twitterapp.src.models.TwitterPost;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 
 public class TwitterAppService {
     private static Logger log = (Logger) LoggerFactory.getLogger("myLogger");
     static TwitterAppService service = null;
-    Twitter twitter;
-    int MAX_LENGTH = 280;
+    public Twitter twitter;
+
 
     public static TwitterAppService getService() {
         if (service == null) {
@@ -30,41 +34,51 @@ public class TwitterAppService {
         twitter = t;
     }
 
-    public Status postTweet(String tweet) throws Exception {
-        Status s;
-        if (tweet.length() > MAX_LENGTH) {
+    public TwitterPost postTweet(TwitterPost inputTwitterPost) throws Exception {
+        TwitterPost twitterPost;
+
+        System.out.println(inputTwitterPost.getMessage());
+        if (inputTwitterPost.getMessage().length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
 
-        } else if (tweet.length() == 0) {
+        } else if (inputTwitterPost.getMessage().length() == 0) {
             log.warn("An empty tweet was entered");
             throw new EmptyTweetException("An empty tweet was entered");
         } else {
             try {
-                s = twitter.updateStatus(tweet);
-                log.info("Tweet(" + tweet + ") has been posted.");
+                twitter.updateStatus(inputTwitterPost.getMessage());
+                twitterPost = inputTwitterPost;
+                log.info("Tweet(" + inputTwitterPost.getMessage() + ") has been posted.");
             } catch (Exception e) {
 
                 log.error("There was a problem on the server side, please try again later.");
                 throw new TwitterAppException("There was a problem on the server side, please try again later");
             }
-            return s;
+            return twitterPost;
 
         }
     }
 
-    public List<Status> getTimeline() {
+    public List<TwitterPost> getTimeline() {
         List<Status> statuses;
+        List<TwitterPost> listTwitterPost = new ArrayList<>();
+
         try {
+
             statuses = twitter.getHomeTimeline();
-            return statuses;
+            for(Status s: statuses){
+                TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
+                twitterPost.setMessage(s.getText());
+                listTwitterPost.add(twitterPost);
+            }
 
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
-            statuses = null;
 
         }
-        return statuses;
+
+        return listTwitterPost;
     }
 }
 
