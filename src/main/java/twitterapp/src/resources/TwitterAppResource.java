@@ -2,6 +2,7 @@ package twitterapp.src.resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import twitter4j.Status;
 import twitter4j.Twitter;
 
 import twitterapp.src.exceptions.EmptyTweetException;
@@ -65,6 +66,14 @@ public class TwitterAppResource {
             }
 
         return Response.ok().entity("Tweet(" + twitterPost.getMessage() + ") has been posted.").build();
+    }
+
+    @GET
+    @Path("/tweet/filter")
+    public Response filterTweets() throws Exception{
+
+        List<String> listTwitterPost = service.filterTweets();
+        return Response.ok(listTwitterPost, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
 }

@@ -14,6 +14,8 @@ import twitterapp.src.models.TwitterPost;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 
@@ -58,6 +60,19 @@ public class TwitterAppService {
             return twitterPost;
 
         }
+    }
+
+    public List<String> filterTweets() throws Exception{
+        List<TwitterPost> listTwitterPost = new ArrayList<>();
+        String filter = "potato";
+        List<Status> statuses = twitter.getHomeTimeline();
+
+        List<String> filteredStatuses = statuses.stream()
+                .filter(s -> s.getText().contains(filter))
+                .sorted(comparing(Status::getCreatedAt))
+                .map(Status::getText)
+                .collect(toList());
+        return filteredStatuses;
     }
 
     public List<TwitterPost> getTimeline() {
