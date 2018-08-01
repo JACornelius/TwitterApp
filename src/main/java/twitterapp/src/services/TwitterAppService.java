@@ -71,7 +71,7 @@ public class TwitterAppService {
             System.out.println(statuses.get(0).getText());
             filteredTweetPosts = statuses.stream()
                     .filter(s -> s.getText().contains(filter))
-                    .map(s -> new TwitterPost(s.getText(), null, null, null, null))
+                    .map(s -> new TwitterPost(s.getText(), s.getUser().getName(), s.getUser().getScreenName(), s.getUser().getProfileImageURL(), s.getCreatedAt()))
                     .collect(toList());
         }
         catch (Exception e) {
