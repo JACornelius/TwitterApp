@@ -7,10 +7,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.mockito.Mock;
-import twitter4j.ResponseList;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
+import twitter4j.*;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
@@ -98,9 +95,22 @@ public class TwitterAppServiceTest {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
         Status mockStatus = mock(Status.class);
         Status mockStatus1 = mock(Status.class);
+        User mockUser = mock(User.class);
+        User mockUser1 = mock(User.class);
         try {
+            Date date = new Date(2018,1,1);
             when(mockStatus.getText()).thenReturn("mockStatus");
             when(mockStatus1.getText()).thenReturn("mockStatus1");
+            when(mockStatus.getUser()).thenReturn(mockUser);
+            when(mockStatus1.getUser()).thenReturn(mockUser1);
+            when(mockStatus.getUser().getName()).thenReturn("slkdjf");
+            when(mockStatus1.getUser().getName()).thenReturn("lsdjflksdjf");
+            when(mockStatus.getUser().getProfileImageURL()).thenReturn("lsjdflsdkfj");
+            when(mockStatus1.getUser().getProfileImageURL()).thenReturn("lsdjflsdkjf");
+            when(mockStatus.getUser().getScreenName()).thenReturn("lskdjflsdkjf");
+            when(mockStatus1.getUser().getScreenName()).thenReturn("sljflskjdfl");
+            when(mockStatus.getCreatedAt()).thenReturn(date);
+            when(mockStatus1.getCreatedAt()).thenReturn(date);
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
@@ -108,7 +118,6 @@ public class TwitterAppServiceTest {
           assertEquals(2, twitterPostList.size());
            assertEquals(responseList.get(0).getText(), twitterPostList.get(0).getMessage());
            assertEquals(responseList.get(1).getText(), twitterPostList.get(1).getMessage());
-
            assertNotNull(service.getTimeline());
 
         } catch (Exception e) {
@@ -116,45 +125,51 @@ public class TwitterAppServiceTest {
         }
     }
 
-//    @Test
-//    public void testGoodFilter(){
-//        ResponseList<Status> responseList = new TwitterResponseList<Status>();
-//        Status mockStatus = mock(Status.class);
-//        Status mockStatus1 = mock(Status.class);
-//        Status mockStatus2 = mock(Status.class);
-//        Date date = new Date (2018, 1,1);
-//        try {
-//            when(mockStatus.getText()).thenReturn("mockStatus");
-//            when(mockStatus1.getText()).thenReturn("mockStatus1");
-//            when(mockStatus2.getText()).thenReturn("differentText");
-////            when(mockStatus.getUser().getName()).thenReturn("userName");
-////            when(mockStatus1.getUser().getName()).thenReturn("userName");
-////            when(mockStatus2.getUser().getName()).thenReturn("userName");
-////            when(mockStatus.getUser().getScreenName()).thenReturn("screenName");
-////            when(mockStatus1.getUser().getScreenName()).thenReturn("screenName");
-////            when(mockStatus2.getUser().getScreenName()).thenReturn("screenName");
-////            when(mockStatus.getUser().getProfileImageURL()).thenReturn("URL");
-////            when(mockStatus1.getUser().getProfileImageURL()).thenReturn("URL");
-////            when(mockStatus2.getUser().getProfileImageURL()).thenReturn("URL");
-//            when(mockStatus.getCreatedAt()).thenReturn(date);
-//            when(mockStatus1.getCreatedAt()).thenReturn(date);
-//            when(mockStatus2.getCreatedAt()).thenReturn(date);
-//            responseList.add(mockStatus);
-//            responseList.add(mockStatus1);
-//            responseList.add(mockStatus2);
-//            when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
-//            List<TwitterPost> result = service.filterTweets("mockStatus");
-//            //assertEquals(2, result.size());
-//        } catch (Exception e) {
-//            fail();
-//        }
-//    }
+    @Test
+    public void testGoodFilter(){
+
+        ResponseList<Status> responseList = new TwitterResponseList<>();
+        ResponseList<Status> filteredResponseList = new TwitterResponseList<Status>();
+        Status mockStatus = mock(Status.class);
+        Status mockStatus1 = mock(Status.class);
+        Status mockStatus2 = mock(Status.class);
+        User mockUser = mock(User.class);
+        User mockUser1 = mock(User.class);
+        try {
+            Date date = new Date(2018,1,1);
+            when(mockStatus.getText()).thenReturn("mockStatus");
+            when(mockStatus1.getText()).thenReturn("mockStatus1");
+            when(mockStatus2.getText()).thenReturn("lklkjjhkjhjf");
+
+            when(mockStatus.getUser()).thenReturn(mockUser);
+            when(mockStatus1.getUser()).thenReturn(mockUser1);
+            when(mockStatus.getUser().getName()).thenReturn("slkdjf");
+            when(mockStatus1.getUser().getName()).thenReturn("lsdjflksdjf");
+            when(mockStatus.getUser().getProfileImageURL()).thenReturn("lsjdflsdkfj");
+            when(mockStatus1.getUser().getProfileImageURL()).thenReturn("lsdjflsdkjf");
+            when(mockStatus.getUser().getScreenName()).thenReturn("lskdjflsdkjf");
+            when(mockStatus1.getUser().getScreenName()).thenReturn("sljflskjdfl");
+            when(mockStatus.getCreatedAt()).thenReturn(date);
+            when(mockStatus1.getCreatedAt()).thenReturn(date);
+            responseList.add(mockStatus);
+            responseList.add(mockStatus1);
+            responseList.add(mockStatus2);
+            when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
+
+            List<TwitterPost> twitterPostList = service.filterTweets("s");
+            assertEquals(2, twitterPostList.size());
+            assertEquals("mockStatus", twitterPostList.get(0).getMessage());
+            assertEquals("mockStatus1", twitterPostList.get(1).getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
 //
-//    @Test
-//    public void testBadFilter() throws Exception{
-//        doThrow(new TwitterException("There was a problem on the server side.")).when(mockTwitter).getHomeTimeline();
-//        assertTrue(service.filterTweets("potato").isEmpty());
-//    }
+    @Test
+    public void testBadFilter() throws Exception{
+        doThrow(new TwitterException("There was a problem on the server side.")).when(mockTwitter).getHomeTimeline();
+        assertTrue(service.filterTweets("potato").isEmpty());
+    }
 
     @Test
     public void testBadTimeline() throws Exception {

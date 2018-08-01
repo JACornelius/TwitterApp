@@ -12,10 +12,8 @@ import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.models.TwitterPost;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
@@ -68,7 +66,6 @@ public class TwitterAppService {
         List<TwitterPost> filteredTweetPosts = new ArrayList<>();
         try {
             List<Status> statuses = twitter.getHomeTimeline();
-            System.out.println(statuses.get(0).getText());
             filteredTweetPosts = statuses.stream()
                     .filter(s -> s.getText().contains(filter))
                     .map(s -> new TwitterPost(s.getText(), s.getUser().getName(), s.getUser().getScreenName(), s.getUser().getProfileImageURL(), s.getCreatedAt()))
@@ -88,11 +85,11 @@ public class TwitterAppService {
         try {
 
             statuses = twitter.getHomeTimeline();
-            for(Status s: statuses){
-                TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
-                twitterPost.setMessage(s.getText());
-                listTwitterPost.add(twitterPost);
-            }
+           listTwitterPost = statuses.stream()
+                    .map(s -> new TwitterPost(s.getText(), s.getUser().getName(), s.getUser().getScreenName(), s.getUser().getProfileImageURL(), s.getCreatedAt()))
+                    .collect(toList());
+
+
 
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
