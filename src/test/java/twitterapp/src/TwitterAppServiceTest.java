@@ -115,6 +115,35 @@ public class TwitterAppServiceTest {
     }
 
     @Test
+    public void testGoodFilter(){
+        ResponseList<Status> responseList = new TwitterResponseList<Status>();
+        Status mockStatus = mock(Status.class);
+        Status mockStatus1 = mock(Status.class);
+        Status mockStatus2 = mock(Status.class);
+        try {
+            when(mockStatus.getText()).thenReturn("mockStatus");
+            when(mockStatus1.getText()).thenReturn("mockStatus1");
+            when(mockStatus2.getText()).thenReturn("differentText");
+            responseList.add(mockStatus);
+            responseList.add(mockStatus1);
+            responseList.add(mockStatus2);
+            when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
+            List<TwitterPost> result = service.filterTweets("mockStatus");
+            assertEquals(2, result.size());
+
+
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testBadFilter() throws Exception{
+        doThrow(new TwitterException("There was a problem on the server side.")).when(mockTwitter).getHomeTimeline();
+        assertTrue(service.filterTweets("potato").isEmpty());
+    }
+
+    @Test
     public void testBadTimeline() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
         assertTrue(service.getTimeline().isEmpty());

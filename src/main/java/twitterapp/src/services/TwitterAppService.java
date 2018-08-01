@@ -12,6 +12,7 @@ import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.models.TwitterPost;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.Comparator.comparing;
@@ -62,17 +63,22 @@ public class TwitterAppService {
         }
     }
 
-    public List<String> filterTweets() throws Exception{
-        List<TwitterPost> listTwitterPost = new ArrayList<>();
-        String filter = "potato";
-        List<Status> statuses = twitter.getHomeTimeline();
+    public List<TwitterPost> filterTweets(String filter) {
 
-        List<String> filteredStatuses = statuses.stream()
-                .filter(s -> s.getText().contains(filter))
-                .sorted(comparing(Status::getCreatedAt))
-                .map(Status::getText)
-                .collect(toList());
-        return filteredStatuses;
+        List<TwitterPost> filteredTweetPosts = new ArrayList<>();
+        try {
+            List<Status> statuses = twitter.getHomeTimeline();
+            System.out.println(statuses.get(0).getText());
+            filteredTweetPosts = statuses.stream()
+                    .filter(s -> s.getText().contains(filter))
+                    .map(s -> new TwitterPost(s.getText(), null, null, null, null))
+                    .collect(toList());
+        }
+        catch (Exception e) {
+            log.error("There was a problem on the server side.", e);
+
+        }
+        return filteredTweetPosts;
     }
 
     public List<TwitterPost> getTimeline() {

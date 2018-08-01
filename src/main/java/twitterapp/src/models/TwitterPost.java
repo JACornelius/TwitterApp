@@ -76,8 +76,4 @@ public class TwitterPost {
         this.createdAt = createdAt;
     }
 
-    public TwitterPost statusToTwitterPost(Status status){
-        TwitterPost twitterPost = new TwitterPost(status.getText(),status.getUser().getName(), status.getUser().getScreenName(), status.getUser().getProfileImageURL(), status.getCreatedAt());
-        return twitterPost;
-    }
 }

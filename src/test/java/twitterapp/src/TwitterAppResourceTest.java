@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
+import javax.swing.text.EditorKit;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -140,7 +141,35 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
     @Test
+    public void testFilter() throws Exception{
+        TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
+        TwitterPost twitterPost1 = new TwitterPost(null, null, null, null, null);
+        twitterPost.setMessage("twitterPost");
+        twitterPost1.setMessage("twitterPost1");
+        List<TwitterPost> twitterPostList = new ArrayList<>();
+        twitterPostList.add(twitterPost);
+        twitterPostList.add(twitterPost1);
+        when(mockService.filterTweets("twitterPost")).thenReturn(twitterPostList);
+        Response r = resource.filterTweets("twitterPost");
+        List<TwitterPost> result = (List<TwitterPost>) r.getEntity();
+        assertEquals(2, result.size());
+        assertEquals("twitterPost", result.get(0).getMessage());
+        assertEquals("twitterPost1", result.get(1).getMessage());
+        assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
+        assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testBadFilter() throws Exception{
+        doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
+       // when(mockService.filterTweets("potato")).thenThrow(new Exception("There was a problem on the server side."));
+        Response r = resource.filterTweets("potato");
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
+    }
+    @Test
     public void throwExceptionWhenTimelineDoesNotPrint() throws Exception{
+
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
             Response r = resource.getTimeline();
           assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));

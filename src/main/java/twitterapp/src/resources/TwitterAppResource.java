@@ -49,8 +49,6 @@ public class TwitterAppResource {
     @Consumes("application/json")
     public Response postTweet(RequestBody input) throws Exception{
         TwitterPost twitterPost = new TwitterPost(input.message, input.name, null, null, null);
-
-
             try {
                  twitterPost = service.postTweet(twitterPost);
             }
@@ -70,10 +68,15 @@ public class TwitterAppResource {
 
     @GET
     @Path("/tweet/filter")
-    public Response filterTweets() throws Exception{
+    public Response filterTweets(@QueryParam("filter") String filter) throws Exception{
+        List<TwitterPost> listTwitterPost = service.filterTweets(filter);
+        if(!listTwitterPost.isEmpty()){
+            return Response.ok(listTwitterPost, MediaType.APPLICATION_JSON_TYPE).build();
+        }
+        else{
+            return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
+        }
 
-        List<String> listTwitterPost = service.filterTweets();
-        return Response.ok(listTwitterPost, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
 }
