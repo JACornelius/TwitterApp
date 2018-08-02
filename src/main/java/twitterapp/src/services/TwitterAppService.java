@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 
@@ -15,15 +14,15 @@ import twitterapp.src.models.TwitterPost;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 import static java.util.stream.Collectors.toList;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 
 public class TwitterAppService {
-    private static Logger log = (Logger) LoggerFactory.getLogger("myLogger");
+    private static Logger log = (Logger) LoggerFactory.getLogger(TwitterAppService.class);
     static TwitterAppService service = null;
     public Twitter twitter;
 
@@ -40,22 +39,20 @@ public class TwitterAppService {
     }
 
     public TwitterPost postTweet(RequestBody input) throws Exception {
-        TwitterPost twitterPost;
-        Stream<TwitterPost> streamRequestBody = Stream.of(input).map(i -> new TwitterPost(input.getMessage(), input.getName(), null, null, null));
-        List<TwitterPost> list = streamRequestBody.collect(Collectors.toList());
-        TwitterPost inputTwitterPost = list.get(0);
-        if (inputTwitterPost.getMessage().length() > MAX_LENGTH) {
+       TwitterPost twitterPost;
+        if (input.getMessage().length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
 
-        } else if (inputTwitterPost.getMessage().length() == 0) {
+        } else if (input.getMessage().length() == 0) {
             log.warn("An empty tweet was entered");
             throw new EmptyTweetException("An empty tweet was entered");
         } else {
             try {
-                twitter.updateStatus(inputTwitterPost.getMessage());
-                twitterPost = inputTwitterPost;
-                log.info("Tweet(" + inputTwitterPost.getMessage() + ") has been posted.");
+                Status status = twitter.updateStatus(input.getMessage());
+                Stream<TwitterPost> streamTwitterPost = Stream.of(status).map(s -> new TwitterPost(s.getText(), s.getUser().getName(), s.getUser().getScreenName(), s.getUser().getProfileImageURL(), s.getCreatedAt()));
+                twitterPost = streamTwitterPost.collect(toList()).get(0);
+                log.info("Tweet(" + twitterPost.getMessage() + ") has been posted.");
             } catch (Exception e) {
 
                 log.error("There was a problem on the server side, please try again later.", e);

@@ -12,18 +12,20 @@ import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
 
     public static int MAX_LENGTH = 280;
     public TwitterAppService service;
-    private static Logger log = (Logger) LoggerFactory.getLogger("myLogger");
 
     public void setService(TwitterAppService s) {
         service = s;
@@ -36,7 +38,7 @@ public class TwitterAppResource {
 
     @GET
     @Path("/timeline")
-    public Response getTimeline() throws Exception{
+    public Response getTimeline(){
         try{
             List<TwitterPost> statuses = service.getTimeline();
             return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();

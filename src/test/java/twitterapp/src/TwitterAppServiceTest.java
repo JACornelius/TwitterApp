@@ -57,8 +57,17 @@ public class TwitterAppServiceTest {
     public void testGoodTweet() throws Exception{
         String tweet = "good tweethjfgj";
         requestBody.setMessage(tweet);
-        Status s = mock(Status.class);
-        when(mockTwitter.updateStatus(requestBody.getMessage())).thenReturn(s);
+        Status mockStatus = mock(Status.class);
+        User u = mock(User.class);
+        when(mockStatus.getText()).thenReturn(tweet);
+        when(mockStatus.getUser()).thenReturn(u);
+        when(mockStatus.getUser().getName()).thenReturn("slkdjf");
+        when(mockStatus.getUser().getProfileImageURL()).thenReturn("lsjdflsdkfj");
+        when(mockStatus.getUser().getScreenName()).thenReturn("lskdjflsdkjf");
+        Date date = new Date(2018,1,1);
+        when(mockStatus.getCreatedAt()).thenReturn(date);
+        when(mockTwitter.updateStatus(requestBody.getMessage())).thenReturn(mockStatus);
+        service.postTweet(requestBody);
         assertEquals(tweet, service.postTweet(requestBody).getMessage());
 
 
