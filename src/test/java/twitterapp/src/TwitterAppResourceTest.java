@@ -59,7 +59,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         requestBody1.setName("jojo");
         Response r = resource.postTweet(requestBody1);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("Tweet("+shortTweet+") has been posted.", r.getEntity().toString());
+        assertEquals(twitterPost, r.getEntity());
     }
 
 

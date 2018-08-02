@@ -69,7 +69,7 @@ public class TwitterAppResource {
                 return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
             }
 
-        return Response.ok().entity("Tweet(" + twitterPost.getMessage() + ") has been posted.").build();
+        return Response.ok(twitterPost, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     @GET
