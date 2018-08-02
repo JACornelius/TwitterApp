@@ -37,10 +37,11 @@ public class TwitterAppResource {
     @GET
     @Path("/timeline")
     public Response getTimeline() throws Exception{
-        List<TwitterPost> statuses = service.getTimeline();
-        if (statuses.isEmpty() == false) {
+        try{
+            List<TwitterPost> statuses = service.getTimeline();
             return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
-        } else {
+        }
+        catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
     }
@@ -71,12 +72,13 @@ public class TwitterAppResource {
 
     @GET
     @Path("/tweet/filter")
-    public Response filterTweets(@QueryParam("filter") String filter) throws Exception{
-        List<TwitterPost> listTwitterPost = service.filterTweets(filter);
-        if(!listTwitterPost.isEmpty()){
+    public Response filterTweets(@QueryParam("filter") String filter){
+        List<TwitterPost> listTwitterPost;
+        try{
+            listTwitterPost = service.filterTweets(filter);
             return Response.ok(listTwitterPost, MediaType.APPLICATION_JSON_TYPE).build();
         }
-        else{
+        catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
 
