@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 
@@ -61,7 +62,7 @@ public class TwitterAppService {
         }
     }
 
-    public List<TwitterPost> filterTweets(String filter) {
+    public List<TwitterPost> filterTweets(String filter) throws Exception{
 
         List<TwitterPost> filteredTweetPosts = new ArrayList<>();
         try {
@@ -73,12 +74,12 @@ public class TwitterAppService {
         }
         catch (Exception e) {
             log.error("There was a problem on the server side.", e);
-
+            throw new TwitterAppException("There was a problem on the server side.");
         }
         return filteredTweetPosts;
     }
 
-    public List<TwitterPost> getTimeline() {
+    public List<TwitterPost> getTimeline() throws Exception{
         List<Status> statuses;
         List<TwitterPost> listTwitterPost = new ArrayList<>();
 
@@ -93,7 +94,7 @@ public class TwitterAppService {
 
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
-
+            throw new TwitterAppException("There was a problem on the server side");
         }
 
         return listTwitterPost;

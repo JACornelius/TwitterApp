@@ -165,13 +165,13 @@ public class TwitterAppServiceTest {
         }
     }
 //
-    @Test
+    @Test(expected = TwitterAppException.class)
     public void testBadFilter() throws Exception{
         doThrow(new TwitterException("There was a problem on the server side.")).when(mockTwitter).getHomeTimeline();
         assertTrue(service.filterTweets("potato").isEmpty());
     }
 
-    @Test
+    @Test(expected = TwitterAppException.class)
     public void testBadTimeline() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
         assertTrue(service.getTimeline().isEmpty());

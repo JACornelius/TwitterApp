@@ -34,7 +34,7 @@ public class TwitterAppResource {
 
     @GET
     @Path("/timeline")
-    public Response getTimeline() {
+    public Response getTimeline() throws Exception{
         List<TwitterPost> statuses = service.getTimeline();
         if (statuses.isEmpty() == false) {
             return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();

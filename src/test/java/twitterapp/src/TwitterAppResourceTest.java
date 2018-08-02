@@ -99,7 +99,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
 
     @Test
-    public void testEmptyTimeline(){
+    public void testEmptyTimeline() throws Exception{
         Response r = resource.getTimeline();
         when(r.getEntity()).thenReturn(null);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
