@@ -10,7 +10,15 @@ public class TwitterPost {
     private String twitterHandle;
     private String profileImageUrl;
     private Date createdAt;
-    
+
+    public TwitterPost(){
+        this.message = null;
+        this.userName = null;
+        this.twitterHandle = null;
+        this.profileImageUrl = null;
+        this.createdAt = null;
+    }
+
     public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt){
         this.message = message;
         this.userName = userName;

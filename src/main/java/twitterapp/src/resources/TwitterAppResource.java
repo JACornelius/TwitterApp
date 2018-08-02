@@ -15,6 +15,8 @@ import twitterapp.src.services.TwitterAppService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
@@ -48,9 +50,10 @@ public class TwitterAppResource {
     @Path("/tweet")
     @Consumes("application/json")
     public Response postTweet(RequestBody input) throws Exception{
-        TwitterPost twitterPost = new TwitterPost(input.message, input.name, null, null, null);
+        TwitterPost twitterPost;
+
             try {
-                 twitterPost = service.postTweet(twitterPost);
+                twitterPost = service.postTweet(input);
             }
             catch (EmptyTweetException e) {
                 return Response.serverError().entity("The tweet is empty.").build();

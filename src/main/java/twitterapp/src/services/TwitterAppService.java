@@ -10,10 +10,13 @@ import twitterapp.src.exceptions.LongTweetException;
 
 
 import twitterapp.src.exceptions.TwitterAppException;
+import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
@@ -36,10 +39,11 @@ public class TwitterAppService {
         twitter = t;
     }
 
-    public TwitterPost postTweet(TwitterPost inputTwitterPost) throws Exception {
+    public TwitterPost postTweet(RequestBody input) throws Exception {
         TwitterPost twitterPost;
-
-        System.out.println(inputTwitterPost.getMessage());
+        Stream<TwitterPost> streamRequestBody = Stream.of(input).map(i -> new TwitterPost(input.getMessage(), input.getName(), null, null, null));
+        List<TwitterPost> list = streamRequestBody.collect(Collectors.toList());
+        TwitterPost inputTwitterPost = list.get(0);
         if (inputTwitterPost.getMessage().length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
@@ -54,32 +58,29 @@ public class TwitterAppService {
                 log.info("Tweet(" + inputTwitterPost.getMessage() + ") has been posted.");
             } catch (Exception e) {
 
-                log.error("There was a problem on the server side, please try again later.");
-                throw new TwitterAppException("There was a problem on the server side, please try again later");
+                log.error("There was a problem on the server side, please try again later.", e);
+                throw new TwitterAppException("Unable to post tweet. There was a problem on the server side, please try again later");
             }
             return twitterPost;
-
         }
     }
 
-    public List<TwitterPost> filterTweets(String filter) throws Exception{
-
-        List<TwitterPost> filteredTweetPosts = new ArrayList<>();
+    public List<TwitterPost> filterTweets(String filter) throws TwitterAppException{
         try {
             List<Status> statuses = twitter.getHomeTimeline();
-            filteredTweetPosts = statuses.stream()
+            return statuses.stream()
                     .filter(s -> s.getText().contains(filter))
                     .map(s -> new TwitterPost(s.getText(), s.getUser().getName(), s.getUser().getScreenName(), s.getUser().getProfileImageURL(), s.getCreatedAt()))
                     .collect(toList());
         }
         catch (Exception e) {
             log.error("There was a problem on the server side.", e);
-            throw new TwitterAppException("There was a problem on the server side.");
+            throw new TwitterAppException("Unable to filter tweets. There was a problem on the server side.");
         }
-        return filteredTweetPosts;
+
     }
 
-    public List<TwitterPost> getTimeline() throws Exception{
+    public List<TwitterPost> getTimeline() throws TwitterAppException{
         List<Status> statuses;
         List<TwitterPost> listTwitterPost = new ArrayList<>();
 
@@ -94,7 +95,7 @@ public class TwitterAppService {
 
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
-            throw new TwitterAppException("There was a problem on the server side");
+            throw new TwitterAppException("Unable to get timeline. There was a problem on the server side");
         }
 
         return listTwitterPost;
