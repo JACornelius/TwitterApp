@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Path("/api/1.0/twitter")
 public class TwitterAppResource {
@@ -40,8 +41,8 @@ public class TwitterAppResource {
     @Path("/timeline")
     public Response getTimeline(){
         try{
-            List<TwitterPost> statuses = service.getTimeline();
-            return Response.ok(statuses, MediaType.APPLICATION_JSON_TYPE).build();
+            Optional<List<TwitterPost>> statuses = service.getTimeline();
+            return Response.ok(statuses.get(), MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
@@ -53,7 +54,7 @@ public class TwitterAppResource {
     @Path("/tweet")
     @Consumes("application/json")
     public Response postTweet(RequestBody input) throws Exception{
-        TwitterPost twitterPost;
+        Optional<TwitterPost> twitterPost;
 
             try {
                 twitterPost = service.postTweet(input);
@@ -69,16 +70,16 @@ public class TwitterAppResource {
                 return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
             }
 
-        return Response.ok(twitterPost, MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok(twitterPost.get(), MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     @GET
     @Path("/tweet/filter")
     public Response filterTweets(@QueryParam("filter") String filter){
-        List<TwitterPost> listTwitterPost;
+        Optional<List<TwitterPost>> listTwitterPost;
         try{
             listTwitterPost = service.filterTweets(filter);
-            return Response.ok(listTwitterPost, MediaType.APPLICATION_JSON_TYPE).build();
+            return Response.ok(listTwitterPost.get(), MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();

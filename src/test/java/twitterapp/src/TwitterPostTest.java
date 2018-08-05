@@ -1,6 +1,5 @@
 package twitterapp.src;
 
-import org.junit.Before;
 import org.junit.Test;
 import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;

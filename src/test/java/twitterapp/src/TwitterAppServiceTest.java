@@ -24,11 +24,12 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,7 +37,8 @@ import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 public class TwitterAppServiceTest {
     TwitterAppService service; 
-    TwitterPost twitterPost = new TwitterPost(null, null, null, null, null);
+    Optional<TwitterPost> twitterPost = Optional.empty();
+    Optional<List<TwitterPost>> twitterPostList = Optional.empty();
     RequestBody requestBody = new RequestBody();
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
@@ -68,7 +70,7 @@ public class TwitterAppServiceTest {
         when(mockStatus.getCreatedAt()).thenReturn(date);
         when(mockTwitter.updateStatus(requestBody.getMessage())).thenReturn(mockStatus);
         service.postTweet(requestBody);
-        assertEquals(tweet, service.postTweet(requestBody).getMessage());
+        assertEquals(tweet, service.postTweet(requestBody).get().getMessage());
 
 
 
@@ -101,9 +103,7 @@ public class TwitterAppServiceTest {
         String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
         requestBody.setMessage(longTweet);
         twitterPost = service.postTweet(requestBody);
-        assertTrue(twitterPost == null);
-
-
+        assertFalse(twitterPost.isPresent());
     }
 
     @Test
@@ -130,11 +130,11 @@ public class TwitterAppServiceTest {
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
-           List<TwitterPost> twitterPostList = service.getTimeline();
-          assertEquals(2, twitterPostList.size());
-           assertEquals(responseList.get(0).getText(), twitterPostList.get(0).getMessage());
-           assertEquals(responseList.get(1).getText(), twitterPostList.get(1).getMessage());
-           assertNotNull(service.getTimeline());
+           twitterPostList = service.getTimeline();
+          assertEquals(2, twitterPostList.get().size());
+           assertEquals(responseList.get(0).getText(), twitterPostList.get().get(0).getMessage());
+           assertEquals(responseList.get(1).getText(), twitterPostList.get().get(1).getMessage());
+           assertTrue(twitterPostList.isPresent());
 
         } catch (Exception e) {
            fail("Timeline was not returned");
@@ -171,10 +171,10 @@ public class TwitterAppServiceTest {
             responseList.add(mockStatus2);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
 
-            List<TwitterPost> twitterPostList = service.filterTweets("s");
-            assertEquals(2, twitterPostList.size());
-            assertEquals("mockStatus", twitterPostList.get(0).getMessage());
-            assertEquals("mockStatus1", twitterPostList.get(1).getMessage());
+            twitterPostList = service.filterTweets("s");
+            assertEquals(2, twitterPostList.get().size());
+            assertEquals("mockStatus", twitterPostList.get().get(0).getMessage());
+            assertEquals("mockStatus1", twitterPostList.get().get(1).getMessage());
         } catch (Exception e) {
             fail();
         }
@@ -183,13 +183,13 @@ public class TwitterAppServiceTest {
     @Test(expected = TwitterAppException.class)
     public void testBadFilter() throws Exception{
         doThrow(new TwitterException("There was a problem on the server side.")).when(mockTwitter).getHomeTimeline();
-        assertTrue(service.filterTweets("potato").isEmpty());
+        assertFalse(service.filterTweets("potato").isPresent());
     }
 
     @Test(expected = TwitterAppException.class)
     public void testBadTimeline() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
-        assertTrue(service.getTimeline().isEmpty());
+        assertFalse(service.getTimeline().isPresent());
     }
 
 }
