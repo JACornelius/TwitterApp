@@ -49,7 +49,7 @@ public class TwitterAppService {
             throw new EmptyTweetException("An empty tweet was entered");
         } else {
             try {
-                    return (Optional.ofNullable(twitter.updateStatus(input.getMessage())))
+                    return Optional.ofNullable(twitter.updateStatus(input.getMessage()))
                             .map(s -> new TwitterPost(s.getText(),
                                 s.getUser().getName(),
                                 s.getUser().getScreenName(),
