@@ -17,20 +17,26 @@ import twitterapp.src.services.TwitterAppService;
 
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class TwitterAppResourceTest extends TwitterResponseList{
     TwitterAppResource resource;
     TwitterPost twitterPost = new TwitterPost();
+    Optional<TwitterPost> twitterPostOptional = Optional.of(twitterPost);
+    List<TwitterPost> twitterPostList = new ArrayList<>();
+    Optional<List<TwitterPost>> twitterPostListOptional = Optional.of(twitterPostList);
 
     @Mock
     TwitterAppService mockService = mock(TwitterAppService.class);
@@ -50,16 +56,16 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
         String shortTweet = "this is a short tweet jfgf";
 
-        twitterPost.setMessage(shortTweet);
-        twitterPost.setUsername("jojo");
-        when(mockService.postTweet(isA(RequestBody.class))).thenReturn(twitterPost);
+        twitterPostOptional.get().setMessage(shortTweet);
+        twitterPostOptional.get().setUsername("jojo");
+        when(mockService.postTweet(isA(RequestBody.class))).thenReturn(twitterPostOptional);
 
         RequestBody requestBody1 = new RequestBody();
         requestBody1.setMessage(shortTweet);
         requestBody1.setName("jojo");
         Response r = resource.postTweet(requestBody1);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals(twitterPost, r.getEntity());
+        assertEquals(twitterPostOptional.get(), r.getEntity());
     }
 
 
@@ -67,7 +73,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     public void testFailTweet() throws Exception{
 
             String tweet = "test tweet";
-            twitterPost.setMessage(tweet);
+            twitterPostOptional.get().setMessage(tweet);
             when(mockTwitter.updateStatus(tweet)).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
             when(mockService.postTweet(isA(RequestBody.class))).thenThrow(new TwitterAppException("There was a problem on the server side, please try again later."));
             requestBody.message = tweet;
@@ -90,7 +96,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     @Test
     public void testEmptyTweet() throws Exception{
         String emptyTweet = "";
-        twitterPost.setMessage(emptyTweet);
+        twitterPostOptional.get().setMessage(emptyTweet);
         when(mockService.postTweet(isA(RequestBody.class))).thenThrow(new EmptyTweetException("An empty tweet was entered"));
         requestBody.message = emptyTweet;
         Response r = resource.postTweet(requestBody);
@@ -113,16 +119,16 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testTimelineReturnJSON() {
-        List<TwitterPost> twitterPostList = new ArrayList<>();
+
 
 
         try {
             TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null);
             TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null);
 
-           twitterPostList.add(twitterPost);
-            twitterPostList.add(twitterPost1);
-            when(mockService.getTimeline()).thenReturn(twitterPostList);
+           twitterPostListOptional.get().add(twitterPost);
+            twitterPostListOptional.get().add(twitterPost1);
+            when(mockService.getTimeline()).thenReturn(twitterPostListOptional);
            Response r = resource.getTimeline();
            List<TwitterPost> newTwitterPostList = (List<TwitterPost>) r.getEntity();
             assertNotNull(newTwitterPostList);
@@ -144,10 +150,9 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     public void testFilter() throws Exception{
         TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null);
         TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null);
-        List<TwitterPost> twitterPostList = new ArrayList<>();
-        twitterPostList.add(twitterPost);
-        twitterPostList.add(twitterPost1);
-        when(mockService.filterTweets("twitterPost")).thenReturn(twitterPostList);
+        twitterPostListOptional.get().add(twitterPost);
+        twitterPostListOptional.get().add(twitterPost1);
+        when(mockService.filterTweets("twitterPost")).thenReturn(twitterPostListOptional);
         Response r = resource.filterTweets("twitterPost");
         List<TwitterPost> result = (List<TwitterPost>) r.getEntity();
         assertEquals(2, result.size());
@@ -155,7 +160,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         assertEquals("twitterPost1", result.get(1).getMessage());
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
-        assertNotNull(result);
+        assertFalse(result.isEmpty());
     }
 
     @Test
