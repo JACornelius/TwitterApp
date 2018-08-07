@@ -2,7 +2,6 @@ package twitterapp.src;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 public class TwitterConfiguration {
 
     @JsonProperty("accessToken")
@@ -21,6 +20,7 @@ public class TwitterConfiguration {
     String consumerKey;
 
 
+    @JsonProperty
     public String getAccessToken(){
         return accessToken;
     }
