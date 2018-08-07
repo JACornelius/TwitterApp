@@ -2,6 +2,7 @@ package twitterapp.src.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
@@ -48,15 +49,12 @@ public class TwitterAppService {
             throw new EmptyTweetException("An empty tweet was entered");
         } else {
             try {
-
-                return Optional.ofNullable((Stream.of(twitter.updateStatus(input.getMessage()))
-                        .map(s -> new TwitterPost(s.getText(),
+                    return (Optional.ofNullable(twitter.updateStatus(input.getMessage())))
+                            .map(s -> new TwitterPost(s.getText(),
                                 s.getUser().getName(),
                                 s.getUser().getScreenName(),
                                 s.getUser().getProfileImageURL(),
-                                s.getCreatedAt()))
-                        .collect(toList())).get(0));
-
+                                s.getCreatedAt()));
 
             } catch (Exception e) {
 
