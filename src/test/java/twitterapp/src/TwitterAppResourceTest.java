@@ -45,7 +45,7 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        resource = new TwitterAppResource(mockTwitter);
+        resource = new TwitterAppResource();
         resource.setService(mockService);
         mockService.setTwitter(mockTwitter);
     }

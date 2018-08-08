@@ -6,10 +6,6 @@ import io.dropwizard.Configuration;
 import twitter4j.Twitter;
 
 
-import twitterapp.src.injections.DaggerTwitterComponent;
-import twitterapp.src.injections.TwitterComponent;
-import twitterapp.src.injections.TwitterInjection;
-import twitterapp.src.injections.TwitterModule;
 
 
 public class TwitterAppConfiguration extends Configuration {
@@ -20,11 +16,7 @@ public class TwitterAppConfiguration extends Configuration {
     Twitter twitter;
 
     public Twitter getTwitter(){
-        TwitterComponent component = DaggerTwitterComponent.builder()
-                .twitterModule(new TwitterModule(twitterConfig))
-                .build();
-        TwitterInjection injection = component.buildTwitterInjection();
-        return injection.getTwitter();
+        return twitter;
 
     }
 

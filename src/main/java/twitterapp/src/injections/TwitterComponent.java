@@ -1,13 +1,13 @@
 package twitterapp.src.injections;
 
 import dagger.Component;
-import twitter4j.Twitter;
-import twitterapp.src.TwitterConfiguration;
+import twitterapp.src.resources.TwitterAppResource;
 
 import javax.inject.Singleton;
 
 @Singleton
-@Component(modules = TwitterModule.class)
+@Component(modules = {TwitterModule.class, ServiceModule.class})
 public interface TwitterComponent {
-     TwitterInjection buildTwitterInjection();
+     TwitterAppResource buildTwitterAppResource(TwitterAppResource resource);
+
 }

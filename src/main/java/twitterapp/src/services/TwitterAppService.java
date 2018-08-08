@@ -12,9 +12,9 @@ import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 
 import static java.util.stream.Collectors.toList;
@@ -24,6 +24,7 @@ import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 public class TwitterAppService {
     private static Logger log = (Logger) LoggerFactory.getLogger(TwitterAppService.class);
     static TwitterAppService service = null;
+    @Inject
     public Twitter twitter;
 
 
