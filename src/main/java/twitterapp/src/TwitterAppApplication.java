@@ -27,7 +27,7 @@ public class TwitterAppApplication extends Application<TwitterAppConfiguration>
                 .twitterModule(twitterModule)
                 .serviceModule(new ServiceModule(twitter))
                 .build();
-        environment.jersey().register(component.buildTwitterAppResource(new TwitterAppResource()));
+        environment.jersey().register(component.buildTwitterAppResource());
     }
 
 

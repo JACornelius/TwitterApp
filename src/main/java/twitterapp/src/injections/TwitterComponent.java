@@ -8,6 +8,6 @@ import javax.inject.Singleton;
 @Singleton
 @Component(modules = {TwitterModule.class, ServiceModule.class})
 public interface TwitterComponent {
-     TwitterAppResource buildTwitterAppResource(TwitterAppResource resource);
+     TwitterAppResource buildTwitterAppResource();
 
 }
