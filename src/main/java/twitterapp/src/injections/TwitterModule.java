@@ -1,19 +1,25 @@
 package twitterapp.src.injections;
 
+
 import dagger.Module;
 import dagger.Provides;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import twitterapp.src.TwitterConfiguration;
+import twitterapp.src.resources.TwitterAppResource;
 
-import javax.inject.Inject;
+
 import javax.inject.Singleton;
 
 @Module
 public class TwitterModule {
-    @Inject
-    TwitterConfiguration twitterConfig = new TwitterConfiguration();
+    TwitterConfiguration twitterConfig;
+
+
+    public TwitterModule(TwitterConfiguration twitterConfig){
+        this.twitterConfig = twitterConfig;
+    }
 
     @Provides
     @Singleton
@@ -29,3 +35,5 @@ public class TwitterModule {
 
     }
 }
+
+

@@ -8,22 +8,23 @@ import twitter4j.Twitter;
 
 import twitterapp.src.injections.DaggerTwitterComponent;
 import twitterapp.src.injections.TwitterComponent;
+import twitterapp.src.injections.TwitterInjection;
+import twitterapp.src.injections.TwitterModule;
 
-
-import javax.inject.Inject;
 
 public class TwitterAppConfiguration extends Configuration {
+
 
     @JsonProperty("twitter")
     TwitterConfiguration twitterConfig = new TwitterConfiguration();
     Twitter twitter;
 
-    @Inject
-    @JsonProperty("twitter")
     public Twitter getTwitter(){
-        TwitterComponent component = DaggerTwitterComponent.create();
-        Twitter twitter = component.buildTwitter();
-        return twitter;
+        TwitterComponent component = DaggerTwitterComponent.builder()
+                .twitterModule(new TwitterModule(twitterConfig))
+                .build();
+        TwitterInjection injection = component.buildTwitterInjection();
+        return injection.getTwitter();
 
     }
 

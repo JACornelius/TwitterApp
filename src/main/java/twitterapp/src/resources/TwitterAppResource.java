@@ -12,6 +12,7 @@ import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 
+import javax.inject.Inject;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,6 +27,7 @@ import java.util.Optional;
 public class TwitterAppResource {
 
     public static int MAX_LENGTH = 280;
+
     public TwitterAppService service;
 
     public void setService(TwitterAppService s) {
