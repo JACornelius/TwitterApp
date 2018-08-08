@@ -31,14 +31,19 @@ public class TwitterAppResource {
 
     Twitter twitter;
 
+
     TwitterAppService service;
 
     public void setService(TwitterAppService s) {
         service = s;
     }
 
+
+
     @Inject
-    public TwitterAppResource() {
+    public TwitterAppResource(Twitter twitter, TwitterAppService service) {
+        this.service = service;
+        this.twitter = twitter;
     }
 
     @GET

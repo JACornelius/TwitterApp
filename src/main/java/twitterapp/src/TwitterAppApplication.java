@@ -1,6 +1,7 @@
 package twitterapp.src;
 
 import io.dropwizard.Application;
+import io.dropwizard.Bundle;
 import io.dropwizard.setup.Environment;
 import twitter4j.Twitter;
 import twitterapp.src.injections.DaggerTwitterComponent;
@@ -27,8 +28,10 @@ public class TwitterAppApplication extends Application<TwitterAppConfiguration>
                 .twitterModule(twitterModule)
                 .serviceModule(new ServiceModule(twitter))
                 .build();
+        //TwitterAppResource twitterAppResource = component.inject();
         environment.jersey().register(component.buildTwitterAppResource());
     }
+
 
 
 }
