@@ -7,7 +7,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import twitterapp.src.TwitterConfiguration;
-import twitterapp.src.resources.TwitterAppResource;
 
 
 import javax.inject.Singleton;

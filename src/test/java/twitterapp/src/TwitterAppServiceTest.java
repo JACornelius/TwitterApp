@@ -36,22 +36,21 @@ import static org.mockito.Mockito.when;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 public class TwitterAppServiceTest {
-    TwitterAppService service; 
+    TwitterAppService service;
     Optional<TwitterPost> twitterPost = Optional.empty();
     Optional<List<TwitterPost>> twitterPostList = Optional.empty();
     RequestBody requestBody = new RequestBody();
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
-   
+
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        service = TwitterAppService.getService();
         mockTwitter = mock(Twitter.class);
-        service.setTwitter(mockTwitter);
+        service = new TwitterAppService(mockTwitter);
     }
 
 
@@ -130,14 +129,14 @@ public class TwitterAppServiceTest {
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
-           twitterPostList = service.getTimeline();
-          assertEquals(2, twitterPostList.get().size());
-           assertEquals(responseList.get(0).getText(), twitterPostList.get().get(0).getMessage());
-           assertEquals(responseList.get(1).getText(), twitterPostList.get().get(1).getMessage());
-           assertTrue(twitterPostList.isPresent());
+            twitterPostList = service.getTimeline();
+            assertEquals(2, twitterPostList.get().size());
+            assertEquals(responseList.get(0).getText(), twitterPostList.get().get(0).getMessage());
+            assertEquals(responseList.get(1).getText(), twitterPostList.get().get(1).getMessage());
+            assertTrue(twitterPostList.isPresent());
 
         } catch (Exception e) {
-           fail("Timeline was not returned");
+            fail("Timeline was not returned");
         }
     }
 

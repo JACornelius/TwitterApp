@@ -41,9 +41,9 @@ public class TwitterAppResource {
 
 
     @Inject
-    public TwitterAppResource(Twitter twitter, TwitterAppService service) {
+    public TwitterAppResource(TwitterAppService service) {
         this.service = service;
-        this.twitter = twitter;
+
     }
 
     @GET
