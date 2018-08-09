@@ -32,9 +32,6 @@ public class TwitterAppService {
     }
 
 
-    public void setTwitter(Twitter t) {
-        twitter = t;
-    }
 
     public Optional<TwitterPost> postTweet(RequestBody input) throws Exception {
 
