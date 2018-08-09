@@ -2,7 +2,9 @@ package twitterapp.src;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import twitterapp.src.resources.TwitterAppResource;
+import twitterapp.src.injections.DaggerTwitterComponent;
+import twitterapp.src.injections.TwitterComponent;
+import twitterapp.src.injections.TwitterModule;
 
 
 public class TwitterAppApplication extends Application<TwitterAppConfiguration>
@@ -16,8 +18,13 @@ public class TwitterAppApplication extends Application<TwitterAppConfiguration>
     @Override
     public void run(final TwitterAppConfiguration configuration, final Environment environment)
     {
-        environment.jersey().register(new TwitterAppResource(configuration.getTwitter()));
+        TwitterModule twitterModule = new TwitterModule(configuration.twitterConfig);
+        TwitterComponent component = DaggerTwitterComponent.builder()
+                .twitterModule(twitterModule)
+                .build();
+        environment.jersey().register(component.buildTwitterAppResource());
     }
+
 
 
 }

@@ -7,25 +7,25 @@ import org.mockito.MockitoAnnotations;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
-import static org.junit.Assert.assertEquals;
+import twitterapp.src.injections.TwitterModule;
+
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-public class TwitterAppConfigurationTest {
-    TwitterAppConfiguration configuration;
-
+public class TwitterModuleTest {
     @Mock
     TwitterConfiguration mockTwitterConfig = mock(TwitterConfiguration.class);
-
 
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        configuration = new TwitterAppConfiguration();
+
     }
 
     @Test
-    public void testGetTwitter() {
-        Twitter twitter = configuration.getTwitter();
+    public void testProvideTwitter(){
+        TwitterModule module = new TwitterModule(mockTwitterConfig);
+        Twitter twitter = module.provideTwitter();
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerSecret(mockTwitterConfig.getConsumerSecret())

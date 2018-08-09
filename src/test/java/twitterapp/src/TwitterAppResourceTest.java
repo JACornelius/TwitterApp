@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
@@ -41,13 +40,11 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     @Mock
     TwitterAppService mockService = mock(TwitterAppService.class);
     RequestBody requestBody = mock(RequestBody.class);
-    Twitter mockTwitter = mock(Twitter.class);
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        resource = new TwitterAppResource(mockTwitter);
+        resource = new TwitterAppResource( mockService);
         resource.setService(mockService);
-        mockService.setTwitter(mockTwitter);
     }
 
 
@@ -74,7 +71,6 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
             String tweet = "test tweet";
             twitterPostOptional.get().setMessage(tweet);
-            when(mockTwitter.updateStatus(tweet)).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
             when(mockService.postTweet(isA(RequestBody.class))).thenThrow(new TwitterAppException("There was a problem on the server side, please try again later."));
             requestBody.message = tweet;
         Response r = resource.postTweet(requestBody);

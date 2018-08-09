@@ -2,7 +2,6 @@ package twitterapp.src.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
@@ -12,9 +11,9 @@ import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 
 import static java.util.stream.Collectors.toList;
@@ -23,20 +22,16 @@ import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 public class TwitterAppService {
     private static Logger log = (Logger) LoggerFactory.getLogger(TwitterAppService.class);
-    static TwitterAppService service = null;
+
+    @Inject
     public Twitter twitter;
 
-
-    public static TwitterAppService getService() {
-        if (service == null) {
-            service = new TwitterAppService();
-        }
-        return service;
+    @Inject
+    public TwitterAppService(Twitter twitter){
+        this.twitter = twitter;
     }
 
-    public void setTwitter(Twitter t) {
-        twitter = t;
-    }
+
 
     public Optional<TwitterPost> postTweet(RequestBody input) throws Exception {
 
