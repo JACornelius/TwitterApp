@@ -18,8 +18,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,8 +48,10 @@ public class TwitterAppResource {
     @GET
     @Path("/timeline")
     public Response getTimeline(){
+
         try{
             Optional<List<TwitterPost>> statuses = service.getTimeline();
+
             return Response.ok(statuses.get(), MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
