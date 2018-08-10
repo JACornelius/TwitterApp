@@ -67,14 +67,8 @@ public class TwitterAppService {
                             s.getCreatedAt()))
                     .collect(toList()));
             Integer eTag = resultListTwitterPost.hashCode();
-            if(cacheTimeline.get(eTag).isPresent() == false){
-                cacheTimeline.invalidateAll();
                 cacheTimeline.put(eTag, resultListTwitterPost);
-                return resultListTwitterPost;
-            }
-            else{
-               return cacheTimeline.get(eTag);
-            }
+                return cacheTimeline.get(eTag);
 
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
@@ -95,6 +89,8 @@ public class TwitterAppService {
             throw new EmptyTweetException("An empty tweet was entered");
         } else {
             try {
+                    cacheTimeline.invalidateAll();
+                    cacheFilter.invalidateAll();
                     return Optional.ofNullable(twitter.updateStatus(input.getMessage()))
                             .map(s -> new TwitterPost(s.getText(),
                                 s.getUser().getName(),
@@ -122,13 +118,9 @@ public class TwitterAppService {
                                               s.getCreatedAt()))
                     .collect(toList()));
                 Integer eTag = resultFilterdTweets.hashCode();
-                if(cacheFilter.get(eTag).isPresent() == false){
                     cacheFilter.put(eTag, resultFilterdTweets);
-                    return resultFilterdTweets;
-                }
-                else{
                     return cacheFilter.get(eTag);
-                }
+
         }
         catch (Exception e) {
             log.error("There was a problem on the server side.", e);
