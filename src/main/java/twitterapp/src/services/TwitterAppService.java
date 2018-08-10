@@ -15,15 +15,11 @@ import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.ArrayUtils.toArray;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 
@@ -58,7 +54,7 @@ public class TwitterAppService {
 
     public Optional<List<TwitterPost>> getTimeline() throws TwitterAppException{
         try {
-
+            if(cacheTimeline.size() == 0){
             Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getHomeTimeline().stream()
                     .map(s -> new TwitterPost(s.getText(),
                             s.getUser().getName(),
@@ -66,9 +62,12 @@ public class TwitterAppService {
                             s.getUser().getProfileImageURL(),
                             s.getCreatedAt()))
                     .collect(toList()));
-            Integer eTag = resultListTwitterPost.hashCode();
-                cacheTimeline.put(eTag, resultListTwitterPost);
-                return cacheTimeline.get(eTag);
+
+                cacheTimeline.put(1, resultListTwitterPost);
+                }
+
+               return cacheTimeline.get(1);
+
 
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
@@ -109,18 +108,21 @@ public class TwitterAppService {
 
     public Optional<List<TwitterPost>> filterTweets(String filter) throws TwitterAppException{
         try {
+            if(cacheFilter.size() == 0){
                 Optional<List<TwitterPost>> resultFilterdTweets = Optional.ofNullable(twitter.getHomeTimeline().stream()
-                    .filter(s -> s.getText().contains(filter))
-                    .map(s -> new TwitterPost(s.getText(),
-                                              s.getUser().getName(),
-                                              s.getUser().getScreenName(),
-                                              s.getUser().getProfileImageURL(),
-                                              s.getCreatedAt()))
-                    .collect(toList()));
-                Integer eTag = resultFilterdTweets.hashCode();
-                    cacheFilter.put(eTag, resultFilterdTweets);
-                    return cacheFilter.get(eTag);
+                        .filter(s -> s.getText().contains(filter))
+                        .map(s -> new TwitterPost(s.getText(),
+                                s.getUser().getName(),
+                                s.getUser().getScreenName(),
+                                s.getUser().getProfileImageURL(),
+                                s.getCreatedAt()))
+                        .collect(toList()));
 
+                cacheFilter.put(1, resultFilterdTweets);
+
+            }
+
+            return cacheFilter.get(1);
         }
         catch (Exception e) {
             log.error("There was a problem on the server side.", e);
