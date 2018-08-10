@@ -19,7 +19,6 @@ import java.util.*;
 
 
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.ArrayUtils.toArray;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
 
 
@@ -34,11 +33,11 @@ public class TwitterAppService {
                         }
                     }
             );
-    LoadingCache<Integer, Optional<List<TwitterPost>>> cacheFilter= CacheBuilder.newBuilder()
+    LoadingCache<String, Optional<List<TwitterPost>>> cacheFilter= CacheBuilder.newBuilder()
             .build(
-                    new CacheLoader<Integer, Optional<List<TwitterPost>>>() {
+                    new CacheLoader<String, Optional<List<TwitterPost>>>() {
                         @Override
-                        public Optional<List<TwitterPost>> load(Integer integer) throws Exception {
+                        public Optional<List<TwitterPost>> load(String filter) throws Exception {
                             return Optional.empty();
                         }
                     }
@@ -108,8 +107,8 @@ public class TwitterAppService {
 
     public Optional<List<TwitterPost>> filterTweets(String filter) throws TwitterAppException{
         try {
-            if(cacheFilter.size() == 0){
-                Optional<List<TwitterPost>> resultFilterdTweets = Optional.ofNullable(twitter.getHomeTimeline().stream()
+            if(cacheFilter.get(filter).isPresent() == false){
+                Optional<List<TwitterPost>> resultFilteredTweets = Optional.ofNullable(twitter.getHomeTimeline().stream()
                         .filter(s -> s.getText().contains(filter))
                         .map(s -> new TwitterPost(s.getText(),
                                 s.getUser().getName(),
@@ -118,11 +117,15 @@ public class TwitterAppService {
                                 s.getCreatedAt()))
                         .collect(toList()));
 
-                cacheFilter.put(1, resultFilterdTweets);
-
+                cacheFilter.put(filter, resultFilteredTweets);
+                return cacheFilter.get(filter);
+            }
+            else{
+                return cacheFilter.get(filter);
             }
 
-            return cacheFilter.get(1);
+
+
         }
         catch (Exception e) {
             log.error("There was a problem on the server side.", e);
