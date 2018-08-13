@@ -66,18 +66,27 @@ public class TwitterAppService {
         } else {
             try {
                 return Optional.ofNullable(twitter.updateStatus(input.getMessage()))
-                        .map(s -> new TwitterPost(s.getText(),
-                                s.getUser().getName(),
-                                s.getUser().getScreenName(),
-                                s.getUser().getProfileImageURL(),
-                                s.getCreatedAt()));
+                        .map(s -> {
+
+                                TwitterPost twitterPost = new TwitterPost(s.getText(),
+                                    s.getUser().getName(),
+                                    s.getUser().getScreenName(),
+                                    s.getUser().getProfileImageURL(),
+                                    s.getCreatedAt());
+                                cacheTimeline.invalidateAll();
+                                cacheFilter.invalidateAll();
+                                return twitterPost;
+                        });
+
+
+
+
             } catch (Exception e) {
                 log.error("There was a problem on the server side, please try again later.", e);
                 throw new TwitterAppException("Unable to post tweet. There was a problem on the server side, please try again later");
 
             } finally {
-                cacheFilter.invalidateAll();
-                cacheTimeline.invalidateAll();
+
             }
         }
 
@@ -93,6 +102,7 @@ public class TwitterAppService {
                                 s.getUser().getScreenName(),
                                 s.getUser().getProfileImageURL(),
                                 s.getCreatedAt()))
+
                         .collect(toList()));
 
                 cacheFilter.put(filter, resultFilteredTweets);
