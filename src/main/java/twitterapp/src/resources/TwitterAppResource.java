@@ -27,17 +27,11 @@ public class TwitterAppResource {
 
     public static int MAX_LENGTH = 280;
 
-
-    Twitter twitter;
-
-
     TwitterAppService service;
 
-    public void setService(TwitterAppService s) {
+       public void setService(TwitterAppService s) {
         service = s;
     }
-
-
 
     @Inject
     public TwitterAppResource(TwitterAppService service) {
