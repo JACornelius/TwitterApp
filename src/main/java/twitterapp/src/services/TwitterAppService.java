@@ -85,8 +85,6 @@ public class TwitterAppService {
                 log.error("There was a problem on the server side, please try again later.", e);
                 throw new TwitterAppException("Unable to post tweet. There was a problem on the server side, please try again later");
 
-            } finally {
-
             }
         }
 
