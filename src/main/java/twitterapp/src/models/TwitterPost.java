@@ -39,7 +39,8 @@ public class TwitterPost {
                 && Objects.equals(userName, twitterPost.userName)
                 && Objects.equals(twitterHandle, twitterPost.twitterHandle)
                 && Objects.equals(profileImageUrl, twitterPost.profileImageUrl)
-                && Objects.equals(createdAt, twitterPost.createdAt);
+                && Objects.equals(createdAt, twitterPost.createdAt)
+                && Objects.equals(statusId, twitterPost.statusId);
     }
 
     @Override
