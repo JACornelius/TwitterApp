@@ -1,5 +1,5 @@
 package twitterapp.src.models;
-import twitter4j.Status;
+
 
 import java.util.Date;
 import java.util.Objects;
@@ -9,6 +9,7 @@ public class TwitterPost {
     private String userName;
     private String twitterHandle;
     private String profileImageUrl;
+    private long statusId;
     private Date createdAt;
 
     public TwitterPost(){
@@ -17,14 +18,16 @@ public class TwitterPost {
         this.twitterHandle = null;
         this.profileImageUrl = null;
         this.createdAt = null;
+        this.statusId = 0;
     }
 
-    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt){
+    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, long statusId){
         this.message = message;
         this.userName = userName;
         this.twitterHandle = twitterHandle;
         this.profileImageUrl = profileImageUrl;
         this.createdAt = createdAt;
+        this.statusId = statusId;
     }
 
     @Override
@@ -64,6 +67,8 @@ public class TwitterPost {
         return this.createdAt;
     }
 
+    public long getStatusId() {return this.statusId; }
+
     public void setMessage(String message){
         this.message = message;
     }
@@ -83,5 +88,7 @@ public class TwitterPost {
     public void setCreatedAt(Date createdAt){
         this.createdAt = createdAt;
     }
+
+    public void setStatusId(long statusId) { this.statusId = statusId; }
 
 }
