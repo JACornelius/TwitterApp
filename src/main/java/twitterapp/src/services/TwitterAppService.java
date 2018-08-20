@@ -73,7 +73,7 @@ public class TwitterAppService {
                                     s.getUser().getScreenName(),
                                     s.getUser().getProfileImageURL(),
                                     s.getCreatedAt(),
-                                    s.getId());
+                                    Objects.toString(s.getId()));
                                 cacheTimeline.invalidateAll();
                                 cacheFilter.invalidateAll();
                                 return twitterPost;
@@ -101,7 +101,7 @@ public class TwitterAppService {
                                 s.getUser().getScreenName(),
                                 s.getUser().getProfileImageURL(),
                                 s.getCreatedAt(),
-                                s.getId()))
+                                Objects.toString(s.getId())))
 
                         .collect(toList()));
 
@@ -126,7 +126,7 @@ public class TwitterAppService {
                             s.getUser().getScreenName(),
                             s.getUser().getProfileImageURL(),
                             s.getCreatedAt(),
-                            s.getId()))
+                            Objects.toString(s.getId())))
                     .collect(toList()));
 
                 cacheTimeline.put(TIMELINE_KEY, resultListTwitterPost);

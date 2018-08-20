@@ -9,7 +9,7 @@ public class TwitterPost {
     private String userName;
     private String twitterHandle;
     private String profileImageUrl;
-    private long statusId;
+    private String statusId;
     private Date createdAt;
 
     public TwitterPost(){
@@ -18,10 +18,10 @@ public class TwitterPost {
         this.twitterHandle = null;
         this.profileImageUrl = null;
         this.createdAt = null;
-        this.statusId = 0;
+        this.statusId = null;
     }
 
-    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, long statusId){
+    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, String statusId){
         this.message = message;
         this.userName = userName;
         this.twitterHandle = twitterHandle;
@@ -68,7 +68,7 @@ public class TwitterPost {
         return this.createdAt;
     }
 
-    public long getStatusId() {return this.statusId; }
+    public String getStatusId() {return this.statusId; }
 
     public void setMessage(String message){
         this.message = message;
@@ -90,6 +90,6 @@ public class TwitterPost {
         this.createdAt = createdAt;
     }
 
-    public void setStatusId(long statusId) { this.statusId = statusId; }
+    public void setStatusId(String statusId) { this.statusId = statusId; }
 
 }

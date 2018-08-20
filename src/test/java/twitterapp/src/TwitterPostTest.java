@@ -11,7 +11,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 public class TwitterPostTest {
-    TwitterPost twitterPost = new TwitterPost(null, null, null, null, null, 0);
+    TwitterPost twitterPost = new TwitterPost(null, null, null, null, null, null);
 
     @Test
     public void testTwitterPost() {
@@ -33,15 +33,15 @@ public class TwitterPostTest {
     public void testEquals(){
         Date date = new Date(2018, 1,1);
         Date date1 = new Date(2018, 2, 2);
-        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 0);
-        TwitterPost twitterPost0 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 0);
-        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost0", "usernameTwitterPost0", "twitterHandleTwitterPost0", "profileURLTwittterPost0", date1, 0);
-        TwitterPost twitterPost2 = new TwitterPost("messageTwitterPost1", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 0);
-        TwitterPost twitterPost3 = new TwitterPost("messageTwitterPost", "usernameTwitterPost1", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 0);
-        TwitterPost twitterPost4 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost1", "profileURLTwittterPost", date, 0);
-        TwitterPost twitterPost5 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost1", date ,0);
-        TwitterPost twitterPost6 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date1, 0);
-        TwitterPost twitterPost7 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 1);
+        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, null);
+        TwitterPost twitterPost0 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, null);
+        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost0", "usernameTwitterPost0", "twitterHandleTwitterPost0", "profileURLTwittterPost0", date1, null);
+        TwitterPost twitterPost2 = new TwitterPost("messageTwitterPost1", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, null);
+        TwitterPost twitterPost3 = new TwitterPost("messageTwitterPost", "usernameTwitterPost1", "twitterHandleTwitterPost", "profileURLTwittterPost", date, null);
+        TwitterPost twitterPost4 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost1", "profileURLTwittterPost", date, null);
+        TwitterPost twitterPost5 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost1", date ,null);
+        TwitterPost twitterPost6 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date1, null);
+        TwitterPost twitterPost7 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "1");
         RequestBody requestBody = new RequestBody();
         assertTrue(twitterPost.equals(twitterPost));
         assertTrue(twitterPost.equals(twitterPost0));
@@ -59,8 +59,8 @@ public class TwitterPostTest {
     @Test
     public void testHashCode(){
         Date date = new Date(2018, 1,1);
-        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 0);
-        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 0);
+        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "0");
+        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "0");
         assertEquals(twitterPost.hashCode(),twitterPost1.hashCode());
 
     }
