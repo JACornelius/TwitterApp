@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitterapp.src.exceptions.EmptyTweetException;
@@ -120,7 +121,8 @@ public class TwitterAppService {
     public Optional<List<TwitterPost>> getTimeline() throws TwitterAppException{
         try {
             if(cacheTimeline.get(TIMELINE_KEY).isPresent() == false){
-            Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getHomeTimeline().stream()
+                Paging page = new Paging(1,25);
+            Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getHomeTimeline(page).stream()
                     .map(s -> new TwitterPost(s.getText(),
                             s.getUser().getName(),
                             s.getUser().getScreenName(),
