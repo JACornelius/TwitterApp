@@ -119,8 +119,8 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
 
         try {
-            TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null);
-            TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null);
+            TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null, "0");
+            TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null, "0");
 
            twitterPostListOptional.get().add(twitterPost);
             twitterPostListOptional.get().add(twitterPost1);
@@ -144,8 +144,8 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testFilter() throws Exception{
-        TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null);
-        TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null);
+        TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null, "0");
+        TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null, "0");
         twitterPostListOptional.get().add(twitterPost);
         twitterPostListOptional.get().add(twitterPost1);
         when(mockService.filterTweets("twitterPost")).thenReturn(twitterPostListOptional);

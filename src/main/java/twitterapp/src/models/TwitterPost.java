@@ -1,5 +1,5 @@
 package twitterapp.src.models;
-import twitter4j.Status;
+
 
 import java.util.Date;
 import java.util.Objects;
@@ -9,6 +9,7 @@ public class TwitterPost {
     private String userName;
     private String twitterHandle;
     private String profileImageUrl;
+    private String statusId;
     private Date createdAt;
 
     public TwitterPost(){
@@ -17,14 +18,16 @@ public class TwitterPost {
         this.twitterHandle = null;
         this.profileImageUrl = null;
         this.createdAt = null;
+        this.statusId = null;
     }
 
-    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt){
+    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, String statusId){
         this.message = message;
         this.userName = userName;
         this.twitterHandle = twitterHandle;
         this.profileImageUrl = profileImageUrl;
         this.createdAt = createdAt;
+        this.statusId = statusId;
     }
 
     @Override
@@ -36,7 +39,8 @@ public class TwitterPost {
                 && Objects.equals(userName, twitterPost.userName)
                 && Objects.equals(twitterHandle, twitterPost.twitterHandle)
                 && Objects.equals(profileImageUrl, twitterPost.profileImageUrl)
-                && Objects.equals(createdAt, twitterPost.createdAt);
+                && Objects.equals(createdAt, twitterPost.createdAt)
+                && Objects.equals(statusId, twitterPost.statusId);
     }
 
     @Override
@@ -64,6 +68,8 @@ public class TwitterPost {
         return this.createdAt;
     }
 
+    public String getStatusId() {return this.statusId; }
+
     public void setMessage(String message){
         this.message = message;
     }
@@ -83,5 +89,7 @@ public class TwitterPost {
     public void setCreatedAt(Date createdAt){
         this.createdAt = createdAt;
     }
+
+    public void setStatusId(String statusId) { this.statusId = statusId; }
 
 }
