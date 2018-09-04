@@ -129,7 +129,7 @@ public class TwitterAppServiceTest {
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
             when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
-            twitterPostList = service.getTimeline();
+            twitterPostList = service.getHomeTimeline();
             assertEquals(2, twitterPostList.get().size());
             assertEquals(responseList.get(0).getText(), twitterPostList.get().get(0).getMessage());
             assertEquals(responseList.get(1).getText(), twitterPostList.get().get(1).getMessage());
@@ -188,7 +188,7 @@ public class TwitterAppServiceTest {
     @Test(expected = TwitterAppException.class)
     public void testBadTimeline() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
-        assertFalse(service.getTimeline().isPresent());
+        assertFalse(service.getHomeTimeline().isPresent());
     }
 
 }

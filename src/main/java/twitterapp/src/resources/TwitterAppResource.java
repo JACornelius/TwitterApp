@@ -41,10 +41,10 @@ public class TwitterAppResource {
 
     @GET
     @Path("/timeline")
-    public Response getTimeline(){
+    public Response getHomeTimeline(){
 
         try{
-            Optional<List<TwitterPost>> statuses = service.getTimeline();
+            Optional<List<TwitterPost>> statuses = service.getHomeTimeline();
 
             return Response.ok(statuses.get(), MediaType.APPLICATION_JSON_TYPE).build();
         }
@@ -53,6 +53,19 @@ public class TwitterAppResource {
         }
     }
 
+    @GET
+    @Path("/timeline/user")
+    public Response getUserTimeline(){
+
+        try{
+            Optional<List<TwitterPost>> statuses = service.getUserTimeline();
+
+            return Response.ok(statuses.get(), MediaType.APPLICATION_JSON_TYPE).build();
+        }
+        catch(TwitterAppException e){
+            return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
+        }
+    }
 
     @POST
     @Path("/tweet")

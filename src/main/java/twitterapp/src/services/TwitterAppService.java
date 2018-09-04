@@ -28,7 +28,16 @@ public class TwitterAppService {
     private static Logger log = (Logger) LoggerFactory.getLogger(TwitterAppService.class);
     private static int TIMELINE_KEY = 1;
 
-    LoadingCache<Integer, Optional<List<TwitterPost>>> cacheTimeline = CacheBuilder.newBuilder()
+    LoadingCache<Integer, Optional<List<TwitterPost>>> cacheHomeTimeline = CacheBuilder.newBuilder()
+            .build(
+                    new CacheLoader<Integer, Optional<List<TwitterPost>>>() {
+                        @Override
+                        public Optional<List<TwitterPost>> load(Integer integer) throws Exception {
+                            return Optional.empty();
+                        }
+                    }
+            );
+    LoadingCache<Integer, Optional<List<TwitterPost>>> cacheUserTimeline = CacheBuilder.newBuilder()
             .build(
                     new CacheLoader<Integer, Optional<List<TwitterPost>>>() {
                         @Override
@@ -75,7 +84,7 @@ public class TwitterAppService {
                                     s.getUser().getProfileImageURL(),
                                     s.getCreatedAt(),
                                     Objects.toString(s.getId()));
-                                cacheTimeline.invalidateAll();
+                                cacheHomeTimeline.invalidateAll();
                                 cacheFilter.invalidateAll();
                                 return twitterPost;
                         });
@@ -118,9 +127,9 @@ public class TwitterAppService {
 
     }
 
-    public Optional<List<TwitterPost>> getTimeline() throws TwitterAppException{
+    public Optional<List<TwitterPost>> getHomeTimeline() throws TwitterAppException{
         try {
-            if(cacheTimeline.get(TIMELINE_KEY).isPresent() == false){
+            if(cacheHomeTimeline.get(TIMELINE_KEY).isPresent() == false){
                 Paging page = new Paging(1,25);
             Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getHomeTimeline(page).stream()
                     .map(s -> new TwitterPost(s.getText(),
@@ -131,10 +140,10 @@ public class TwitterAppService {
                             Objects.toString(s.getId())))
                     .collect(toList()));
 
-                cacheTimeline.put(TIMELINE_KEY, resultListTwitterPost);
+                cacheHomeTimeline.put(TIMELINE_KEY, resultListTwitterPost);
                 }
 
-               return cacheTimeline.get(1);
+               return cacheHomeTimeline.get(1);
 
 
         } catch (Exception e) {
@@ -145,7 +154,32 @@ public class TwitterAppService {
 
     }
 
+    public Optional<List<TwitterPost>> getUserTimeline() throws TwitterAppException{
+        try {
+            if(cacheUserTimeline.get(TIMELINE_KEY).isPresent() == false){
+                Paging page = new Paging(1,25);
+                Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getUserTimeline(page).stream()
+                        .map(s -> new TwitterPost(s.getText(),
+                                s.getUser().getName(),
+                                s.getUser().getScreenName(),
+                                s.getUser().getProfileImageURL(),
+                                s.getCreatedAt(),
+                                Objects.toString(s.getId())))
+                        .collect(toList()));
 
+                cacheUserTimeline.put(TIMELINE_KEY, resultListTwitterPost);
+            }
+
+            return cacheUserTimeline.get(1);
+
+
+        } catch (Exception e) {
+            log.error("There was a problem on the server side.", e);
+            throw new TwitterAppException("Unable to get timeline. There was a problem on the server side");
+        }
+
+
+    }
 
 
 
