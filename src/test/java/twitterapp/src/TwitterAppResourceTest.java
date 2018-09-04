@@ -112,6 +112,16 @@ public class TwitterAppResourceTest extends TwitterResponseList{
     }
 
 
+    @Test
+    public void testEmptyUserTimeline() throws Exception{
+        when(mockService.getUserTimeline()).thenThrow(new TwitterAppException("Unable to get timeline. There was a problem on the server side"));
+        Response r = resource.getUserTimeline();
+        when(r.getEntity()).thenReturn(null);
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
+        assertEquals("There was a problem on the server side, please try again later.", r.getEntity().toString());
+    }
+
+
 
     @Test
     public void testHomeTimelineReturnJSON() {
