@@ -14,6 +14,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
+import twitter4j.Paging;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
@@ -106,7 +107,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testGoodTimeline() {
+    public void testGoodHomeTimeline() {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
         Status mockStatus = mock(Status.class);
         Status mockStatus1 = mock(Status.class);
@@ -128,8 +129,43 @@ public class TwitterAppServiceTest {
             when(mockStatus1.getCreatedAt()).thenReturn(date);
             responseList.add(mockStatus);
             responseList.add(mockStatus1);
-            when(mockTwitter.getHomeTimeline()).thenReturn(responseList);
+            when(mockTwitter.getHomeTimeline(new Paging(1,25))).thenReturn(responseList);
             twitterPostList = service.getHomeTimeline();
+            assertEquals(2, twitterPostList.get().size());
+            assertEquals(responseList.get(0).getText(), twitterPostList.get().get(0).getMessage());
+            assertEquals(responseList.get(1).getText(), twitterPostList.get().get(1).getMessage());
+            assertTrue(twitterPostList.isPresent());
+
+        } catch (Exception e) {
+            fail("Timeline was not returned");
+        }
+    }
+
+    @Test
+    public void testGoodUserTimeline() {
+        ResponseList<Status> responseList = new TwitterResponseList<Status>();
+        Status mockStatus = mock(Status.class);
+        Status mockStatus1 = mock(Status.class);
+        User mockUser = mock(User.class);
+        User mockUser1 = mock(User.class);
+        try {
+            Date date = new Date(2018,1,1);
+            when(mockStatus.getText()).thenReturn("mockStatus");
+            when(mockStatus1.getText()).thenReturn("mockStatus1");
+            when(mockStatus.getUser()).thenReturn(mockUser);
+            when(mockStatus1.getUser()).thenReturn(mockUser1);
+            when(mockStatus.getUser().getName()).thenReturn("slkdjf");
+            when(mockStatus1.getUser().getName()).thenReturn("lsdjflksdjf");
+            when(mockStatus.getUser().getProfileImageURL()).thenReturn("lsjdflsdkfj");
+            when(mockStatus1.getUser().getProfileImageURL()).thenReturn("lsdjflsdkjf");
+            when(mockStatus.getUser().getScreenName()).thenReturn("lskdjflsdkjf");
+            when(mockStatus1.getUser().getScreenName()).thenReturn("sljflskjdfl");
+            when(mockStatus.getCreatedAt()).thenReturn(date);
+            when(mockStatus1.getCreatedAt()).thenReturn(date);
+            responseList.add(mockStatus);
+            responseList.add(mockStatus1);
+            when(mockTwitter.getUserTimeline(new Paging(1,25))).thenReturn(responseList);
+            twitterPostList = service.getUserTimeline();
             assertEquals(2, twitterPostList.get().size());
             assertEquals(responseList.get(0).getText(), twitterPostList.get().get(0).getMessage());
             assertEquals(responseList.get(1).getText(), twitterPostList.get().get(1).getMessage());
@@ -186,9 +222,14 @@ public class TwitterAppServiceTest {
     }
 
     @Test(expected = TwitterAppException.class)
-    public void testBadTimeline() throws Exception {
+    public void testBadHomeTimeline() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
         assertFalse(service.getHomeTimeline().isPresent());
     }
 
+    @Test(expected = TwitterAppException.class)
+    public void testBadUserTimeline() throws Exception {
+        doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
+        assertFalse(service.getUserTimeline().isPresent());
+    }
 }
