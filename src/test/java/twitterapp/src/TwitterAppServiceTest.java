@@ -1,5 +1,8 @@
 package twitterapp.src;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,6 +46,7 @@ public class TwitterAppServiceTest {
     RequestBody requestBody = new RequestBody();
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
+    CacheLoader<Integer, Optional<List<TwitterPost>>> mockCacheLoader = mock(CacheLoader.class);
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
@@ -71,11 +75,7 @@ public class TwitterAppServiceTest {
         when(mockTwitter.updateStatus(requestBody.getMessage())).thenReturn(mockStatus);
         service.postTweet(requestBody);
         assertEquals(tweet, service.postTweet(requestBody).get().getMessage());
-
-
-
     }
-
 
     @Test(expected = TwitterAppException.class)
     public void testBadTweetInPostTweet() throws Exception {

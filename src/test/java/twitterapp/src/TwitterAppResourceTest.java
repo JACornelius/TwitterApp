@@ -124,9 +124,6 @@ public class TwitterAppResourceTest extends TwitterResponseList{
 
     @Test
     public void testHomeTimelineReturnJSON() {
-
-
-
         try {
             TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null, "0");
             TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null, "0");
@@ -147,9 +144,32 @@ public class TwitterAppResourceTest extends TwitterResponseList{
         catch (Exception e) {
             fail("Timeline was not returned");
         }
-
-
     }
+
+    @Test
+    public void testUserTimelineReturnJSON() {
+        try {
+            TwitterPost twitterPost = new TwitterPost("twitterPost", null, null, null, null, "0");
+            TwitterPost twitterPost1 = new TwitterPost("twitterPost1", null, null, null, null, "0");
+
+            twitterPostListOptional.get().add(twitterPost);
+            twitterPostListOptional.get().add(twitterPost1);
+            when(mockService.getUserTimeline()).thenReturn(twitterPostListOptional);
+            Response r = resource.getUserTimeline();
+            List<TwitterPost> newTwitterPostList = (List<TwitterPost>) r.getEntity();
+            assertNotNull(newTwitterPostList);
+            assertEquals(2, newTwitterPostList.size());
+            assertEquals("twitterPost", newTwitterPostList.get(0).getMessage());
+            assertEquals("twitterPost1", newTwitterPostList.get(1).getMessage());
+
+            assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
+            assertEquals( MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
+        }
+        catch (Exception e) {
+            fail("Timeline was not returned");
+        }
+    }
+
 
     @Test
     public void testFilter() throws Exception{
