@@ -85,6 +85,7 @@ public class TwitterAppService {
                                     s.getCreatedAt(),
                                     Objects.toString(s.getId()));
                                 cacheHomeTimeline.invalidateAll();
+                                cacheUserTimeline.invalidateAll();
                                 cacheFilter.invalidateAll();
                                 return twitterPost;
                         });
