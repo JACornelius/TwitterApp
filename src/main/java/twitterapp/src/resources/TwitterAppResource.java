@@ -40,8 +40,9 @@ public class TwitterAppResource {
     public Response getHomeTimeline(){
         try{
             Optional<List<TwitterPost>> statuses = service.getHomeTimeline();
-
-            return Response.ok(statuses.get(), MediaType.APPLICATION_JSON_TYPE).build();
+            List<TwitterPost> result = statuses.map(res -> statuses.get())
+                                               .orElse(null);
+            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
@@ -53,8 +54,9 @@ public class TwitterAppResource {
     public Response getUserTimeline(){
         try{
             Optional<List<TwitterPost>> statuses = service.getUserTimeline();
-
-            return Response.ok(statuses.get(), MediaType.APPLICATION_JSON_TYPE).build();
+            List<TwitterPost> result = statuses.map(res -> statuses.get())
+                    .orElse(null);
+            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
@@ -89,7 +91,9 @@ public class TwitterAppResource {
         Optional<List<TwitterPost>> listTwitterPost;
         try{
             listTwitterPost = service.filterTweets(filter);
-            return Response.ok(listTwitterPost.get(), MediaType.APPLICATION_JSON_TYPE).build();
+            List<TwitterPost> result = listTwitterPost.map(res -> listTwitterPost.get())
+                    .orElse(null);
+            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
