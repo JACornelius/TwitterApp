@@ -15,14 +15,10 @@ import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
 import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
-
 import javax.inject.Inject;
 import java.util.*;
-
-
 import static java.util.stream.Collectors.toList;
 import static twitterapp.src.resources.TwitterAppResource.MAX_LENGTH;
-
 
 public class TwitterAppService {
     private static Logger log = (Logger) LoggerFactory.getLogger(TwitterAppService.class);
@@ -65,7 +61,6 @@ public class TwitterAppService {
     }
 
     public Optional<TwitterPost> postTweet(RequestBody input) throws Exception {
-
         if (input.getMessage().length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
@@ -77,7 +72,6 @@ public class TwitterAppService {
             try {
                 return Optional.ofNullable(twitter.updateStatus(input.getMessage()))
                         .map(s -> {
-
                                 TwitterPost twitterPost = new TwitterPost(s.getText(),
                                     s.getUser().getName(),
                                     s.getUser().getScreenName(),
@@ -89,17 +83,11 @@ public class TwitterAppService {
                                 cacheFilter.invalidateAll();
                                 return twitterPost;
                         });
-
-
-
-
             } catch (Exception e) {
                 log.error("There was a problem on the server side, please try again later.", e);
                 throw new TwitterAppException("Unable to post tweet. There was a problem on the server side, please try again later");
-
             }
         }
-
     }
 
     public Optional<List<TwitterPost>> filterTweets(String filter) throws TwitterAppException{
@@ -119,13 +107,11 @@ public class TwitterAppService {
                 cacheFilter.put(filter, resultFilteredTweets);
             }
             return cacheFilter.get(filter);
-
         }
         catch (Exception e) {
             log.error("There was a problem on the server side.", e);
             throw new TwitterAppException("Unable to filter tweets. There was a problem on the server side.");
         }
-
     }
 
     public Optional<List<TwitterPost>> getHomeTimeline() throws TwitterAppException{
@@ -143,16 +129,11 @@ public class TwitterAppService {
 
                 cacheHomeTimeline.put(TIMELINE_KEY, resultListTwitterPost);
                 }
-
                return cacheHomeTimeline.get(1);
-
-
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
             throw new TwitterAppException("Unable to get timeline. There was a problem on the server side");
         }
-
-
     }
 
     public Optional<List<TwitterPost>> getUserTimeline() throws TwitterAppException{
@@ -167,22 +148,13 @@ public class TwitterAppService {
                                 s.getCreatedAt(),
                                 Objects.toString(s.getId())))
                         .collect(toList()));
-
                 cacheUserTimeline.put(TIMELINE_KEY, resultListTwitterPost);
             }
-
             return cacheUserTimeline.get(1);
-
-
         } catch (Exception e) {
             log.error("There was a problem on the server side.", e);
             throw new TwitterAppException("Unable to get timeline. There was a problem on the server side");
         }
-
-
     }
-
-
-
 }
 

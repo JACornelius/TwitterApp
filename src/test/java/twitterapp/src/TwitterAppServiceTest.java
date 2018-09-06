@@ -1,17 +1,12 @@
 package twitterapp.src;
 
-import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-
 import org.mockito.Mock;
-
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -25,11 +20,9 @@ import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 import org.mockito.MockitoAnnotations;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
@@ -58,7 +51,6 @@ public class TwitterAppServiceTest {
         service = new TwitterAppService(mockTwitter);
     }
 
-
     @Test
     public void testGoodTweet() throws Exception{
         String tweet = "good tweethjfgj";
@@ -79,7 +71,6 @@ public class TwitterAppServiceTest {
 
     @Test(expected = TwitterAppException.class)
     public void testBadTweetInPostTweet() throws Exception {
-
         requestBody.setMessage("bad tweet");
         when(mockTwitter.updateStatus(requestBody.getMessage())).thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
         twitterPost = service.postTweet(requestBody);
@@ -87,15 +78,12 @@ public class TwitterAppServiceTest {
 
     }
 
-
     @Test(expected = EmptyTweetException.class)
     public void testEmptyTweetExceptionHandling() throws Exception {
         String emptyTweet = "";
         requestBody.setMessage(emptyTweet);
         twitterPost = service.postTweet(requestBody);
         assertTrue(twitterPost == null);
-
-
     }
 
     @Test(expected = LongTweetException.class)
@@ -178,7 +166,6 @@ public class TwitterAppServiceTest {
 
     @Test
     public void testGoodFilter(){
-
         ResponseList<Status> responseList = new TwitterResponseList<>();
         Status mockStatus = mock(Status.class);
         Status mockStatus1 = mock(Status.class);
@@ -190,7 +177,6 @@ public class TwitterAppServiceTest {
             when(mockStatus.getText()).thenReturn("mockStatus");
             when(mockStatus1.getText()).thenReturn("mockStatus1");
             when(mockStatus2.getText()).thenReturn("lklkjjhkjhjf");
-
             when(mockStatus.getUser()).thenReturn(mockUser);
             when(mockStatus1.getUser()).thenReturn(mockUser1);
             when(mockStatus.getUser().getName()).thenReturn("slkdjf");

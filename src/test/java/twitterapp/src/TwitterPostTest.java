@@ -26,7 +26,6 @@ public class TwitterPostTest {
         assertEquals("testUserName",twitterPost.getUserName());
         assertEquals("testMessage", twitterPost.getMessage());
         assertEquals(date, twitterPost.getCreatedAt());
-
     }
 
     @Test
@@ -53,7 +52,6 @@ public class TwitterPostTest {
         assertFalse(twitterPost.equals(twitterPost6));
         assertFalse(twitterPost.equals(twitterPost7));
         assertFalse(twitterPost.equals(requestBody));
-
     }
 
     @Test
@@ -62,6 +60,5 @@ public class TwitterPostTest {
         TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "0");
         TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "0");
         assertEquals(twitterPost.hashCode(),twitterPost1.hashCode());
-
     }
 }

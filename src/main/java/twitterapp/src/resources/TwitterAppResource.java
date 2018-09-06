@@ -1,9 +1,5 @@
 package twitterapp.src.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import twitter4j.Status;
-import twitter4j.Twitter;
 
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
@@ -42,7 +38,6 @@ public class TwitterAppResource {
     @GET
     @Path("/timeline")
     public Response getHomeTimeline(){
-
         try{
             Optional<List<TwitterPost>> statuses = service.getHomeTimeline();
 
@@ -56,7 +51,6 @@ public class TwitterAppResource {
     @GET
     @Path("/timeline/user")
     public Response getUserTimeline(){
-
         try{
             Optional<List<TwitterPost>> statuses = service.getUserTimeline();
 
@@ -72,7 +66,6 @@ public class TwitterAppResource {
     @Consumes("application/json")
     public Response postTweet(RequestBody input) throws Exception{
         Optional<TwitterPost> twitterPost;
-
             try {
                 twitterPost = service.postTweet(input);
             }
