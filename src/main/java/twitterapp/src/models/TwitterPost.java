@@ -35,6 +35,7 @@ public class TwitterPost {
         if(o == this) return true;
         if(!(o instanceof TwitterPost)) return false;
         TwitterPost twitterPost = (TwitterPost) o;
+
         return Objects.equals(message, twitterPost.message)
                 && Objects.equals(userName, twitterPost.userName)
                 && Objects.equals(twitterHandle, twitterPost.twitterHandle)

@@ -1,9 +1,5 @@
 package twitterapp.src.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import twitter4j.Status;
-import twitter4j.Twitter;
 
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
@@ -41,25 +37,37 @@ public class TwitterAppResource {
 
     @GET
     @Path("/timeline")
-    public Response getTimeline(){
-
+    public Response getHomeTimeline(){
         try{
-            Optional<List<TwitterPost>> statuses = service.getTimeline();
-
-            return Response.ok(statuses.get(), MediaType.APPLICATION_JSON_TYPE).build();
+            Optional<List<TwitterPost>> statuses = service.getHomeTimeline();
+            List<TwitterPost> result = statuses.map(res -> statuses.get())
+                                               .orElse(null);
+            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
     }
 
+    @GET
+    @Path("/timeline/user")
+    public Response getUserTimeline(){
+        try{
+            Optional<List<TwitterPost>> statuses = service.getUserTimeline();
+            List<TwitterPost> result = statuses.map(res -> statuses.get())
+                                               .orElse(null);
+            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
+        }
+        catch(TwitterAppException e){
+            return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
+        }
+    }
 
     @POST
     @Path("/tweet")
     @Consumes("application/json")
     public Response postTweet(RequestBody input) throws Exception{
         Optional<TwitterPost> twitterPost;
-
             try {
                 twitterPost = service.postTweet(input);
             }
@@ -83,7 +91,9 @@ public class TwitterAppResource {
         Optional<List<TwitterPost>> listTwitterPost;
         try{
             listTwitterPost = service.filterTweets(filter);
-            return Response.ok(listTwitterPost.get(), MediaType.APPLICATION_JSON_TYPE).build();
+            List<TwitterPost> result = listTwitterPost.map(res -> listTwitterPost.get())
+                                                      .orElse(null);
+            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
