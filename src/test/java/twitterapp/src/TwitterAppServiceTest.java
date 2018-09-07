@@ -95,7 +95,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testGoodHomeTimeline() {
+    public void testHomeTimeline_happyPath() {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
         try {
             Date date = new Date(2018,1,1);
@@ -121,7 +121,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testGoodUserTimeline() {
+    public void testUserTimeline_happyPath() {
         ResponseList<Status> responseList = new TwitterResponseList<Status>();
         try {
             Date date = new Date(2018,1,1);
@@ -179,13 +179,13 @@ public class TwitterAppServiceTest {
     }
 
     @Test(expected = TwitterAppException.class)
-    public void testBadHomeTimeline() throws Exception {
+    public void testHomeTimeline_badPath() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
         assertFalse(service.getHomeTimeline().isPresent());
     }
 
     @Test(expected = TwitterAppException.class)
-    public void testBadUserTimeline() throws Exception {
+    public void testUserTimeline_badPath() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later.")).when(mockTwitter).getHomeTimeline();
         assertFalse(service.getUserTimeline().isPresent());
     }
