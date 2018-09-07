@@ -143,7 +143,7 @@ public class TwitterAppService {
                 Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getUserTimeline(page).stream()
                         .map(s -> new TwitterPost(s.getText(),
                                                   s.getUser().getName(),
-                                                  s.getUser().getScreenName(),
+                                                  null,
                                                   s.getUser().getProfileImageURL(),
                                                   s.getCreatedAt(),
                                                   Objects.toString(s.getId())))
