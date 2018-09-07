@@ -55,7 +55,7 @@ public class TwitterAppResource {
         try{
             Optional<List<TwitterPost>> statuses = service.getUserTimeline();
             List<TwitterPost> result = statuses.map(res -> statuses.get())
-                    .orElse(null);
+                                               .orElse(null);
             return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
@@ -92,7 +92,7 @@ public class TwitterAppResource {
         try{
             listTwitterPost = service.filterTweets(filter);
             List<TwitterPost> result = listTwitterPost.map(res -> listTwitterPost.get())
-                    .orElse(null);
+                                                      .orElse(null);
             return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
         catch(TwitterAppException e){
