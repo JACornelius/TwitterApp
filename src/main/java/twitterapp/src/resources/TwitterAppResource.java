@@ -85,6 +85,28 @@ public class TwitterAppResource {
         return Response.ok(twitterPost.get(), MediaType.APPLICATION_JSON_TYPE).build();
     }
 
+    @POST
+    @Path("/tweet/reply")
+    @Consumes("application/json")
+    public Response replyTweet(RequestBody input) throws Exception{
+        Optional<TwitterPost> twitterPost;
+        try {
+            twitterPost = service.replyTweet(input);
+        }
+        catch (EmptyTweetException e) {
+            return Response.serverError().entity("The tweet is empty.").build();
+        }
+        catch(LongTweetException e){
+            return Response.serverError().entity("The tweet needs to under 280 characters.").build();
+
+        }
+        catch (TwitterAppException e){
+            return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
+        }
+
+        return Response.ok(twitterPost.get(), MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
     @GET
     @Path("/tweet/filter")
     public Response filterTweets(@QueryParam("filter") String filter){

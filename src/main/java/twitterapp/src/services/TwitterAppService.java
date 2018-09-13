@@ -6,7 +6,7 @@ import com.google.common.cache.LoadingCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Paging;
-import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
@@ -82,6 +82,37 @@ public class TwitterAppService {
                                 cacheUserTimeline.invalidateAll();
                                 cacheFilter.invalidateAll();
                                 return twitterPost;
+                        });
+            } catch (Exception e) {
+                log.error("There was a problem on the server side, please try again later.", e);
+                throw new TwitterAppException("Unable to post tweet. There was a problem on the server side, please try again later");
+            }
+        }
+    }
+    public Optional<TwitterPost> replyTweet(RequestBody input) throws Exception {
+        if (input.getMessage().length() > MAX_LENGTH) {
+            log.warn("Tweet is too long, keep it within 280 characters");
+            throw new LongTweetException("Tweet is too long, keep it within 280 characters");
+
+        } else if (input.getMessage().length() == 0) {
+            log.warn("An empty tweet was entered");
+            throw new EmptyTweetException("An empty tweet was entered");
+        } else {
+            try {
+                StatusUpdate statusReply = new StatusUpdate(input.getMessage());
+                statusReply.inReplyToStatusId(input.getReplyTweetID());
+                return Optional.ofNullable(twitter.updateStatus(statusReply))
+                        .map(s -> {
+                            TwitterPost twitterPost = new TwitterPost(s.getText(),
+                                    s.getUser().getName(),
+                                    s.getUser().getScreenName(),
+                                    s.getUser().getProfileImageURL(),
+                                    s.getCreatedAt(),
+                                    Objects.toString(s.getId()));
+                            cacheHomeTimeline.invalidateAll();
+                            cacheUserTimeline.invalidateAll();
+                            cacheFilter.invalidateAll();
+                            return twitterPost;
                         });
             } catch (Exception e) {
                 log.error("There was a problem on the server side, please try again later.", e);

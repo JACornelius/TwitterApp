@@ -8,7 +8,7 @@ public class RequestBody{
     @JsonProperty("message")
     public String message;
     @JsonProperty("replyTweetID")
-    public String replyTweetID;
+    public long replyTweetID;
 
     public void setName(String name){
         this.name = name;
@@ -18,7 +18,7 @@ public class RequestBody{
         this.message = message;
     }
 
-    public void setReplyTweetID(String replyTweetID) { this.replyTweetID = replyTweetID; }
+    public void setReplyTweetID(long replyTweetID) { this.replyTweetID = replyTweetID; }
 
     public String getName(){
         return name;
@@ -29,6 +29,6 @@ public class RequestBody{
         return message;
     }
 
-    public String getReplyTweetID() { return replyTweetID; }
+    public long getReplyTweetID() { return replyTweetID; }
 }
 
