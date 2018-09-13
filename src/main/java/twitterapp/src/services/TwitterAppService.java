@@ -71,12 +71,7 @@ public class TwitterAppService {
             try {
                 return Optional.ofNullable(twitter.updateStatus(input.getMessage()))
                         .map(s -> {
-                                TwitterPost twitterPost = new TwitterPost(s.getText(),
-                                                                          s.getUser().getName(),
-                                                                          s.getUser().getScreenName(),
-                                                                          s.getUser().getProfileImageURL(),
-                                                                          s.getCreatedAt(),
-                                                                          Objects.toString(s.getId()));
+                                TwitterPost twitterPost = new TwitterPost(s);
                                 cacheHomeTimeline.invalidateAll();
                                 cacheUserTimeline.invalidateAll();
                                 cacheFilter.invalidateAll();
@@ -102,14 +97,10 @@ public class TwitterAppService {
             throw new EmptyReplyTweetId("No reply TweetID was entered");
         } else {
             try {
-                return Optional.ofNullable(twitter.updateStatus(new StatusUpdate(input.getMessage()).inReplyToStatusId(input.getReplyTweetID())))
+                return Optional.ofNullable(twitter.updateStatus(new StatusUpdate(input.getMessage())
+                                                                        .inReplyToStatusId(input.getReplyTweetID())))
                         .map(s -> {
-                            TwitterPost twitterPost = new TwitterPost(s.getText(),
-                                                                      s.getUser().getName(),
-                                                                      s.getUser().getScreenName(),
-                                                                      s.getUser().getProfileImageURL(),
-                                                                      s.getCreatedAt(),
-                                                                      Objects.toString(s.getId()));
+                            TwitterPost twitterPost = new TwitterPost(s);
                             cacheHomeTimeline.invalidateAll();
                             cacheUserTimeline.invalidateAll();
                             cacheFilter.invalidateAll();
@@ -127,12 +118,7 @@ public class TwitterAppService {
             if(cacheFilter.get(filter).isPresent() == false) {
                 Optional<List<TwitterPost>> resultFilteredTweets = Optional.ofNullable(twitter.getHomeTimeline().stream()
                         .filter(s -> s.getText().contains(filter))
-                        .map(s -> new TwitterPost(s.getText(),
-                                                  s.getUser().getName(),
-                                                  s.getUser().getScreenName(),
-                                                  s.getUser().getProfileImageURL(),
-                                                  s.getCreatedAt(),
-                                                  Objects.toString(s.getId())))
+                        .map(s -> new TwitterPost(s))
                         .collect(toList()));
                 cacheFilter.put(filter, resultFilteredTweets);
             }
@@ -148,12 +134,7 @@ public class TwitterAppService {
             if(cacheHomeTimeline.get(TIMELINE_KEY).isPresent() == false){
                 Paging page = new Paging(1,25);
             Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getHomeTimeline(page).stream()
-                    .map(s -> new TwitterPost(s.getText(),
-                                              s.getUser().getName(),
-                                              s.getUser().getScreenName(),
-                                              s.getUser().getProfileImageURL(),
-                                              s.getCreatedAt(),
-                                             Objects.toString(s.getId())))
+                    .map(s -> new TwitterPost(s))
                     .collect(toList()));
 
                 cacheHomeTimeline.put(TIMELINE_KEY, resultListTwitterPost);
@@ -170,12 +151,7 @@ public class TwitterAppService {
             if(cacheUserTimeline.get(TIMELINE_KEY).isPresent() == false){
                 Paging page = new Paging(1,25);
                 Optional<List<TwitterPost>> resultListTwitterPost = Optional.ofNullable(twitter.getUserTimeline(page).stream()
-                        .map(s -> new TwitterPost(s.getText(),
-                                                  s.getUser().getName(),
-                                                  s.getUser().getScreenName(),
-                                                  s.getUser().getProfileImageURL(),
-                                                  s.getCreatedAt(),
-                                                  Objects.toString(s.getId())))
+                        .map(s -> new TwitterPost(s))
                         .collect(toList()));
                 cacheUserTimeline.put(TIMELINE_KEY, resultListTwitterPost);
             }

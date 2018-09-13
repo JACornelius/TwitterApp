@@ -155,6 +155,7 @@ public class TwitterAppServiceTest {
         replyTweetRequestBody.setReplyTweetID(0);
         replyTweetRequestBody.setMessage("test reply message");
         twitterPost = service.replyTweet(replyTweetRequestBody);
+
         assertTrue(twitterPost == null);
     }
 
@@ -264,6 +265,7 @@ public class TwitterAppServiceTest {
     public void testBadFilter() throws Exception{
         doThrow(new TwitterException("There was a problem on the server side."))
                 .when(mockTwitter).getHomeTimeline();
+
         assertFalse(service.filterTweets("potato").isPresent());
     }
 
@@ -271,6 +273,7 @@ public class TwitterAppServiceTest {
     public void testHomeTimeline_badPath() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later."))
                 .when(mockTwitter).getHomeTimeline();
+
         assertFalse(service.getHomeTimeline().isPresent());
     }
 
@@ -278,6 +281,7 @@ public class TwitterAppServiceTest {
     public void testUserTimeline_badPath() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side, please try again later."))
                 .when(mockTwitter).getHomeTimeline();
+
         assertFalse(service.getUserTimeline().isPresent());
     }
 }
