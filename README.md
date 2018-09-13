@@ -53,7 +53,11 @@ To post a new tweet, in a different terminal while the server is running
 curl -d'{"name":"mojo", "message":"insert new tweet here"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/1.0/twitter/tweet
 
 ```
-To post a new tweet with additional information
+To reply to a tweet with ID of replyTweetId, in a different terminal while the server is running
+```
+curl -d'{"name":"mojo", "message":"insert new tweet here", "replyTweetID":"replyTweetId"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/1.0/twitter/tweet/reply
+
+```
 Timeline can be viewed at http://localhost:8080/api/1.0/twitter/timeline
 
 ## Unit Testing with mockito
