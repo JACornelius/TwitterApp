@@ -1,9 +1,11 @@
 package twitterapp.src.resources;
 
 
-import twitterapp.src.exceptions.EmptyTweetException;
+import twitterapp.src.exceptions.EmptyReplyTweetId;
+import twitterapp.src.exceptions.EmptyTweetMsgException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
+import twitterapp.src.models.ReplyTweetRequestBody;
 import twitterapp.src.models.RequestBody;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
@@ -70,15 +72,11 @@ public class TwitterAppResource {
         Optional<TwitterPost> twitterPost;
             try {
                 twitterPost = service.postTweet(input);
-            }
-            catch (EmptyTweetException e) {
+            } catch (EmptyTweetMsgException e) {
                 return Response.serverError().entity("The tweet is empty.").build();
-            }
-            catch(LongTweetException e){
+            } catch(LongTweetException e){
                 return Response.serverError().entity("The tweet needs to under 280 characters.").build();
-
-            }
-            catch (TwitterAppException e){
+            } catch (TwitterAppException e){
                 return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
             }
 
@@ -88,22 +86,19 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet/reply")
     @Consumes("application/json")
-    public Response replyTweet(RequestBody input) throws Exception{
+    public Response replyTweet(ReplyTweetRequestBody input) throws Exception{
         Optional<TwitterPost> twitterPost;
         try {
             twitterPost = service.replyTweet(input);
-        }
-        catch (EmptyTweetException e) {
+        } catch (EmptyTweetMsgException e) {
             return Response.serverError().entity("The tweet is empty.").build();
-        }
-        catch(LongTweetException e){
+        } catch (LongTweetException e) {
             return Response.serverError().entity("The tweet needs to under 280 characters.").build();
-
-        }
-        catch (TwitterAppException e){
+        } catch (EmptyReplyTweetId e) {
+            return Response.serverError().entity("No reply TweetID was entered").build();
+        } catch (TwitterAppException e) {
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }
-
         return Response.ok(twitterPost.get(), MediaType.APPLICATION_JSON_TYPE).build();
     }
 
