@@ -11,7 +11,7 @@ import twitterapp.src.injections.TwitterModule;
 
 public class TwitterAppApplication extends Application<TwitterAppConfiguration>
 {
-    public static void  main (String[] args) throws Exception{
+    public static void  main (String[] args) throws Exception {
 
         new TwitterAppApplication().run(args);
     }

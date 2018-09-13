@@ -36,7 +36,7 @@ public class TwitterConfiguration {
     }
 
     @JsonProperty
-    public String getConsumerKey(){ return consumerKey; }
+    public String getConsumerKey() { return consumerKey; }
 
     public void setAccessToken(String accessToken){
         this.accessToken = accessToken;

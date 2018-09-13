@@ -1,6 +1,6 @@
 package twitterapp.src.models;
 
-
+import twitter4j.Status;
 import java.util.Date;
 import java.util.Objects;
 
@@ -9,19 +9,19 @@ public class TwitterPost {
     private String userName;
     private String twitterHandle;
     private String profileImageUrl;
-    private String statusId;
+    private long statusId;
     private Date createdAt;
 
-    public TwitterPost(){
+    public TwitterPost() {
         this.message = null;
         this.userName = null;
         this.twitterHandle = null;
         this.profileImageUrl = null;
         this.createdAt = null;
-        this.statusId = null;
+        this.statusId = 0;
     }
 
-    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, String statusId){
+    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, long statusId) {
         this.message = message;
         this.userName = userName;
         this.twitterHandle = twitterHandle;
@@ -30,8 +30,17 @@ public class TwitterPost {
         this.statusId = statusId;
     }
 
+    public TwitterPost(Status s) {
+        this.message = s.getText();
+        this.userName = s.getUser().getName();
+        this.twitterHandle = s.getUser().getScreenName();
+        this.profileImageUrl = s.getUser().getProfileImageURL();
+        this.statusId = s.getId();
+        this.createdAt = s.getCreatedAt();
+    }
+
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if(o == this) return true;
         if(!(o instanceof TwitterPost)) return false;
         TwitterPost twitterPost = (TwitterPost) o;
@@ -69,7 +78,7 @@ public class TwitterPost {
         return this.createdAt;
     }
 
-    public String getStatusId() {return this.statusId; }
+    public long getStatusId() {return this.statusId; }
 
     public void setMessage(String message){
         this.message = message;
@@ -91,6 +100,6 @@ public class TwitterPost {
         this.createdAt = createdAt;
     }
 
-    public void setStatusId(String statusId) { this.statusId = statusId; }
+    public void setStatusId(long statusId) { this.statusId = statusId; }
 
 }
