@@ -7,12 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-import twitter4j.ResponseList;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.User;
-import twitter4j.Paging;
+import twitter4j.*;
 import twitterapp.src.exceptions.EmptyTweetException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
@@ -52,8 +47,8 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testGoodTweet() throws Exception{
-        String tweet = "good tweethjfgj";
+    public void testGoodTweetPost() throws Exception{
+        String tweet = "good tweet";
         requestBody.setMessage(tweet);
         Status mockStatus = mock(Status.class);
         User u = mock(User.class);
@@ -67,6 +62,26 @@ public class TwitterAppServiceTest {
         when(mockTwitter.updateStatus(requestBody.getMessage())).thenReturn(mockStatus);
         service.postTweet(requestBody);
         assertEquals(tweet, service.postTweet(requestBody).get().getMessage());
+    }
+
+    @Test
+    public void testGoodTweetReply() throws Exception{
+        String tweet = "good tweet";
+        long replyID = 23232323;
+        requestBody.setMessage(tweet);
+        requestBody.setReplyTweetID(replyID);
+        Status mockStatus = mock(Status.class);
+        User u = mock(User.class);
+        when(mockStatus.getText()).thenReturn(tweet);
+        when(mockStatus.getUser()).thenReturn(u);
+        when(mockStatus.getUser().getName()).thenReturn("mockUserName");
+        when(mockStatus.getUser().getProfileImageURL()).thenReturn("mockProfileImgURL");
+        when(mockStatus.getUser().getScreenName()).thenReturn("mockTwitterHandle");
+        Date date = new Date(2018,1,1);
+        when(mockStatus.getCreatedAt()).thenReturn(date);
+        when(mockTwitter.updateStatus(new StatusUpdate(tweet).inReplyToStatusId(replyID))).thenReturn(mockStatus);
+        service.replyTweet(requestBody);
+        assertEquals(tweet, service.replyTweet(requestBody).get().getMessage());
     }
 
     @Test(expected = TwitterAppException.class)
