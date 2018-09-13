@@ -99,9 +99,7 @@ public class TwitterAppService {
             throw new EmptyTweetException("An empty tweet was entered");
         } else {
             try {
-                StatusUpdate statusReply = new StatusUpdate(input.getMessage());
-                statusReply.inReplyToStatusId(input.getReplyTweetID());
-                return Optional.ofNullable(twitter.updateStatus(statusReply))
+                return Optional.ofNullable(twitter.updateStatus(new StatusUpdate(input.getMessage()).inReplyToStatusId(input.getReplyTweetID())))
                         .map(s -> {
                             TwitterPost twitterPost = new TwitterPost(s.getText(),
                                     s.getUser().getName(),
