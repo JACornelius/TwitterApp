@@ -73,7 +73,7 @@ public class TwitterAppResource {
             try {
                 twitterPost = service.postTweet(input);
             } catch (EmptyTweetMsgException e) {
-                return Response.serverError().entity("The tweet is empty.").build();
+                return Response.serverError().entity("No tweet was provided.").build();
             } catch(LongTweetException e){
                 return Response.serverError().entity("The tweet needs to under 280 characters.").build();
             } catch (TwitterAppException e){
@@ -91,11 +91,11 @@ public class TwitterAppResource {
         try {
             twitterPost = service.replyTweet(input);
         } catch (EmptyTweetMsgException e) {
-            return Response.serverError().entity("The tweet is empty.").build();
+            return Response.serverError().entity("No tweet was provided").build();
         } catch (LongTweetException e) {
             return Response.serverError().entity("The tweet needs to under 280 characters.").build();
         } catch (EmptyReplyTweetId e) {
-            return Response.serverError().entity("No reply TweetID was entered").build();
+            return Response.serverError().entity("No reply tweet ID was provided").build();
         } catch (TwitterAppException e) {
             return Response.serverError().entity("There was a problem on the server side, please try again later.").build();
         }

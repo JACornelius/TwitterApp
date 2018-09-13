@@ -65,8 +65,8 @@ public class TwitterAppService {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
         } else if (input.getMessage().length() == 0) {
-            log.warn("An empty tweet was entered");
-            throw new EmptyTweetMsgException("An empty tweet was entered");
+            log.warn("No tweet was provided.");
+            throw new EmptyTweetMsgException("No tweet was provided.");
         } else {
             try {
                 return Optional.ofNullable(twitter.updateStatus(input.getMessage()))
@@ -89,12 +89,12 @@ public class TwitterAppService {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
         } else if (input.getMessage().length() == 0) {
-            log.warn("An empty tweet was entered");
-            throw new EmptyTweetMsgException("An empty tweet was entered");
+            log.warn("No tweet was provided.");
+            throw new EmptyTweetMsgException("No tweet was provided.");
         } else if (input.getReplyTweetID() == 0) {
             System.out.println(input.getReplyTweetID());
-            log.warn("No reply tweetID was entered");
-            throw new EmptyReplyTweetId("No reply TweetID was entered");
+            log.warn("No reply tweetID was provided");
+            throw new EmptyReplyTweetId("No reply TweetID was provided");
         } else {
             try {
                 return Optional.ofNullable(twitter.updateStatus(new StatusUpdate(input.getMessage())

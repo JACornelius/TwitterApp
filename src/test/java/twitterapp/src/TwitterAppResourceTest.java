@@ -77,6 +77,7 @@ public class TwitterAppResourceTest extends TwitterResponseList {
 
         Response r = resource.replyTweet(replyTweetRequest1);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
+        assertEquals("No reply tweet ID was provided", r.getEntity().toString());
     }
     @Test
     public void testReplyTweetMsgLength() throws Exception {
@@ -160,7 +161,7 @@ public class TwitterAppResourceTest extends TwitterResponseList {
 
         Response r = resource.postTweet(postTweetRequest);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("The tweet is empty.", r.getEntity());
+        assertEquals("No tweet was provided.", r.getEntity());
     }
 
     @Test
@@ -174,7 +175,7 @@ public class TwitterAppResourceTest extends TwitterResponseList {
 
         Response r = resource.replyTweet(replyTweetRequest);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
-        assertEquals("The tweet is empty.", r.getEntity());
+        assertEquals("No tweet was provided", r.getEntity());
     }
 
     @Test
