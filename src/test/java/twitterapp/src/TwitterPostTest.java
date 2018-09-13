@@ -1,7 +1,7 @@
 package twitterapp.src;
 
 import org.junit.Test;
-import twitterapp.src.models.RequestBody;
+import twitterapp.src.models.PostTweetRequest;
 import twitterapp.src.models.TwitterPost;
 
 import java.util.Date;
@@ -29,7 +29,7 @@ public class TwitterPostTest {
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
         Date date = new Date(2018, 1,1);
         Date date1 = new Date(2018, 2, 2);
         TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date,2);
@@ -41,7 +41,7 @@ public class TwitterPostTest {
         TwitterPost twitterPost5 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost1", date ,2);
         TwitterPost twitterPost6 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date1, 2);
         TwitterPost twitterPost7 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 1);
-        RequestBody requestBody = new RequestBody();
+        PostTweetRequest postTweetRequest = new PostTweetRequest();
         assertTrue(twitterPost.equals(twitterPost));
         assertTrue(twitterPost.equals(twitterPost0));
         assertFalse(twitterPost.equals(twitterPost1));
@@ -51,11 +51,11 @@ public class TwitterPostTest {
         assertFalse(twitterPost.equals(twitterPost5));
         assertFalse(twitterPost.equals(twitterPost6));
         assertFalse(twitterPost.equals(twitterPost7));
-        assertFalse(twitterPost.equals(requestBody));
+        assertFalse(twitterPost.equals(postTweetRequest));
     }
 
     @Test
-    public void testHashCode(){
+    public void testHashCode() {
         Date date = new Date(2018, 1,1);
         TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 1);
         TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 1);

@@ -5,8 +5,8 @@ import twitterapp.src.exceptions.EmptyReplyTweetId;
 import twitterapp.src.exceptions.EmptyTweetMsgException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
-import twitterapp.src.models.ReplyTweetRequestBody;
-import twitterapp.src.models.RequestBody;
+import twitterapp.src.models.ReplyTweetRequest;
+import twitterapp.src.models.PostTweetRequest;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 
@@ -39,7 +39,7 @@ public class TwitterAppResource {
 
     @GET
     @Path("/timeline")
-    public Response getHomeTimeline(){
+    public Response getHomeTimeline() {
         try{
             Optional<List<TwitterPost>> statuses = service.getHomeTimeline();
             List<TwitterPost> result = statuses.map(res -> statuses.get())
@@ -53,7 +53,7 @@ public class TwitterAppResource {
 
     @GET
     @Path("/timeline/user")
-    public Response getUserTimeline(){
+    public Response getUserTimeline() {
         try{
             Optional<List<TwitterPost>> statuses = service.getUserTimeline();
             List<TwitterPost> result = statuses.map(res -> statuses.get())
@@ -68,7 +68,7 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet")
     @Consumes("application/json")
-    public Response postTweet(RequestBody input) throws Exception{
+    public Response postTweet(PostTweetRequest input) throws Exception {
         Optional<TwitterPost> twitterPost;
             try {
                 twitterPost = service.postTweet(input);
@@ -86,7 +86,7 @@ public class TwitterAppResource {
     @POST
     @Path("/tweet/reply")
     @Consumes("application/json")
-    public Response replyTweet(ReplyTweetRequestBody input) throws Exception{
+    public Response replyTweet(ReplyTweetRequest input) throws Exception {
         Optional<TwitterPost> twitterPost;
         try {
             twitterPost = service.replyTweet(input);
@@ -104,7 +104,7 @@ public class TwitterAppResource {
 
     @GET
     @Path("/tweet/filter")
-    public Response filterTweets(@QueryParam("filter") String filter){
+    public Response filterTweets(@QueryParam("filter") String filter) {
         Optional<List<TwitterPost>> listTwitterPost;
         try{
             listTwitterPost = service.filterTweets(filter);

@@ -17,8 +17,8 @@ import twitterapp.src.exceptions.EmptyReplyTweetId;
 import twitterapp.src.exceptions.EmptyTweetMsgException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
-import twitterapp.src.models.ReplyTweetRequestBody;
-import twitterapp.src.models.RequestBody;
+import twitterapp.src.models.ReplyTweetRequest;
+import twitterapp.src.models.PostTweetRequest;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.services.TwitterAppService;
 import org.mockito.MockitoAnnotations;
@@ -38,8 +38,8 @@ public class TwitterAppServiceTest {
     TwitterAppService service;
     Optional<TwitterPost> twitterPost = Optional.empty();
     Optional<List<TwitterPost>> twitterPostList = Optional.empty();
-    RequestBody requestBody = new RequestBody();
-    ReplyTweetRequestBody replyTweetRequestBody = new ReplyTweetRequestBody();
+    PostTweetRequest postTweetRequest = new PostTweetRequest();
+    ReplyTweetRequest replyTweetRequest = new ReplyTweetRequest();
     @Mock
     Twitter mockTwitter = mock(Twitter.class);
 
@@ -54,27 +54,27 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testGoodTweetPost() throws Exception{
+    public void testGoodTweetPost() throws Exception {
         String tweet = "good tweet";
         Status mockStatus = mock(Status.class);
         User u = mock(User.class);
         Date date = new Date(2018,1,1);
 
-        requestBody.setMessage(tweet);
+        postTweetRequest.setMessage(tweet);
         when(mockStatus.getText()).thenReturn(tweet);
         when(mockStatus.getUser()).thenReturn(u);
         when(mockStatus.getUser().getName()).thenReturn("mockUserName");
         when(mockStatus.getUser().getProfileImageURL()).thenReturn("mockProfileImgURL");
         when(mockStatus.getUser().getScreenName()).thenReturn("mockTwitterHandle");
         when(mockStatus.getCreatedAt()).thenReturn(date);
-        when(mockTwitter.updateStatus(requestBody.getMessage())).thenReturn(mockStatus);
+        when(mockTwitter.updateStatus(postTweetRequest.getMessage())).thenReturn(mockStatus);
 
-        service.postTweet(requestBody);
-        assertEquals(tweet, service.postTweet(requestBody).get().getMessage());
+        service.postTweet(postTweetRequest);
+        assertEquals(tweet, service.postTweet(postTweetRequest).get().getMessage());
     }
 
     @Test
-    public void testGoodTweetReply() throws Exception{
+    public void testGoodTweetReply() throws Exception {
         String tweet = "good tweet";
         long replyID = 23232323;
         Status mockStatus = mock(Status.class);
@@ -89,32 +89,32 @@ public class TwitterAppServiceTest {
         when(mockStatus.getCreatedAt()).thenReturn(date);
         when(mockTwitter.updateStatus(new StatusUpdate(tweet).inReplyToStatusId(replyID))).thenReturn(mockStatus);
 
-        replyTweetRequestBody.setMessage(tweet);
-        replyTweetRequestBody.setReplyTweetID(replyID);
-        service.replyTweet(replyTweetRequestBody);
-        assertEquals(tweet, service.replyTweet(replyTweetRequestBody).get().getMessage());
+        replyTweetRequest.setMessage(tweet);
+        replyTweetRequest.setReplyTweetID(replyID);
+        service.replyTweet(replyTweetRequest);
+        assertEquals(tweet, service.replyTweet(replyTweetRequest).get().getMessage());
     }
 
     @Test(expected = TwitterAppException.class)
     public void testBadTweetInPostTweet() throws Exception {
-        requestBody.setMessage("bad tweet");
+        postTweetRequest.setMessage("bad tweet");
 
-        when(mockTwitter.updateStatus(requestBody.getMessage()))
+        when(mockTwitter.updateStatus(postTweetRequest.getMessage()))
                 .thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
 
-        twitterPost = service.postTweet(requestBody);
+        twitterPost = service.postTweet(postTweetRequest);
         assertTrue(twitterPost == null);
     }
 
     @Test(expected = TwitterAppException.class)
-    public void testBadTweetReply() throws Exception{
+    public void testBadTweetReply() throws Exception {
         String tweet = "bad tweet";
         long replyID = 23232323;
         Status mockStatus = mock(Status.class);
         User u = mock(User.class);
 
-        replyTweetRequestBody.setMessage(tweet);
-        replyTweetRequestBody.setReplyTweetID(replyID);
+        replyTweetRequest.setMessage(tweet);
+        replyTweetRequest.setReplyTweetID(replyID);
         when(mockStatus.getText()).thenReturn(tweet);
         when(mockStatus.getUser()).thenReturn(u);
         when(mockStatus.getUser().getName()).thenReturn("mockUserName");
@@ -125,8 +125,8 @@ public class TwitterAppServiceTest {
         when(mockTwitter.updateStatus(new StatusUpdate(tweet).inReplyToStatusId(replyID)))
                 .thenThrow(new TwitterException("There was a problem on the server side, please try again later."));
 
-        service.replyTweet(replyTweetRequestBody);
-        assertEquals(tweet, service.replyTweet(replyTweetRequestBody).get().getMessage());
+        service.replyTweet(replyTweetRequest);
+        assertEquals(tweet, service.replyTweet(replyTweetRequest).get().getMessage());
     }
 
 
@@ -134,9 +134,9 @@ public class TwitterAppServiceTest {
     public void testEmptyPostTweetMsgExceptionHandling() throws Exception {
         String emptyTweet = "";
 
-        requestBody.setMessage(emptyTweet);
+        postTweetRequest.setMessage(emptyTweet);
 
-        twitterPost = service.postTweet(requestBody);
+        twitterPost = service.postTweet(postTweetRequest);
         assertTrue(twitterPost == null);
     }
 
@@ -144,17 +144,17 @@ public class TwitterAppServiceTest {
     public void testEmptyReplyMsgTweetExceptionHandling() throws Exception {
         String emptyTweet = "";
 
-        replyTweetRequestBody.setMessage(emptyTweet);
+        replyTweetRequest.setMessage(emptyTweet);
 
-        twitterPost = service.replyTweet(replyTweetRequestBody);
+        twitterPost = service.replyTweet(replyTweetRequest);
         assertTrue(twitterPost == null);
     }
 
     @Test(expected = EmptyReplyTweetId.class)
     public void testEmptyReplyTweetId() throws Exception {
-        replyTweetRequestBody.setReplyTweetID(0);
-        replyTweetRequestBody.setMessage("test reply message");
-        twitterPost = service.replyTweet(replyTweetRequestBody);
+        replyTweetRequest.setReplyTweetID(0);
+        replyTweetRequest.setMessage("test reply message");
+        twitterPost = service.replyTweet(replyTweetRequest);
 
         assertTrue(twitterPost == null);
     }
@@ -163,9 +163,9 @@ public class TwitterAppServiceTest {
     public void testLongPostTweetMsgExceptionHandling() throws Exception {
         String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
 
-        requestBody.setMessage(longTweet);
+        postTweetRequest.setMessage(longTweet);
 
-        twitterPost = service.postTweet(requestBody);
+        twitterPost = service.postTweet(postTweetRequest);
         assertFalse(twitterPost.isPresent());
     }
 
@@ -173,9 +173,9 @@ public class TwitterAppServiceTest {
     public void testLongReplyTweetMsgExceptionHandling() throws Exception {
         String longTweet = StringUtils.repeat("a", MAX_LENGTH + 3);
 
-        replyTweetRequestBody.setMessage(longTweet);
+        replyTweetRequest.setMessage(longTweet);
 
-        twitterPost = service.replyTweet(replyTweetRequestBody);
+        twitterPost = service.replyTweet(replyTweetRequest);
         assertFalse(twitterPost.isPresent());
     }
 
@@ -236,7 +236,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testGoodFilter(){
+    public void testGoodFilter() {
         ResponseList<Status> responseList = new TwitterResponseList<>();
         try {
             Date date = new Date(2018,1,1);
@@ -262,7 +262,7 @@ public class TwitterAppServiceTest {
     }
 
     @Test(expected = TwitterAppException.class)
-    public void testBadFilter() throws Exception{
+    public void testBadFilter() throws Exception {
         doThrow(new TwitterException("There was a problem on the server side."))
                 .when(mockTwitter).getHomeTimeline();
 

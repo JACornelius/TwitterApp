@@ -2,7 +2,7 @@ package twitterapp.src.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ReplyTweetRequestBody{
+public class ReplyTweetRequest {
     @JsonProperty("name")
     public String name;
     @JsonProperty("message")

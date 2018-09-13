@@ -12,8 +12,8 @@ import twitterapp.src.exceptions.EmptyReplyTweetId;
 import twitterapp.src.exceptions.EmptyTweetMsgException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
-import twitterapp.src.models.ReplyTweetRequestBody;
-import twitterapp.src.models.RequestBody;
+import twitterapp.src.models.ReplyTweetRequest;
+import twitterapp.src.models.PostTweetRequest;
 import twitterapp.src.models.TwitterPost;
 import javax.inject.Inject;
 import java.util.*;
@@ -60,7 +60,7 @@ public class TwitterAppService {
         this.twitter = twitter;
     }
 
-    public Optional<TwitterPost> postTweet(RequestBody input) throws Exception {
+    public Optional<TwitterPost> postTweet(PostTweetRequest input) throws Exception {
         if (input.getMessage().length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
             throw new LongTweetException("Tweet is too long, keep it within 280 characters");
@@ -83,7 +83,7 @@ public class TwitterAppService {
             }
         }
     }
-    public Optional<TwitterPost> replyTweet(ReplyTweetRequestBody input) throws Exception {
+    public Optional<TwitterPost> replyTweet(ReplyTweetRequest input) throws Exception {
 
         if (input.getMessage().length() > MAX_LENGTH) {
             log.warn("Tweet is too long, keep it within 280 characters");
@@ -113,7 +113,7 @@ public class TwitterAppService {
         }
     }
 
-    public Optional<List<TwitterPost>> filterTweets(String filter) throws TwitterAppException{
+    public Optional<List<TwitterPost>> filterTweets(String filter) throws TwitterAppException {
         try {
             if(cacheFilter.get(filter).isPresent() == false) {
                 Optional<List<TwitterPost>> resultFilteredTweets = Optional.ofNullable(twitter.getHomeTimeline().stream()
@@ -129,7 +129,7 @@ public class TwitterAppService {
         }
     }
 
-    public Optional<List<TwitterPost>> getHomeTimeline() throws TwitterAppException{
+    public Optional<List<TwitterPost>> getHomeTimeline() throws TwitterAppException {
         try {
             if(cacheHomeTimeline.get(TIMELINE_KEY).isPresent() == false){
                 Paging page = new Paging(1,25);
@@ -146,7 +146,7 @@ public class TwitterAppService {
         }
     }
 
-    public Optional<List<TwitterPost>> getUserTimeline() throws TwitterAppException{
+    public Optional<List<TwitterPost>> getUserTimeline() throws TwitterAppException {
         try {
             if(cacheUserTimeline.get(TIMELINE_KEY).isPresent() == false){
                 Paging page = new Paging(1,25);

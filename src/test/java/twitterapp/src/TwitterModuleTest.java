@@ -23,7 +23,7 @@ public class TwitterModuleTest {
     }
 
     @Test
-    public void testProvideTwitter(){
+    public void testProvideTwitter() {
         TwitterModule module = new TwitterModule(mockTwitterConfig);
         Twitter twitter = module.provideTwitter();
         ConfigurationBuilder cb = new ConfigurationBuilder();

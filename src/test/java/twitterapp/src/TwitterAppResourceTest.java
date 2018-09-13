@@ -9,8 +9,8 @@ import twitterapp.src.exceptions.EmptyReplyTweetId;
 import twitterapp.src.exceptions.EmptyTweetMsgException;
 import twitterapp.src.exceptions.LongTweetException;
 import twitterapp.src.exceptions.TwitterAppException;
-import twitterapp.src.models.ReplyTweetRequestBody;
-import twitterapp.src.models.RequestBody;
+import twitterapp.src.models.PostTweetRequest;
+import twitterapp.src.models.ReplyTweetRequest;
 import twitterapp.src.models.TwitterPost;
 import twitterapp.src.resources.TwitterAppResource;
 import twitterapp.src.services.TwitterAppService;
@@ -38,8 +38,8 @@ public class TwitterAppResourceTest extends TwitterResponseList {
 
     @Mock
     TwitterAppService mockService = mock(TwitterAppService.class);
-    RequestBody requestBody = mock(RequestBody.class);
-    ReplyTweetRequestBody replyTweetRequestBody = mock(ReplyTweetRequestBody.class);
+    PostTweetRequest postTweetRequest = mock(PostTweetRequest.class);
+    ReplyTweetRequest replyTweetRequest = mock(ReplyTweetRequest.class);
 
     @Before
     public void setUp() {
@@ -51,31 +51,31 @@ public class TwitterAppResourceTest extends TwitterResponseList {
     @Test
     public void testPostTweetMsgLength() throws Exception {
         String shortTweet = "this is a short tweet";
-        RequestBody requestBody1 = new RequestBody();
-        requestBody1.setMessage(shortTweet);
-        requestBody1.setName("jojo");
+        PostTweetRequest postTweetRequest1 = new PostTweetRequest();
+        postTweetRequest1.setMessage(shortTweet);
+        postTweetRequest1.setName("jojo");
         twitterPostOptional.get().setMessage(shortTweet);
         twitterPostOptional.get().setUsername("jojo");
         twitterPostOptional.get().setStatusId(2);
 
-        when(mockService.postTweet(isA(RequestBody.class))).thenReturn(twitterPostOptional);
+        when(mockService.postTweet(isA(PostTweetRequest.class))).thenReturn(twitterPostOptional);
 
-        Response r = resource.postTweet(requestBody1);
+        Response r = resource.postTweet(postTweetRequest1);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals(twitterPostOptional.get(), r.getEntity());
     }
     @Test
     public void testEmptyReplyTweetId() throws Exception {
         String shortTweet = "this is a short tweet";
-        ReplyTweetRequestBody replyTweetRequestBody1 = new ReplyTweetRequestBody();
-        replyTweetRequestBody1.setMessage(shortTweet);
-        replyTweetRequestBody1.setReplyTweetID(0);
+        ReplyTweetRequest replyTweetRequest1 = new ReplyTweetRequest();
+        replyTweetRequest1.setMessage(shortTweet);
+        replyTweetRequest1.setReplyTweetID(0);
         twitterPostOptional.get().setMessage(shortTweet);
 
-        when(mockService.replyTweet(isA(ReplyTweetRequestBody.class)))
+        when(mockService.replyTweet(isA(ReplyTweetRequest.class)))
                 .thenThrow(new EmptyReplyTweetId("No reply TweetID was entered"));
 
-        Response r = resource.replyTweet(replyTweetRequestBody1);
+        Response r = resource.replyTweet(replyTweetRequest1);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
     }
     @Test
@@ -83,14 +83,14 @@ public class TwitterAppResourceTest extends TwitterResponseList {
         String shortTweet = "this is a short tweet";
         twitterPostOptional.get().setMessage(shortTweet);
         twitterPostOptional.get().setUsername("jojo");
-        ReplyTweetRequestBody replyTweetRequestBody1 = new ReplyTweetRequestBody();
-        replyTweetRequestBody1.setMessage(shortTweet);
-        replyTweetRequestBody1.setName("jojo");
-        replyTweetRequestBody1.setReplyTweetID(232323233);
+        ReplyTweetRequest replyTweetRequest1 = new ReplyTweetRequest();
+        replyTweetRequest1.setMessage(shortTweet);
+        replyTweetRequest1.setName("jojo");
+        replyTweetRequest1.setReplyTweetID(232323233);
 
-        when(mockService.replyTweet(isA(ReplyTweetRequestBody.class))).thenReturn(twitterPostOptional);
+        when(mockService.replyTweet(isA(ReplyTweetRequest.class))).thenReturn(twitterPostOptional);
 
-        Response r = resource.replyTweet(replyTweetRequestBody1);
+        Response r = resource.replyTweet(replyTweetRequest1);
         assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals(twitterPostOptional.get(), r.getEntity());
     }
@@ -100,11 +100,11 @@ public class TwitterAppResourceTest extends TwitterResponseList {
         String tweet = "test tweet";
         twitterPostOptional.get().setMessage(tweet);
 
-        when(mockService.postTweet(isA(RequestBody.class)))
+        when(mockService.postTweet(isA(PostTweetRequest.class)))
                 .thenThrow(new TwitterAppException("There was a problem on the server side, please try again later."));
-        requestBody.message = tweet;
+        postTweetRequest.message = tweet;
 
-        Response r = resource.postTweet(requestBody);
+        Response r = resource.postTweet(postTweetRequest);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
     }
 
@@ -112,25 +112,25 @@ public class TwitterAppResourceTest extends TwitterResponseList {
     public void testFailReplyTweet() throws Exception {
         String tweet = "test tweet";
         twitterPostOptional.get().setMessage(tweet);
-        replyTweetRequestBody.message = tweet;
+        replyTweetRequest.message = tweet;
 
-        when(mockService.replyTweet(isA(ReplyTweetRequestBody.class)))
+        when(mockService.replyTweet(isA(ReplyTweetRequest.class)))
                 .thenThrow(new TwitterAppException("There was a problem on the server side, please try again later."));
 
-        Response r = resource.replyTweet(replyTweetRequestBody);
+        Response r = resource.replyTweet(replyTweetRequest);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
     }
 
     @Test
     public void testLongPostTweetMsg() throws Exception {
         String longTweet = StringUtils.repeat(".", MAX_LENGTH + 5);
-        RequestBody requestBody1 = new RequestBody();
-        requestBody1.setName("jojo");
-        requestBody1.setMessage(longTweet);
+        PostTweetRequest postTweetRequest1 = new PostTweetRequest();
+        postTweetRequest1.setName("jojo");
+        postTweetRequest1.setMessage(longTweet);
 
-        when(mockService.postTweet(isA(RequestBody.class))).thenThrow(new LongTweetException("The tweet needs to under 280 characters."));
+        when(mockService.postTweet(isA(PostTweetRequest.class))).thenThrow(new LongTweetException("The tweet needs to under 280 characters."));
 
-        Response r = resource.postTweet(requestBody1);
+        Response r = resource.postTweet(postTweetRequest1);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("The tweet needs to under 280 characters.", r.getEntity().toString());
     }
@@ -138,14 +138,14 @@ public class TwitterAppResourceTest extends TwitterResponseList {
     @Test
     public void testReplyLongTweetMsg() throws Exception {
         String longTweet = StringUtils.repeat(".", MAX_LENGTH + 5);
-        ReplyTweetRequestBody replyTweetRequestBody1 = new ReplyTweetRequestBody();
-        replyTweetRequestBody1.setName("jojo");
-        replyTweetRequestBody1.setMessage(longTweet);
+        ReplyTweetRequest replyTweetRequest1 = new ReplyTweetRequest();
+        replyTweetRequest1.setName("jojo");
+        replyTweetRequest1.setMessage(longTweet);
 
-        when(mockService.replyTweet(isA(ReplyTweetRequestBody.class)))
+        when(mockService.replyTweet(isA(ReplyTweetRequest.class)))
                 .thenThrow(new LongTweetException("The tweet needs to under 280 characters."));
 
-        Response r = resource.replyTweet(replyTweetRequestBody1);
+        Response r = resource.replyTweet(replyTweetRequest1);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("The tweet needs to under 280 characters.", r.getEntity().toString());
     }
@@ -154,11 +154,11 @@ public class TwitterAppResourceTest extends TwitterResponseList {
     public void testEmptyPostTweetMsg() throws Exception {
         String emptyTweet = "";
         twitterPostOptional.get().setMessage(emptyTweet);
-        requestBody.message = emptyTweet;
+        postTweetRequest.message = emptyTweet;
 
-        when(mockService.postTweet(isA(RequestBody.class))).thenThrow(new EmptyTweetMsgException("An empty tweet was entered"));
+        when(mockService.postTweet(isA(PostTweetRequest.class))).thenThrow(new EmptyTweetMsgException("An empty tweet was entered"));
 
-        Response r = resource.postTweet(requestBody);
+        Response r = resource.postTweet(postTweetRequest);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("The tweet is empty.", r.getEntity());
     }
@@ -167,12 +167,12 @@ public class TwitterAppResourceTest extends TwitterResponseList {
     public void testEmptyReplyTweetMsg() throws Exception {
         String emptyTweet = "";
         twitterPostOptional.get().setMessage(emptyTweet);
-        replyTweetRequestBody.message = emptyTweet;
+        replyTweetRequest.message = emptyTweet;
 
-        when(mockService.replyTweet(isA(ReplyTweetRequestBody.class)))
+        when(mockService.replyTweet(isA(ReplyTweetRequest.class)))
                 .thenThrow(new EmptyTweetMsgException("An empty tweet was entered"));
 
-        Response r = resource.replyTweet(replyTweetRequestBody);
+        Response r = resource.replyTweet(replyTweetRequest);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, Response.Status.fromStatusCode(r.getStatus()));
         assertEquals("The tweet is empty.", r.getEntity());
     }

@@ -1,9 +1,6 @@
 package twitterapp.src.models;
 
-
 import twitter4j.Status;
-import twitter4j.StatusUpdate;
-
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,7 +12,7 @@ public class TwitterPost {
     private long statusId;
     private Date createdAt;
 
-    public TwitterPost(){
+    public TwitterPost() {
         this.message = null;
         this.userName = null;
         this.twitterHandle = null;
@@ -24,7 +21,7 @@ public class TwitterPost {
         this.statusId = 0;
     }
 
-    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, long statusId){
+    public TwitterPost(String message, String userName, String twitterHandle, String profileImageUrl, Date createdAt, long statusId) {
         this.message = message;
         this.userName = userName;
         this.twitterHandle = twitterHandle;
@@ -43,7 +40,7 @@ public class TwitterPost {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if(o == this) return true;
         if(!(o instanceof TwitterPost)) return false;
         TwitterPost twitterPost = (TwitterPost) o;
