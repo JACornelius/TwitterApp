@@ -5,9 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import twitter4j.Paging;
-import twitter4j.StatusUpdate;
-import twitter4j.Twitter;
+import twitter4j.*;
 import twitterapp.src.exceptions.EmptyReplyTweetId;
 import twitterapp.src.exceptions.EmptyTweetMsgException;
 import twitterapp.src.exceptions.LongTweetException;
@@ -97,7 +95,17 @@ public class TwitterAppService {
             throw new EmptyReplyTweetId("No reply TweetID was provided");
         } else {
             try {
-                return Optional.ofNullable(twitter.updateStatus(new StatusUpdate(input.getMessage())
+                Status status = twitter.showStatus(input.getReplyTweetID());
+                String msg;
+                if(twitter.getScreenName() != status.getUser().getScreenName())
+                {
+                    msg = " @" + status.getUser().getScreenName() + " "+ input.getMessage();
+
+                }
+                else {
+                    msg = input.getMessage();
+                }
+                return Optional.ofNullable(twitter.updateStatus(new StatusUpdate(msg)
                                                                         .inReplyToStatusId(input.getReplyTweetID())))
                         .map(s -> {
                             TwitterPost twitterPost = new TwitterPost(s);
