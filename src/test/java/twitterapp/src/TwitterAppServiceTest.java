@@ -29,6 +29,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,12 +75,14 @@ public class TwitterAppServiceTest {
     }
 
     @Test
-    public void testGoodTweetReply() throws Exception {
+    public void testGoodTweetReplyDiffUser() throws Exception {
         String tweet = "good tweet";
         long replyID = 23232323;
         Status mockStatus = mock(Status.class);
         User u = mock(User.class);
-        Date date = new Date(2018,1,1);
+        Date date = new Date(2018, 1, 1);
+        replyTweetRequest.setMessage(tweet);
+        replyTweetRequest.setReplyTweetID(replyID);
 
         when(mockStatus.getText()).thenReturn(tweet);
         when(mockStatus.getUser()).thenReturn(u);
@@ -87,10 +90,33 @@ public class TwitterAppServiceTest {
         when(mockStatus.getUser().getProfileImageURL()).thenReturn("mockProfileImgURL");
         when(mockStatus.getUser().getScreenName()).thenReturn("mockTwitterHandle");
         when(mockStatus.getCreatedAt()).thenReturn(date);
-        when(mockTwitter.updateStatus(new StatusUpdate(tweet).inReplyToStatusId(replyID))).thenReturn(mockStatus);
+        when(mockTwitter.showStatus(replyID)).thenReturn(mockStatus);
+        when(mockTwitter.updateStatus(isA(StatusUpdate.class))).thenReturn(mockStatus);
 
+        service.replyTweet(replyTweetRequest);
+        assertEquals(tweet, service.replyTweet(replyTweetRequest).get().getMessage());
+    }
+
+    @Test
+    public void testGoodTweetReplySameUser() throws Exception {
+        String tweet = "good tweet";
+        long replyID = 23232323;
+        Status mockStatus = mock(Status.class);
+        User u = mock(User.class);
+        Date date = new Date(2018, 1, 1);
         replyTweetRequest.setMessage(tweet);
         replyTweetRequest.setReplyTweetID(replyID);
+
+        when(mockStatus.getText()).thenReturn(tweet);
+        when(mockStatus.getUser()).thenReturn(u);
+        when(mockStatus.getUser().getName()).thenReturn("mockUserName");
+        when(mockStatus.getUser().getProfileImageURL()).thenReturn("mockProfileImgURL");
+        when(mockStatus.getUser().getScreenName()).thenReturn("mockTwitterHandle");
+        when(mockStatus.getCreatedAt()).thenReturn(date);
+        when(mockTwitter.showStatus(replyID)).thenReturn(mockStatus);
+        when(mockTwitter.getScreenName()).thenReturn("mockTwitterHandle");
+        when(mockTwitter.updateStatus(isA(StatusUpdate.class))).thenReturn(mockStatus);
+
         service.replyTweet(replyTweetRequest);
         assertEquals(tweet, service.replyTweet(replyTweetRequest).get().getMessage());
     }
