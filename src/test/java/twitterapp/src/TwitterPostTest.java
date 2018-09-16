@@ -32,15 +32,15 @@ public class TwitterPostTest {
     public void testEquals() {
         Date date = new Date(2018, 1,1);
         Date date1 = new Date(2018, 2, 2);
-        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date,2);
-        TwitterPost twitterPost0 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 2);
-        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost0", "usernameTwitterPost0", "twitterHandleTwitterPost0", "profileURLTwittterPost0", date1, 2);
-        TwitterPost twitterPost2 = new TwitterPost("messageTwitterPost1", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 2);
-        TwitterPost twitterPost3 = new TwitterPost("messageTwitterPost", "usernameTwitterPost1", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 2);
-        TwitterPost twitterPost4 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost1", "profileURLTwittterPost", date, 2);
-        TwitterPost twitterPost5 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost1", date ,2);
-        TwitterPost twitterPost6 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date1, 2);
-        TwitterPost twitterPost7 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 1);
+        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date,"2");
+        TwitterPost twitterPost0 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "2");
+        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost0", "usernameTwitterPost0", "twitterHandleTwitterPost0", "profileURLTwittterPost0", date1, "2");
+        TwitterPost twitterPost2 = new TwitterPost("messageTwitterPost1", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "2");
+        TwitterPost twitterPost3 = new TwitterPost("messageTwitterPost", "usernameTwitterPost1", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "2");
+        TwitterPost twitterPost4 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost1", "profileURLTwittterPost", date, "2");
+        TwitterPost twitterPost5 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost1", date ,"2");
+        TwitterPost twitterPost6 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date1, "2");
+        TwitterPost twitterPost7 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "1");
         PostTweetRequest postTweetRequest = new PostTweetRequest();
         assertTrue(twitterPost.equals(twitterPost));
         assertTrue(twitterPost.equals(twitterPost0));
@@ -57,8 +57,8 @@ public class TwitterPostTest {
     @Test
     public void testHashCode() {
         Date date = new Date(2018, 1,1);
-        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 1);
-        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, 1);
+        TwitterPost twitterPost = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "1");
+        TwitterPost twitterPost1 = new TwitterPost("messageTwitterPost", "usernameTwitterPost", "twitterHandleTwitterPost", "profileURLTwittterPost", date, "1");
         assertEquals(twitterPost.hashCode(),twitterPost1.hashCode());
     }
 }
